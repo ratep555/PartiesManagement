@@ -1,0 +1,23 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-8">
+            <app-cdk-stepper [linearOptionSelected]="true" #appStepper>
+                <cdk-step [label]="'Address'" [completed]="(billingForm.get('addressForm')).valid">
+                     <app-billing-address [billingForm]="billingForm"></app-billing-address>
+                </cdk-step>
+                <cdk-step [label]="'Shipping'" [completed]="(billingForm.get('shippingForm')).valid">
+                     <app-billing-shipping [billingForm]="billingForm"></app-billing-shipping>
+                </cdk-step>
+                <cdk-step [label]="'Summary'">
+                     <app-billing-ordersummary [billingForm]="billingForm" [appStepper]="appStepper"></app-billing-ordersummary>
+                </cdk-step>
+                <cdk-step [label]="'Payment'">
+                     <app-billing-payment [billingForm]="billingForm"></app-billing-payment>
+                </cdk-step>
+            </app-cdk-stepper>
+       </div>
+        <div class="col-4">
+            <app-order-sum></app-order-sum>
+        </div>
+    </div>
+</div>

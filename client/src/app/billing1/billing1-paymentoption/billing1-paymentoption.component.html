@@ -1,0 +1,27 @@
+<div class="mt-4" [formGroup]="billingForm">
+    <h4 class="mb-3">Choose your paying option</h4>
+    <div class="row ml-5" formGroupName="payingForm">
+        <div class="col-6 form-group" *ngFor="let option of payingOptions">
+            <input type="radio" 
+                id={{option.id}} 
+                (click)="persistingPayingOption(option)"
+                value={{option.id}} 
+                formControlName="payingOption"
+                class="custom-control-input">
+            <label for="{{option.id}}" class="custom-control-label">
+                <strong>{{option.name}}</strong>
+                <br>
+                <span class="label-description">{{option.description}}</span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5">
+    <button class="btn btn-outline-primary" cdkStepperPrevious>
+        <i class="fa fa-angle-left"></i> Back to Shipping Options
+    </button>
+    <button [disabled]="billingForm.get('payingForm').invalid" class="btn btn-primary" cdkStepperNext>
+        Go to Basket Summary <i class="fa fa-angle-right"></i> 
+    </button>
+</div>

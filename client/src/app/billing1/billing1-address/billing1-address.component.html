@@ -1,0 +1,53 @@
+<div class="mt-4" [formGroup]="billingForm">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Shipping address</h4>
+        <button 
+            (click)="updateCustomerAddress()" 
+            [disabled]="!billingForm.get('addressForm').valid || 
+                !billingForm.get('addressForm').dirty"
+            class="btn btn-outline-success mb-3">
+            Save as default address
+        </button>
+    </div>
+    <div class="row" formGroupName="addressForm">
+        <div class="form-group col-6">
+            <app-text-input formControlName="firstName" [label]='"First Name"'></app-text-input>
+        </div>
+        <div class="form-group col-6">
+            <app-text-input formControlName="lastName" [label]='"Last Name"'></app-text-input>
+        </div>
+        <div class="form-group col-6">
+            <app-text-input formControlName="street" [label]='"Street"'></app-text-input>
+        </div>
+        <div class="form-group col-6">
+            <app-text-input formControlName="city" [label]='"City"'></app-text-input>
+        </div>
+        <div class="form-group col-6">
+            <select class="form-control" formControlName="countryId">
+                <option value="0">--Country--</option>
+                <option *ngFor="let country of countryList" value="{{ country.id }}">
+                  {{ country.name }}
+                </option>
+              </select>    
+              <span
+              style="font-size: 12px"
+              class="text-danger"
+              *ngIf="
+                billingForm.get('addressForm').get('countryId').invalid &&
+                billingForm.get('addressForm').get('countryId').touched
+              "
+            >
+              Please select country
+            </span>
+            </div>
+    </div>
+</div>
+
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5">
+    <button class="btn btn-outline-primary" routerLink="/basket">
+        <i class="fa fa-angle-left"></i> Back to Basket
+    </button>
+    <button [disabled]="billingForm.get('addressForm').invalid" class="btn btn-primary" cdkStepperNext>
+        Go to Shipping <i class="fa fa-angle-right"></i> 
+    </button>
+</div>

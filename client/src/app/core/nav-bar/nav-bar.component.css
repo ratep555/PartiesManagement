@@ -1,0 +1,66 @@
+.cart-carry {
+  position: absolute;
+  min-height: 25px;
+  min-width: 25px;
+  border-radius: 50%;
+  font-size: 1em;
+  background: blue;
+  color: white;
+  text-align: center;
+  top: -12px;
+  right: 32px;
+  cursor: pointer;
+}
+
+.fa {
+  cursor: pointer;
+}
+
+.navbar {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 20px;
+  }
+  
+  .navbar .active {
+    color: white;
+  }
+  
+  .navbar-brand {
+    font-size: 27px;
+  }
+  
+  .nav-link {
+    margin-left: 10px;
+  }
+
+  .dropdown-menu {
+    background-color: #338DFF;
+  }
+  
+  .navbar > a {
+    cursor: pointer;
+  }
+
+  
+  .dropdown-menu > a:hover{
+    background-color: #337DFF;
+    cursor: pointer;
+  }
+  
+  .dropdown > a:hover{
+    text-decoration: none;
+  }
+  
+  .pero {
+    cursor: pointer;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,14 @@
+[
+    {
+      "Name": "Cash on Delivery (COD)",
+      "Description": "Pay for your products by cash/card in person directly to the courier at the time of delivery."
+    },
+    {
+      "Name": "General Card Slip",
+      "Description": "Pay for your products with card slip prior to delivery. Once the payment is received, chosen product(s) will be shipped."
+    },
+    {
+      "Name": "Stripe",
+      "Description": "Pay for your product via online payment processing platform."
+    }
+  ]

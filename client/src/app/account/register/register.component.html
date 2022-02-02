@@ -1,0 +1,18 @@
+<div class="container" style="margin-top: 100px;">   
+    <div class="d-flex justify-content-center mt-5">
+        <div class="col-4">
+            <form [formGroup]="fg" *ngFor="let fg of userForms.controls"(submit)="recordSubmit(fg)">                     
+               <h2 class="kiki text-center text-primary">Sign up</h2>
+                <app-text-input formControlName="displayName" [label]='"Displayname"'></app-text-input>
+                <app-text-input formControlName="email" [label]='"Email"'></app-text-input>
+                <app-text-input formControlName="password" [label]='"Password"' [type]='"password"'></app-text-input>
+                <app-text-input formControlName="confirmPassword" [label]='"Confirm Password"'
+                [type]='"password"'></app-text-input>           
+                <div class="form-group text-center" style="margin-bottom: 70px; margin-top: 30px;">
+                    <button [disabled]='!userForms.valid' class="btn btn-success mr-2" type="submit">Register</button>
+                </div>     
+            </form>
+            </div>
+            </div>
+            </div>
+

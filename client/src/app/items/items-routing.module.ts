@@ -1,0 +1,23 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+import { ItemsComponent } from './items.component';
+import { AddItemComponent } from './add-item/add-item.component';
+import { EditItemComponent } from './edit-item/edit-item.component';
+import { InfoItemComponent } from './info-item/info-item.component';
+
+const routes: Routes = [
+  {path: '', component: ItemsComponent},
+  {path: 'additem', component: AddItemComponent},
+  {path: 'edititem/:id', component: EditItemComponent},
+  {path: 'infoitem/:id', component: InfoItemComponent},
+];
+
+@NgModule({
+  declarations: [],
+  imports: [
+    RouterModule.forChild(routes)
+  ],
+  exports: [RouterModule]
+})
+export class ItemsRoutingModule { }

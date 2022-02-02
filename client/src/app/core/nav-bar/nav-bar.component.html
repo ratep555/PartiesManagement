@@ -1,0 +1,209 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a
+      class="navbar-brand text-uppercase"
+      style="margin-left: 40px"
+      [routerLink]="['/']"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Home</a
+    >
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarNav"
+      (click)="isCollapsed = !isCollapsed"
+      [attr.aria-expanded]="!isCollapsed"
+      aria-controls="navbarSupportedContent"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse"
+      id="navbarNav"
+      id="navbarSupportedContent"
+      [collapse]="isCollapsed"
+    >
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/webshop"
+            routerLinkActive="active"
+            >Webshop</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/offices"
+            routerLinkActive="active"
+            >Offices</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/appointments"
+            routerLinkActive="active"
+            >Appointments</a
+          >
+        </li>
+        <ng-container
+          *ngIf="
+            (currentUser$ | async) &&
+            (currentUser$ | async)?.roles.includes('Doctor')
+          "
+        >
+          <div class="dropdown" dropdown>
+            <a
+              class="pero nav-link text-uppercase dropdown-toggle text-white"
+              dropdownToggle
+              (click)="(false)"
+              routerLinkActive="active"
+              >Doctor</a
+            >
+            <div class="dropdown-menu" *dropdownMenu>
+              <a routerLink="/doctors/infodoctormyprofile" class="dropdown-item">
+                <i class="fa fa-user-md mr-3"></i> My Profile</a
+              >
+              <div class="dropdown-divider"></div>
+              <a routerLink="/offices/officeslistdoctor" class="dropdown-item">
+                <i class="fa fa-paperclip mr-3"></i>My Offices</a
+              >
+              <a
+                routerLink="/appointments/appointmentslistdoctor"
+                class="dropdown-item"
+              >
+                <i class="fa fa-phone mr-3"></i>My Appointments</a
+              >
+              <a routerLink="/patients/patientslistdoctor" class="dropdown-item">
+                <i class="fa fa-stethoscope mr-2 ml-1"></i> My Patients</a
+              >
+              <a
+                routerLink="/patients/medicalrecordslistdoctor"
+                class="dropdown-item"
+              >
+                <i class="fa fa-ambulance mr-2"></i> Medical Records</a
+              >
+              <a
+              routerLink="/doctors/statisticsdoctor"
+              class="dropdown-item"
+            >
+              <i class="fa fa-bar-chart mr-2"></i> My Statistics</a
+            >
+            </div>
+          </div>
+        </ng-container>
+  
+        <ng-container>
+          <div class="dropdown" dropdown>
+            <a
+              class="pero nav-link text-uppercase dropdown-toggle text-white"
+              dropdownToggle
+              (click)="(false)"
+              routerLinkActive="active"
+              >Patient</a
+            >
+            <div class="dropdown-menu" *dropdownMenu>
+              <a
+                routerLink="/patients/infopatientmyprofile"
+                class="dropdown-item"
+              >
+                <i class="fa fa-user mr-3"></i> My Profile</a
+              >
+              <div class="dropdown-divider"></div>
+              <a
+                routerLink="/appointments/appointmentslistpatient"
+                class="dropdown-item"
+              >
+                <i class="fa fa-phone mr-3"></i>My Appointments</a
+              >
+              <a
+                routerLink="/patients/medicalrecordslistpatient"
+                class="dropdown-item"
+              >
+                <i class="fa fa-ambulance mr-2"></i> My Medical Records</a
+              >
+              <a
+                routerLink="/doctors/doctorslistpatient"
+                class="dropdown-item"
+              >
+                <i class="fa fa-user-md ml-1 mr-2"></i> My Doctors</a
+              >
+              <a
+                routerLink="/patients/statisticspatient"
+                class="dropdown-item"
+              >
+                <i class="fa fa-bar-chart mr-2"></i> My Statistics</a
+              >
+            </div>
+          </div>
+        </ng-container>
+      </ul>
+      <div routerLink="/basket" class="position-relative">
+        <i class="fa fa-shopping-cart fa-2x mr-5 text-dark"></i>
+        <div *ngIf="(basket$ | async) as basket" class="cart-carry">{{basket.basketItems.length}}</div>
+      </div>
+      <ng-container *ngIf="(currentUser$ | async) === null">
+        <div>
+          <a routerLink="/account/login" class="btn btn-outline-secondary mr-2">Login</a>
+        <a routerLink="/account/register" class="btn btn-outline-secondary mr-3">Sign up</a>  
+  
+        </div>
+      </ng-container>
+  
+    <!--   <div *ngIf="currentUser$ | async">
+        <ul class="nav navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link">
+              Welcome {{ (currentUser$ | async).displayName | titlecase }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              (click)="logout()"
+              class="nav-link"
+              routerLink="/account/login"
+              routerLinkActive="active">
+              <i class="fa fa-sign-out mr-3"></i>
+              </a
+            >
+          </li>
+        </ul>
+      </div> -->
+      <ng-container *ngIf="currentUser$ | async">
+        <div class="dropdown mr-5" dropdown>
+          <a class="dropdown-toggle text-white" style="cursor: pointer" dropdownToggle  
+          (click)="(false)" routerLinkActive="active">
+            <strong>Welcome {{(currentUser$ | async).displayName | titlecase}}</strong>  
+          </a>
+          <div class="dropdown-menu" *dropdownMenu>
+            <a
+              routerLink="/basket"
+              class="dropdown-item"
+            >
+              <i class="fa fa-shopping-cart mr-3"></i> Basket Info</a
+            >
+            <a
+              routerLink="/orders"
+              class="dropdown-item"
+            >
+              <i class="fa fa-history mr-3 ml-1"></i>Orders Info </a
+            >
+            <div class="dropdown-divider"></div>
+            <a 
+            (click)="logout()"
+            routerLink="/account/login"
+            routerLinkActive="active"
+            class="dropdown-item"
+            >
+              <i class="fa fa-sign-out mr-3 ml-1"></i>Logout</a
+            >
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </nav>
+  

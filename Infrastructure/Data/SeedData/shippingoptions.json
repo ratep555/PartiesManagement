@@ -1,0 +1,15 @@
+[
+    {
+      "Name": "Expedited Shipping",
+      "Description": "Product is prioritised over others, improving its delivery speed",
+      "TransitDays": "1-3 Days",
+      "Price": 20
+
+    },
+    {
+      "Name": "Regular Shipping",
+      "Description": "Product is delivered via standard procedure",
+      "TransitDays": "Within 14 Days",
+      "Price": 0
+    }
+  ]

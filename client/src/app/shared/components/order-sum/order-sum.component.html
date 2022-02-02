@@ -1,0 +1,28 @@
+<div class="card">
+    <div class="card-header bg-dark text-light ml-0 row container">
+        <div class="col-12 d-none d-md-block col-md-6 pb-1">
+            <i class="fa fa-shopping-cart"></i> &nbsp; Order Summary
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="container rounded p-2">
+            <div class="row">
+                <p class="font-italic mb-4">Shipping expenditures will depend on options chosen throughout billing process</p>
+            </div>
+            <ul class="list-unstyled mb-4" *ngIf="(basketSum$ | async) as totals">
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Order subtotal</strong>
+                    <strong>{{totals.subtotal | currency}}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Shipping</strong>
+                    <strong>{{totals.shipping | currency}}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-3 border-bottom bg-light ">
+                    <strong class="text-primary">Total</strong>
+                    <strong class="text-primary">{{totals.total | currency}}</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

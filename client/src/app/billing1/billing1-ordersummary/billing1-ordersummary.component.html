@@ -1,0 +1,19 @@
+<div class="mt-4">
+    <app-basket-review [isBasket]=false></app-basket-review>
+</div>
+
+<div class="float-none d-flex justify-content-between flex-column flex-lg-row mb-5">
+    <button class="btn btn-outline-primary" cdkStepperPrevious>
+        <i class="fa fa-angle-left"></i> Back to Payment Options
+    </button>
+    <div *ngIf="(basket$ | async).paymentOptionId === stripe.id; else elseBlock">
+        <button class="btn btn-primary" cdkStepperNext  (click)="createPaymentIntent1()">
+            Go to Stripe<i class="fa fa-angle-right"></i> 
+        </button>
+    </div>
+    <ng-template #elseBlock>
+        <button class="btn btn-primary"  (click)="createOrder()">
+            Create order <i class="fa fa-angle-right"></i> 
+        </button>
+    </ng-template>
+</div>
