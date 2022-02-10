@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ChildActivationStart } from '@angular/router';
 import { BasketService } from 'src/app/basket/basket.service';
 import { Item } from 'src/app/shared/models/item';
 import { WebshopService } from '../webshop.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-item-detail',
@@ -31,16 +33,34 @@ export class ItemDetailComponent implements OnInit {
 
   addingItemToBasket() {
     this.basketService.addingItemToBasket(this.item, this.quantity);
+    this.webshopService.decreaseStockQuantity1(this.item.id, this.quantity).subscribe(() => {
+      this.loadProduct();
+    })
+  }
+
+  increaseQuantity1() {
+      this.quantity++;
   }
 
   increaseQuantity() {
-    this.quantity++;
+    if (this.item.stockQuantity > 1) {
+      this.quantity++;
+      this.item.stockQuantity--;
+    }
   }
 
   decreaseQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
+      this.item.stockQuantity++;
     }
   }
+
+  onRating(rate: number){
+    this.webshopService.rate(this.item.id, rate).subscribe(() => {
+     Swal.fire('Success', 'Your vote has been received', 'success');
+     this.loadProduct();
+   });
+ }
 
 }

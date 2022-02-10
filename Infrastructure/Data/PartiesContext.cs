@@ -52,7 +52,7 @@ namespace Infrastructure.Data
                     o => o.ToString(),
                     o => (PaymentStatus) Enum.Parse(typeof(PaymentStatus), o)
                 );
-
+                
             modelBuilder.Entity<OrderItem>()
                 .OwnsOne(s => s.BasketItemOrdered, io => {io.WithOwner();});
             
@@ -68,21 +68,32 @@ namespace Infrastructure.Data
             modelBuilder.Entity<ItemWarehouse>()
                 .HasKey(x => new { x.ItemId, x.WarehouseId }); 
 
+            modelBuilder.Entity<ItemDiscount>()
+                .HasKey(x => new { x.ItemId, x.DiscountId }); 
+            
+            modelBuilder.Entity<Rating>()
+                .HasOne(s => s.Customer)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);   
         }
 
             public DbSet<Address> Addresses { get; set; }
             public DbSet<Category> Categories { get; set; }
-            public DbSet<Client> Clients { get; set; }
+           // public DbSet<Client> Clients { get; set; }
             public DbSet<Country> Countries { get; set; }
+            public DbSet<Discount> Discounts { get; set; }
             public DbSet<Item> Items { get; set; }
             public DbSet<ItemCategory> ItemCategories { get; set; }
+            public DbSet<ItemDiscount> ItemDiscounts { get; set; }
             public DbSet<ItemManufacturer> ItemManufacturers { get; set; }
-            public DbSet<ItemReview> ItemReviews { get; set; }
+          //  public DbSet<ItemReview> ItemReviews { get; set; }
             public DbSet<ItemTag> ItemTags { get; set; }
             public DbSet<ItemWarehouse> ItemWarehouses { get; set; }
             public DbSet<Manufacturer> Manufacturers { get; set; }
             public DbSet<CustomerOrder> CustomerOrders { get; set; }
+            public DbSet<OrderItem> OrderItems { get; set; }
             public DbSet<PaymentOption> PaymentOptions { get; set; }
+            public DbSet<Rating> Ratings { get; set; }
             public DbSet<ShippingOption> ShippingOptions { get; set; }
             public DbSet<Tag> Tags { get; set; }
             public DbSet<Warehouse> Warehouses { get; set; }

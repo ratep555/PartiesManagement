@@ -6,6 +6,7 @@ namespace Infrastructure.Data.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly PartiesContext _context;
+
         public UnitOfWork(PartiesContext context)
         {
             _context = context;

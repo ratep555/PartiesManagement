@@ -1,1 +1,17 @@
-<p>info-item works!</p>
+
+<div class="container mt-5">
+    <div class="row" *ngIf="item">
+        <div class="col-6">
+            <img src="{{item.picture || './assets/kids.jpg'}}" alt="{{item.name}}" class="img-fluid w-100">
+        </div>
+        <div class="col-6">
+            <h3>{{item.name}}</h3>
+            <p style="font-size: 2em;">{{item.price | number: "1.2-2" }} kn</p>
+            <div>
+                <h4>Description</h4>
+            <p>{{item.description}}</p>
+             </div>
+     </div>     
+  </div>
+  
+  

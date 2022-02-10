@@ -1,0 +1,15 @@
+[
+    {
+      "WarehouseName": "Warehouse 1",
+      "Street": "Petrova 77",
+      "City": "Zagreb",
+      "CountryId": 2
+
+    },
+    {
+      "WarehouseName": "Warehouse 2",
+      "Street": "Podutiška 7",
+      "City": "Ljubljana",
+      "CountryId": 1
+    }
+  ]

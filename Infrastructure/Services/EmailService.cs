@@ -58,18 +58,18 @@ namespace Infrastructure.Services
             gfx.DrawString(orderNo.ToString(), font, XBrushes.Black, new XPoint(120, 100));
 
             gfx.DrawString("Customer:", font, XBrushes.Black, new XPoint(50, 130));
-            gfx.DrawString("Pero Perić", font, XBrushes.Black, new XPoint(124, 130));
+            gfx.DrawString(lastName + ", " + firstName, font, XBrushes.Black, new XPoint(124, 130));
 
             gfx.DrawString("Amount:", font, XBrushes.Black, new XPoint(50, 160));
-            gfx.DrawString(orderNo.ToString(), font, XBrushes.Black, new XPoint(110, 160));
+            gfx.DrawString(amount.ToString(), font, XBrushes.Black, new XPoint(110, 160));
 
             gfx.DrawString("Account No:", font, XBrushes.Black, new XPoint(50, 190));
             gfx.DrawString("777777-777777", font, XBrushes.Black, new XPoint(138, 190));
 
-            document.Save("C:\\Users\\petar\\source\\repos\\TestPDF2.pdf");        
+            document.Save("C:\\Users\\petar\\source\\repos\\" + orderNo.ToString() + ".pdf");        
         }
 
-        public async Task SendEmailAsync1(string toEmail, string subject, string content)
+        public async Task SendEmailAsync1(string toEmail, string subject, string content, int orderNo)
         {
             var apiKey = _config["SendGridAPIKey"];
             var client = new SendGridClient(apiKey);
@@ -77,7 +77,7 @@ namespace Infrastructure.Services
             var to = new EmailAddress(toEmail);
             var msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
 
-            using (var fileStream = File.OpenRead("C:\\Users\\petar\\source\\repos\\TestPDF2.pdf"))
+            using (var fileStream = File.OpenRead("C:\\Users\\petar\\source\\repos\\" + orderNo.ToString() + ".pdf"))
             {
                 await msg.AddAttachmentAsync("TestPDF2.pdf", fileStream);
                 var response = await client.SendEmailAsync(msg);

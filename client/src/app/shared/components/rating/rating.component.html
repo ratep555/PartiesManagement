@@ -1,0 +1,10 @@
+<div
+  *ngFor="let star of stars; let index = index"
+  (click)="rate(index)"
+  [ngClass]="{ checked: selectedRate > index }"
+  (mouseenter)="handleMouseEnter(index)"
+  (mouseleave)="handleMouseLeave()"
+  style="display: inline-block; cursor: pointer"
+>
+  <i class="fa fa-star fa-2x"></i>
+</div>

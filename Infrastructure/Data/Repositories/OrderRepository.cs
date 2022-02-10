@@ -98,6 +98,55 @@ namespace Infrastructure.Data.Repositories
         {
             return await _context.PaymentOptions.OrderBy(x => x.Name).ToListAsync();
         }
+
+        public async Task FillingItemWarehousesQuantity(int id, int basketItemQuantity)
+        {
+            var list = await _context.ItemWarehouses.Where(x => x.ItemId == id).ToListAsync();
+
+            int stockquantity = 0;
+
+            foreach (var item in list)
+            {
+                stockquantity = item.StockQuantity;
+            }
+
+            foreach (var item in list)
+            {
+                if (item.StockQuantity >= basketItemQuantity)
+                {
+                    item.StockQuantity = item.StockQuantity - basketItemQuantity;
+                    await _context.SaveChangesAsync();
+                    basketItemQuantity = 0;
+                }
+
+                else if(item.StockQuantity < basketItemQuantity)
+                {
+                    var sum1 = basketItemQuantity - item.StockQuantity;
+
+                    item.StockQuantity = 0;
+                    await _context.SaveChangesAsync();
+
+                    var model = await _context.ItemWarehouses
+                        .FirstOrDefaultAsync(x => x.ItemId == item.ItemId && x.StockQuantity > 0);     
+                    
+                    model.StockQuantity = model.StockQuantity - sum1;
+                    await _context.SaveChangesAsync();          
+                }
+                basketItemQuantity = 0;
+
+
+                  /* sum += (basketItemQuantity - item.StockQuantity);
+                var model = await _context.ItemWarehouses
+                    .FirstOrDefaultAsync(x => x.ItemId == item.ItemId && x.StockQuantity > 0);
+                
+                model.StockQuantity = stockquantity - sum;
+                await _context.SaveChangesAsync();  */
+            }
+
+
+
+
+        }
     }
 }
 

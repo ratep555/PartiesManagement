@@ -75,6 +75,10 @@ namespace Infrastructure.Services
 
                 var orderItem = new OrderItem(basketItemOrdered, productItem.Price, item.Quantity, productItem.Picture);
                 orderItems.Add(orderItem);
+
+                productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
+
+                await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
             }
 
             var shippingOption = await _unitOfWork.ShippingOptionRepository.GetShippingOptionById(shippingOptionId);
@@ -87,11 +91,26 @@ namespace Infrastructure.Services
 
             var customerOrder = new CustomerOrder(orderItems, buyerEmail, shippingAddress, shippingOption,
             paymentOption, subtotal, basket.PaymentIntentId);
+
             _unitOfWork.OrderRepository.CreateCustomerOrder(customerOrder);
 
             if (await _unitOfWork.SaveAsync()) return customerOrder;
 
             return null;        
+        }
+
+        public async Task<bool> CheckIfBasketItemQuantityExceedsItemStackQuantity(string basketId)
+        {
+            var basket = await _basketRepository.GetBasket(basketId);
+
+            foreach (var item in basket.BasketItems)
+            {
+                var productItem = await _unitOfWork.ItemRepository.GetItemById(item.Id);
+
+                if (productItem.StockQuantity < item.Quantity) return true;              
+
+            }
+            return false;
         }
 
         public async Task<CustomerOrder> CreateOrder3(string buyerEmail, int shippingOptionId, 
@@ -109,6 +128,11 @@ namespace Infrastructure.Services
 
                 var orderItem = new OrderItem(basketItemOrdered, productItem.Price, item.Quantity, productItem.Picture);
                 orderItems.Add(orderItem);
+
+                productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
+
+                await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
+
             }
 
             var shippingOption = await _unitOfWork.ShippingOptionRepository.GetShippingOptionById(shippingOptionId);
@@ -184,6 +208,12 @@ namespace Infrastructure.Services
         {
             return await _unitOfWork.OrderRepository.GetStripePaymentOption();
         }
+
+        public async Task FillingItemWarehousesQuantity(int id, int basketItemQuantity)
+        {
+            await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(id, basketItemQuantity);
+        }
+
     }
 }
 

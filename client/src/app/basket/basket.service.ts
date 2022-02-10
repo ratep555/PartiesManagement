@@ -7,6 +7,7 @@ import { Basket, BasketSum, BasketClass, BasketItem } from '../shared/models/bas
 import { Item } from '../shared/models/item';
 import { PayingOption } from '../shared/models/payingOption';
 import { ShippingOption } from '../shared/models/shippingOption';
+import { WebshopService } from '../webshop/webshop.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class BasketService {
   shipping = 0;
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private webshopService: WebshopService) { }
 
   gettingBasket(id: string) {
     return this.http.get(this.baseUrl + 'basket?id=' + id)
@@ -29,11 +30,21 @@ export class BasketService {
           this.basketBSubject.next(basket);
           this.shipping = basket.shippingPrice;
           this.calculateBasketSum();
+          console.log(basket);
         })
       );
   }
 
   editingBasket(basket: Basket) {
+    return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: Basket) => {
+      this.basketBSubject.next(response);
+      this.calculateBasketSum();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  editingBasket1(basket: Basket) {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: Basket) => {
       this.basketBSubject.next(response);
       this.calculateBasketSum();
@@ -135,6 +146,8 @@ export class BasketService {
     return basketitems;
   }
 
+  
+
   private creatingBasket(): Basket {
     const basket = new BasketClass();
     localStorage.setItem('basket_id', basket.id);
@@ -151,6 +164,7 @@ export class BasketService {
     };
   }
 
+ 
   private calculateBasketSum() {
     const basket = this.gettingValueOfBasket();
     const shipping = this.shipping;

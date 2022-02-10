@@ -15,6 +15,9 @@ import { TextInputComponent } from './components/text-input/text-input.component
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CdkStepperComponent } from './components/cdk-stepper/cdk-stepper.component';
 import { BasketReviewComponent } from './components/basket-review/basket-review.component';
+import { ImgInputComponent } from './components/img-input/img-input.component';
+import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
+import { RatingComponent } from './components/rating/rating.component';
 
 
 @NgModule({
@@ -24,7 +27,10 @@ import { BasketReviewComponent } from './components/basket-review/basket-review.
     OrderSumComponent,
     TextInputComponent,
     CdkStepperComponent,
-    BasketReviewComponent
+    BasketReviewComponent,
+    ImgInputComponent,
+    MultipleSelectorComponent,
+    RatingComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +60,10 @@ import { BasketReviewComponent } from './components/basket-review/basket-review.
     TextInputComponent,
     CdkStepperModule,
     CdkStepperComponent,
-    BasketReviewComponent
+    BasketReviewComponent,
+    ImgInputComponent,
+    MultipleSelectorComponent,
+    RatingComponent
     ]
 })
 export class SharedModule { }

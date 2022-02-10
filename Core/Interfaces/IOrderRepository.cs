@@ -27,7 +27,7 @@ namespace Core.Interfaces
         Task<CustomerOrder> FindOrderByPaymentIntentId(string paymentIntentId);
         void DeleteCustomerOrder(CustomerOrder order);
         void UpdateCustomerOrder(CustomerOrder order);
-
+        Task FillingItemWarehousesQuantity(int id, int basketItemQuantity);
 
 
     }

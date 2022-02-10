@@ -1,0 +1,11 @@
+[
+    {
+      "Name": "Discount No. 1",
+      "DiscountPercentage": 20
+
+    },
+    {
+      "Name": "Discount No. 2",
+      "DiscountPercentage": 10
+    }
+  ]

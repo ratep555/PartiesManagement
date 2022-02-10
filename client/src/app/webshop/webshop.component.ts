@@ -19,11 +19,11 @@ export class WebshopComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.getItems(true);
+    this.getItems();
   }
 
-  getItems(useCache = false) {
-    this.webshopService.getItems(useCache).subscribe(response => {
+  getItems() {
+    this.webshopService.getItems().subscribe(response => {
       this.items = response.data;
       this.totalCount = response.count;
     }, error => {
@@ -36,7 +36,7 @@ export class WebshopComponent implements OnInit {
     if (params.page !== event) {
       params.page = event;
       this.webshopService.setMyParams(params);
-      this.getItems(true);
+      this.getItems();
     }
   }
 

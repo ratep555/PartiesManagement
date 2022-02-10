@@ -72,7 +72,7 @@ namespace API.Controllers
            return Ok(order);
         }
 
-        // ovo je pokušaj sa mailom
+        // ovo je pokušaj sa mailom, obje dolje koristiš, funkcioniraju:)
         [HttpPost("okimail")]
         public async Task<ActionResult<CustomerOrder>> CreateOrder2(OrderDto2 orderDto)
         {
@@ -86,9 +86,14 @@ namespace API.Controllers
 
             var address = _mapper.Map<ShippingAddress>(orderDto.ShippingAddress);
 
+            if (await _orderService.CheckIfBasketItemQuantityExceedsItemStackQuantity(orderDto.BasketId))
+            {
+                return BadRequest("Quantity in your basket excceds item's stack quantity!");
+            }
+
             var order = await _orderService.CreateOrder2(email, orderDto.ShippingOptionId, orderDto.PaymentOptionId,
                 orderDto.BasketId, address);
-            
+                        
             var total = order.Subtotal + shippingOptionPrice;
 
            if (paymentOptionName == "Cash on Delivery (COD)")
@@ -103,9 +108,12 @@ namespace API.Controllers
                 $" You can view details of your order by <a href='{url}'>Clicking here</a></p>");
            }
 
-           if (paymentOptionName == "Debit Card and Bank Card payments")
+           if (paymentOptionName == "General Card Slip")
            {
                 // order.PaymentIntentId = null;
+
+                _emailService.GeneratePdf(order.Id, total, orderDto.ShippingAddress.FirstName, 
+                    orderDto.ShippingAddress.LastName);
 
                 string url = $"{_config["AngularAppUrl"]}/orders/{order.Id}";
 
@@ -113,7 +121,7 @@ namespace API.Controllers
                 "Order confirmation", $"<h1>Thank you for your order</h1>" +
                 $"<h3>Please pay {total}</h3>" +
                 $"<p>Your order will be shipped in accordance with your selected shipping preferences" +
-                $"once the payment is completed. You can view details of your order by <a href='{url}'>Clicking here</a></p>");
+                $"once the payment is completed. You can view details of your order by <a href='{url}'>Clicking here</a></p>", order.Id);
            }
 
            await _unitOfWork.SaveAsync();
@@ -122,7 +130,7 @@ namespace API.Controllers
 
            return Ok(order);
         }
-
+        // ovo je stripe
         [HttpPost("okimail1")]
         public async Task<ActionResult<CustomerOrder>> CreateOrder3(OrderDto2 orderDto)
         {
@@ -133,6 +141,11 @@ namespace API.Controllers
             var paymentOptionName = _orderService.GetPaymentOptionName(orderDto.PaymentOptionId);
 
             var address = _mapper.Map<ShippingAddress>(orderDto.ShippingAddress);
+
+            if (await _orderService.CheckIfBasketItemQuantityExceedsItemStackQuantity(orderDto.BasketId))
+            {
+                return BadRequest("Quantity in your basket excceds item's stack quantity!");
+            }
 
             var order = await _orderService.CreateOrder3(email, orderDto.ShippingOptionId, orderDto.PaymentOptionId,
                 orderDto.BasketId, address);
@@ -226,6 +239,15 @@ namespace API.Controllers
             orderDto.ShippingAddress.Country = _orderService.GetCountryName(orderDto.ShippingAddress.CountryId);
 
             return orderDto;
+        } 
+        
+        // warehouse attempt
+        [HttpPut("warehouse/{id}")]
+        public async Task<ActionResult> FillingWarehousesQuantity(int id)
+        {
+            await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(id, 6);
+
+            return NoContent();
         } 
      
     }

@@ -45,7 +45,7 @@ namespace API.Extensions
             });
 
             
-               services.AddAutoMapper(typeof(MappingHelper).Assembly);
+            services.AddAutoMapper(typeof(MappingHelper).Assembly);
 
             services.AddSingleton(provider => new MapperConfiguration(config =>
             {

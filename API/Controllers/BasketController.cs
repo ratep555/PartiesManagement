@@ -26,8 +26,10 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ClientBasket>> EditBasket(ClientBasket basket)
+        public async Task<ActionResult<ClientBasket>> EditBasket(ClientBasketDto basketDto)
         {
+            var basket = _mapper.Map<ClientBasket>(basketDto);
+
             var editedBasket = await _basketRepository.EditBasket(basket);
 
             return Ok(editedBasket);

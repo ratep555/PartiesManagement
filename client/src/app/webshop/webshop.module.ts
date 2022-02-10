@@ -5,6 +5,8 @@ import { ItemComponent } from './item/item.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { SharedModule } from '../shared/shared.module';
 import { WebshopRoutingModule } from './webshop-routing.module';
+import { ItemDetailTabsComponent } from './item-detail-tabs/item-detail-tabs.component';
+import { ItemListIdComponent } from './item-list-id/item-list-id.component';
 
 
 
@@ -12,12 +14,17 @@ import { WebshopRoutingModule } from './webshop-routing.module';
   declarations: [
     WebshopComponent,
     ItemComponent,
-    ItemDetailComponent
+    ItemDetailComponent,
+    ItemDetailTabsComponent,
+    ItemListIdComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     WebshopRoutingModule
+  ],
+  exports: [
+    ItemListIdComponent
   ]
 })
 export class WebshopModule { }

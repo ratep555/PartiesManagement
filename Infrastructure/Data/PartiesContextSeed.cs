@@ -58,6 +58,18 @@ namespace Infrastructure.Data
                     await context.SaveChangesAsync();
                 } 
 
+                if (!context.Categories.Any())
+                {
+                    var categoriesData = File.ReadAllText("../Infrastructure/Data/SeedData/categories.json");
+                    var categories = JsonSerializer.Deserialize<List<Category>>(categoriesData);
+
+                    foreach (var item in categories)
+                    {
+                        context.Categories.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
                 if (!context.Countries.Any())
                 {
                     var countriesData = File.ReadAllText("../Infrastructure/Data/SeedData/countries.json");
@@ -66,6 +78,30 @@ namespace Infrastructure.Data
                     foreach (var item in countries)
                     {
                         context.Countries.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.Discounts.Any())
+                {
+                    var discountsData = File.ReadAllText("../Infrastructure/Data/SeedData/discounts.json");
+                    var discounts = JsonSerializer.Deserialize<List<Discount>>(discountsData);
+
+                    foreach (var item in discounts)
+                    {
+                        context.Discounts.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.Manufacturers.Any())
+                {
+                    var manufacturersData = File.ReadAllText("../Infrastructure/Data/SeedData/manufacturers.json");
+                    var manufacturers = JsonSerializer.Deserialize<List<Manufacturer>>(manufacturersData);
+
+                    foreach (var item in manufacturers)
+                    {
+                        context.Manufacturers.Add(item);
                     }
                     await context.SaveChangesAsync();
                 } 
@@ -90,6 +126,30 @@ namespace Infrastructure.Data
                     foreach (var item in paymentoptions)
                     {
                         context.PaymentOptions.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.Tags.Any())
+                {
+                    var tagsData = File.ReadAllText("../Infrastructure/Data/SeedData/tags.json");
+                    var tags = JsonSerializer.Deserialize<List<Tag>>(tagsData);
+
+                    foreach (var item in tags)
+                    {
+                        context.Tags.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.Warehouses.Any())
+                {
+                    var warehousesData = File.ReadAllText("../Infrastructure/Data/SeedData/warehouses.json");
+                    var warehouses = JsonSerializer.Deserialize<List<Warehouse>>(warehousesData);
+
+                    foreach (var item in warehouses)
+                    {
+                        context.Warehouses.Add(item);
                     }
                     await context.SaveChangesAsync();
                 } 

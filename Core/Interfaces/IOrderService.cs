@@ -15,7 +15,8 @@ namespace Core.Interfaces
             int paymentOptionId, string basketId, ShippingAddress shippingAddress);
         Task<CustomerOrder> GetOrderById(int id, string customerEmail);
         Task<List<CustomerOrder>> GetOrdersForCustomer(string customerEmail);
-        
+        Task<bool> CheckIfBasketItemQuantityExceedsItemStackQuantity(string basketId);
+
         Task<List<ShippingOption>> GetShippingOptions();
         Task<List<PaymentOption>> GetPayingOptions();
         Task<List<Country>> GetCountries();
