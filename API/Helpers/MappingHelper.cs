@@ -47,6 +47,12 @@ namespace API.Helpers
                 .ForMember(d => d.ItemId, o => o.MapFrom(s =>  s.BasketItemOrdered.BasketItemOrderedId))
                 .ForMember(d => d.ItemName, o => o.MapFrom(s =>  s.BasketItemOrdered.BasketItemOrderedName));
             
+            CreateMap<Discount, DiscountDto>()
+                .ForMember(d => d.Items, o => o.MapFrom(MapForItems));
+            
+            CreateMap<DiscountCreateEditDto, Discount>()
+                .ForMember(x => x.ItemDiscounts, options => options.MapFrom(MapDiscountItems));
+
             CreateMap<Item, ItemDto>()
                 .ForMember(d => d.Categories, o => o.MapFrom(MapForCategories))
                 .ForMember(d => d.Discounts, o => o.MapFrom(MapForDiscounts))
@@ -68,9 +74,23 @@ namespace API.Helpers
                 .ForMember(x => x.ItemTags, options => options.MapFrom(MapItemTags1));
 
             CreateMap<Category, CategoryDto>().ReverseMap();
-            CreateMap<Discount, DiscountDto>().ReverseMap();
+            // pazi na redoslijed kojim to navodiš, ovo te zezalo, nemoj duplati!
+           // CreateMap<Discount, DiscountDto>().ReverseMap();
             CreateMap<Manufacturer, ManufacturerDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
+        }
+
+        private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)
+        {
+            var result = new List<ItemDiscount>();
+
+            if (discountDto.ItemsIds == null) { return result; }
+
+            foreach (var id in discountDto.ItemsIds)
+            {
+                result.Add(new ItemDiscount() { ItemId = id });
+            }
+            return result;
         }
 
         private List<ItemCategory> MapItemCategories(ItemCreateEditDto itemDto, Item item)
@@ -175,6 +195,20 @@ namespace API.Helpers
             return result;
         }
 
+        private List<ItemDto> MapForItems(Discount discount, DiscountDto discountDto)
+        {
+            var result = new List<ItemDto>();
+
+            if (discount.ItemDiscounts != null)
+            {
+                foreach (var item in discount.ItemDiscounts)
+                {
+                    result.Add(new ItemDto() { Id = item.ItemId, 
+                    Name = item.Item.Name, Price = item.Item.Price });
+                }
+            }
+            return result;
+        }
         private List<CategoryDto> MapForCategories(Item item, ItemDto itemDto)
         {
             var result = new List<CategoryDto>();

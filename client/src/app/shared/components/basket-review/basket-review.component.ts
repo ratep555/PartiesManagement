@@ -19,7 +19,7 @@ export class BasketReviewComponent implements OnInit {
  // @Input() items: BasketItem[] | OrderItem[] = [];
   @Input() isOrder = false;
 
-  constructor(private basketService: BasketService, 
+  constructor(private basketService: BasketService,
               private webshopservice: WebshopService) { }
 
   ngOnInit() {
@@ -28,19 +28,21 @@ export class BasketReviewComponent implements OnInit {
 
   decreaseBasketItemQuantity(item: BasketItem) {
     this.webshopservice.increaseStockQuantity1(item.id, 1).subscribe(() => {
-    })
+    });
     this.decrease.emit(item);
   }
 
   increaseBasketItemQuantity(item: BasketItem) {
-    this.webshopservice.decreaseStockQuantity1(item.id, 1).subscribe(() => {
-    })
-    this.increase.emit(item);
+    if (item.stockQuantity > 2) {
+      this.webshopservice.decreaseStockQuantity1(item.id, 1).subscribe(() => {
+      });
+      this.increase.emit(item);
+    }
   }
 
   removingItemFromBasket(item: BasketItem) {
     this.webshopservice.increaseStockQuantity1(item.id, item.quantity).subscribe(() => {
-    })
+    });
     this.remove.emit(item);
   }
 

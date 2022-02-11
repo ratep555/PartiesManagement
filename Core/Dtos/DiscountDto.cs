@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 
 namespace Core.Dtos
 {
@@ -11,5 +12,7 @@ namespace Core.Dtos
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public decimal? MinimumOrderValue { get; set; }
+        public List<ItemDto> Items { get; set; }
+
     }
 }

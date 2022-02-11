@@ -19,8 +19,6 @@ namespace Core.Interfaces
         Task AddItem1(Item item);
         Task UpdateItem(ItemEditDto item);
         Task UpdateItem1(Item item);
-        Task UpdateItemWithDiscount(Item item);
-
         Task<List<Category>> GetNonSelectedCategories(List<int> ids);
         Task<List<Discount>> GetNonSelectedDiscounts(List<int> ids);
         Task<List<Category>> GetSelectedCategories(List<int> ids);
@@ -41,8 +39,11 @@ namespace Core.Interfaces
         Task<double> AverageVote(int id);
         Task<bool> ChechIfAny(int id);
 
-
-
+        // discounts
+        Task<Discount> FindDiscountById(int id);
+        Task<List<Item>> GetNonSelectedItems(List<int> ids);
+        Task AddDiscount(Discount discount);
+        Task UpdateItemWithDiscount(Discount discount);
 
     }
 }

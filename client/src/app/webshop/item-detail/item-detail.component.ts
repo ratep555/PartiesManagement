@@ -35,7 +35,7 @@ export class ItemDetailComponent implements OnInit {
     this.basketService.addingItemToBasket(this.item, this.quantity);
     this.webshopService.decreaseStockQuantity1(this.item.id, this.quantity).subscribe(() => {
       this.loadProduct();
-    })
+    });
   }
 
   increaseQuantity1() {

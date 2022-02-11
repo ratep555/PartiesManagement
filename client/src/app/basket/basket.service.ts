@@ -58,7 +58,7 @@ export class BasketService {
   }
 
   addingItemToBasket(item: Item, quantity = 1) {
-    const addedItem: BasketItem = this.mapItemToBasketItem(item, quantity);
+    const addedItem: BasketItem = this.mapItemToBasketItem1(item, quantity);
     const basket = this.gettingValueOfBasket() ?? this.creatingBasket();
     basket.basketItems = this.addingOrUpdatingBasketItem(basket.basketItems, addedItem, quantity);
     this.editingBasket(basket);
@@ -146,7 +146,7 @@ export class BasketService {
     return basketitems;
   }
 
-  
+
 
   private creatingBasket(): Basket {
     const basket = new BasketClass();
@@ -164,7 +164,19 @@ export class BasketService {
     };
   }
 
- 
+  private mapItemToBasketItem1(item: Item, quantity: number): BasketItem {
+    return {
+      id: item.id,
+      itemName: item.name,
+      price: item.price,
+      picture: item.picture,
+      stockQuantity: item.stockQuantity,
+      quantity
+
+    };
+  }
+
+
   private calculateBasketSum() {
     const basket = this.gettingValueOfBasket();
     const shipping = this.shipping;

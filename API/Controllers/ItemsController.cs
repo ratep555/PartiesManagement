@@ -363,7 +363,58 @@ namespace API.Controllers
             return NoContent();               
         }
 
-     
+        // discounts
+        [HttpGet("discount/{id}")]
+        public async Task<ActionResult<DiscountDto>> GetDiscountById(int id)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            var discy = _mapper.Map<DiscountDto>(discount);
+
+            return Ok(discy);
+        }
+        
+
+        [HttpGet("putget1discount/{id}")]
+        public async Task<ActionResult<DiscountPutGetDto>> GetDiscountByIdForEditing1(int id)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            var discountToReturn = _mapper.Map<DiscountDto>(discount);
+
+            var itemsSelectedIds = discountToReturn.Items.Select(x => x.Id).ToList();
+
+            var nonSelectedItems = await _unitOfWork.ItemRepository
+                .GetNonSelectedItems(itemsSelectedIds);
+
+            var nonSelectedItemsDto = _mapper.Map<IEnumerable<ItemDto>>
+                (nonSelectedItems).OrderBy(x => x.Name);
+
+            var response = new DiscountPutGetDto();
+
+            response.Discount = discountToReturn;
+            response.SelectedItems = discountToReturn.Items.OrderBy(x => x.Name);
+            response.NonSelectedItems = nonSelectedItemsDto;
+
+            return response;
+        }
+
+        [HttpPost("discountpost")]
+        public async Task<ActionResult<DiscountDto>> CreateDiscount([FromBody] DiscountCreateEditDto discountDto)
+        {
+            var discount = _mapper.Map<Discount>(discountDto);
+
+            await _unitOfWork.ItemRepository.AddDiscount(discount);
+
+            await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
+
+            return Ok();
+
+        }
     }
 }
 

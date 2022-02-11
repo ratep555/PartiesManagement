@@ -37,29 +37,29 @@ export class ItemListIdComponent implements OnInit {
     });
   }
 
-  increaseQuantity(item: BasketItem) {
+  increaseBasketItemQuantity(item: BasketItem) {
     if (this.item.stockQuantity > 1) {
       this.quantity++;
       this.item.stockQuantity--;
       this.webshopService.decreaseStockQuantity1(item.id, 1).subscribe(() => {
-      })
+      });
       this.increase.emit(item);
     }
   }
 
-  decreaseQuantity(item: BasketItem) {
+  decreaseBasketItemQuantity(item: BasketItem) {
     if (this.quantity > 1) {
       this.quantity--;
       this.item.stockQuantity++;
       this.webshopService.increaseStockQuantity1(item.id, 1).subscribe(() => {
-      })
+      });
       this.decrease.emit(item);
     }
   }
 
   removingItemFromBasket(item: BasketItem) {
     this.webshopService.increaseStockQuantity1(item.id, item.quantity).subscribe(() => {
-    })
+    });
     this.remove.emit(item);
   }
 }

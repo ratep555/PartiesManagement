@@ -1,7 +1,7 @@
-import { Category } from "./category";
-import { Discount } from "./discount";
-import { Manufacturer } from "./manufacturer";
-import { Tag } from "./tag";
+import { Category } from './category';
+import { Discount } from './discount';
+import { Manufacturer } from './manufacturer';
+import { Tag } from './tag';
 
 export interface Item {
     id: number;
