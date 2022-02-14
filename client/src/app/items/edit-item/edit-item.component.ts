@@ -92,10 +92,9 @@ export class EditItemComponent implements OnInit {
 
     const tagsIds = this.selectedTags.map(value => value.key);
     this.itemForm.get('tagsIds').setValue(tagsIds);
-    
-  this.itemsService.updateItem(this.id, this.itemForm.value)
-      .subscribe(() => {
-        this.router.navigateByUrl('items');
+
+    this.itemsService.updateItem(this.id, this.itemForm.value).subscribe(() => {
+    this.router.navigateByUrl('items');
         }, error => {
           console.log(error);
         });

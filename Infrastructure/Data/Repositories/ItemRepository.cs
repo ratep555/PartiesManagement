@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Infrastructure.Data.Repositories
             _context.Items.Add(item);
         }
 
-              public async Task<List<Item>> GetAllItems(QueryParameters queryParameters)
+        public async Task<List<Item>> GetAllItems(QueryParameters queryParameters)
         {
             IQueryable<Item> items = _context.Items.Include(x => x.ItemDiscounts)
                 .ThenInclude(x => x.Discount).AsQueryable().OrderBy(x => x.Name);
@@ -227,10 +228,12 @@ namespace Infrastructure.Data.Repositories
            return await _context.Ratings.AnyAsync(x => x.ItemId == id);          
         }
 
+
         // discounts
         public async Task<Discount> FindDiscountById(int id)
         {
             return await _context.Discounts.Include(x => x.ItemDiscounts).ThenInclude(x => x.Item)
+                .Include(X => X.CategoryDiscounts).ThenInclude(X => X.Category)
                 .Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
@@ -241,95 +244,284 @@ namespace Infrastructure.Data.Repositories
 
         public async Task AddDiscount(Discount discount)
         {
+            discount.StartDate = discount.StartDate.ToLocalTime();
+            discount.EndDate = discount.EndDate.ToLocalTime();
+       
             _context.Discounts.Add(discount);
             await _context.SaveChangesAsync();
         }
-        
+
+        public async Task UpdateDiscount(Discount discount)
+        {    
+            discount.StartDate = discount.StartDate.ToLocalTime();
+            discount.EndDate = discount.EndDate.ToLocalTime();
+
+            _context.Entry(discount).State = EntityState.Modified;        
+             await _context.SaveChangesAsync();
+        }
+ 
         public async Task UpdateItemWithDiscount(Discount discount)
         {     
-            var itemDiscounts = await _context.ItemDiscounts.Include(X => X.Discount).Include(X => X.Item)
-                .Where(x => x.DiscountId == discount.Id && x.IsAppliedOnItem == false).ToListAsync();
+            var itemDiscounts = await _context.ItemDiscounts.Include(X => X.Discount)
+                .Where(x => x.DiscountId == discount.Id).ToListAsync();
 
-            IEnumerable<int> ids = itemDiscounts.Select(x => x.DiscountId);
             IEnumerable<int> ids1 = itemDiscounts.Select(x => x.ItemId);
 
-            decimal discountPercentage = _context.Discounts
-                .Where(x => ids.Contains(x.Id)).First().DiscountPercentage;
-
-           /*  var itemDiscount = await _context.ItemDiscounts
-                .FirstOrDefaultAsync(x => x.DiscountId == discount.Id && x.IsAppliedOnItem == false);
-
-            int id = itemDiscount.DiscountId;
-
-            decimal discountPercentage = _context.Discounts.Where(x => x.Id == id).First().DiscountPercentage; */
-
-           // var list = await _context.Items.Where(x => x.Id == itemDiscount.ItemId).ToListAsync();
             var list = await _context.Items.Where(x => ids1.Contains(x.Id)).ToListAsync();
+
+            if (list.Any())
+            {
 
             foreach (var item in list)
             {
                 var discountPercentage2 = await _context.ItemDiscounts
-                .Where(x => ids.Contains(x.DiscountId) && x.ItemId == item.Id).FirstOrDefaultAsync();
+                    .Where(x => x.DiscountId == discount.Id && x.ItemId == item.Id).FirstOrDefaultAsync();
 
-                decimal discountPercentage1 = _context.ItemDiscounts
-                .Where(x => ids.Contains(x.DiscountId) && x.ItemId == item.Id).First().Discount.DiscountPercentage;
+                decimal discountPercentage1 = discountPercentage2.Discount.DiscountPercentage;
+
+                var discountAmount = (discountPercentage1 / 100) * item.Price;
+                
+                if (discountAmount > 0)
+                {
+                    if (item.DiscountedPrice == null)
+                    {
+                        item.DiscountedPrice = item.Price - discountAmount;
+                        discountPercentage2.IsAppliedOnItem = true;
+                        item.HasDiscountsApplied = true;
+                    }
+
+                    else if (item.DiscountedPrice != null)
+                    {
+                        item.DiscountedPrice = item.DiscountedPrice - discountAmount;
+                        discountPercentage2.IsAppliedOnItem = true;
+                    }   
+                }
+                _context.Entry(item).State = EntityState.Modified;        
+            }
+            await _context.SaveChangesAsync();
+            }
+        }
+        public async Task ResetItemDiscountedPrice(Discount discount)
+        {     
+            var itemDiscounts = await _context.ItemDiscounts.Include(X => X.Discount)
+                .Where(x => x.DiscountId == discount.Id).ToListAsync();
+
+            IEnumerable<int> ids1 = itemDiscounts.Select(x => x.ItemId);
+
+            var list = await _context.Items.Where(x => ids1.Contains(x.Id)).ToListAsync();
+
+            if (list.Any())
+            {
+                foreach (var item in list)
+                {
+                    var discountPercentage2 = await _context.ItemDiscounts
+                        .Where(x => x.DiscountId == discount.Id && x.ItemId == item.Id).FirstOrDefaultAsync();
+
+                    decimal discountPercentage1 = discountPercentage2.Discount.DiscountPercentage;
 
                     var discountAmount = (discountPercentage1 / 100) * item.Price;
                 
-                    if (discountAmount > 0)
-                    {
-                  //  item.DiscountedPrice += discountAmount;
+                    if  (discountAmount > 0)
+                        {          
+                            item.DiscountedPrice = item.DiscountedPrice + discountAmount;
+                            discountPercentage2.IsAppliedOnItem = false;
 
-                        if (item.DiscountedPrice == null)
-                        {
-                            item.DiscountedPrice = item.Price - discountAmount;
-                            discountPercentage2.IsAppliedOnItem = true;
-                            item.HasDiscountsApplied = true;
+                            if (item.DiscountedPrice == item.Price)
+                            {
+                                item.DiscountedPrice = null;
+                                item.HasDiscountsApplied = null;
+                            }
                         }
 
-                        else if (item.DiscountedPrice != null)
-                        {
-                            item.DiscountedPrice = item.DiscountedPrice - discountAmount;
-                            discountPercentage2.IsAppliedOnItem = true;
-
-                        }   
+                    _context.Entry(item).State = EntityState.Modified;        
                 }
-               
-                _context.Entry(item).State = EntityState.Modified;        
             }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<decimal> DiscountSum(Item item)
+        {
+            decimal discountsum = await _context.ItemDiscounts.Include(X => X.Discount)
+                .Where(x => x.ItemId == item.Id).SumAsync(x => x.Discount.DiscountPercentage);
+            
+            return discountsum;
+        }
+
+        public async Task DeleteDiscount(Discount discount)
+        {
+            _context.Discounts.Remove(discount);
+
+            await ResetItemDiscountedPrice(discount);
 
             await _context.SaveChangesAsync();
         }
 
-          public async Task UpdateItemWithDiscount(Item item)
-        {     
-            var itemDiscounts = await _context.ItemDiscounts
-                .Where(x => x.ItemId == item.Id && x.IsAppliedOnItem == false).ToListAsync();
+        public async Task ResetItemDiscountedPriceDueToDiscountExpiry(IEnumerable<Item> items)
+        {
+            IEnumerable<int> ids = items.Select(x => x.Id);
 
-            IEnumerable<int> ids = itemDiscounts.Select(x => x.DiscountId);
+            var itemDiscounts = await _context.ItemDiscounts.Include(X => X.Discount).Include(x => x.Item)
+                .Where(x => ids.Contains(x.ItemId)).ToListAsync();
 
-            decimal discountPercentage = _context.Discounts
-                .Where(x => ids.Contains(x.Id)).First().DiscountPercentage;
+            IEnumerable<int> ids1 = itemDiscounts.Select(x => x.DiscountId);
 
-            if (itemDiscounts.Any())
+            var discounts = await _context.Discounts.Where(x => ids1.Contains(x.Id)).ToListAsync();
+
+            if (discounts.Any())
+
+            foreach (var discount in discounts)
             {
-                foreach (var itemDiscount in itemDiscounts)
+                if (discount.EndDate < DateTime.Now.AddDays(-1))
                 {
-                    var discountAmount = (discountPercentage / 100) * item.Price;
-
-                    if (discountAmount > 0)
-                    {
-                        item.DiscountedPrice = item.Price - discountAmount;
-                        itemDiscount.IsAppliedOnItem = true;
-                    }
-
+                    await ResetItemDiscountedPrice(discount);
                 }
-                item.HasDiscountsApplied = true;
+            }             
+        }
+        public async Task<List<Discount>> GetAllDiscounts(QueryParameters queryParameters)
+        {
+            IQueryable<Discount> discounts = _context.Discounts.AsQueryable().OrderBy(x => x.Name);
+
+            if (queryParameters.HasQuery())
+            {
+                discounts = discounts.Where(t => t.Name.Contains(queryParameters.Query));
             }
 
-            _context.Entry(item).State = EntityState.Modified;        
+            discounts = discounts.Skip(queryParameters.PageCount * (queryParameters.Page - 1))
+                .Take(queryParameters.PageCount);
+
+            return await discounts.ToListAsync();
         }
 
+        public async Task<int> GetCountForDiscounts()
+        {
+            return await _context.Discounts.CountAsync();
+        }
+
+        public async Task<List<Item>> GetAllItemsForDiscounts()
+        {
+            return await _context.Items.OrderBy(x => x.Name).ToListAsync();
+        }
+
+        public async Task UpdateItemWithCategoryDiscount(Discount discount)
+        {    
+            var categoryDiscounts = await _context.CategoryDiscounts.Include(X => X.Discount)
+                .Where(x => x.DiscountId == discount.Id).ToListAsync();
+
+            IEnumerable<int> ids3 = categoryDiscounts.Select(x => x.CategoryId);
+
+            var categories = await _context.Categories.Where(x => ids3.Contains(x.Id)).ToListAsync();
+
+            IEnumerable<int> ids4 = categories.Select(x => x.Id);
+
+            var itemcategories = await _context.ItemCategories.Where(x => ids4.Contains(x.CategoryId)).ToListAsync();
+            
+            IEnumerable<int> ids5 = itemcategories.Select(x => x.ItemId);
+
+            var list = await _context.Items
+                .Where(x => ids5.Contains(x.Id)).ToListAsync();
+
+            if (list.Any())
+            {
+
+            foreach (var item in list)
+            {
+                var categoryPercentage2 = await _context.CategoryDiscounts.Include(x => x.Discount)
+                    .Where(x => x.DiscountId == discount.Id).FirstOrDefaultAsync();
+
+                decimal discountPercentage1 = categoryPercentage2.Discount.DiscountPercentage;
+
+                var discountAmount = (discountPercentage1 / 100) * item.Price;
+                
+                if (discountAmount > 0)
+                {
+                    if (item.DiscountedPrice == null)
+                    {
+                        item.DiscountedPrice = item.Price - discountAmount;
+                        item.HasDiscountsApplied = true;
+                    }
+
+                    else if (item.DiscountedPrice != null)
+                    {
+                        item.DiscountedPrice = item.DiscountedPrice - discountAmount;
+                    }   
+                }
+                _context.Entry(item).State = EntityState.Modified;        
+            }
+            await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task ResetCategoryDiscountedPrice(Discount discount)
+        {   
+            var categoryDiscounts = await _context.CategoryDiscounts.Include(X => X.Discount)
+                .Where(x => x.DiscountId == discount.Id).ToListAsync();
+
+            IEnumerable<int> ids3 = categoryDiscounts.Select(x => x.CategoryId);
+
+            var categories = await _context.Categories.Where(x => ids3.Contains(x.Id)).ToListAsync();
+
+            IEnumerable<int> ids4 = categories.Select(x => x.Id);
+
+            var itemcategories = await _context.ItemCategories.Where(x => ids4.Contains(x.CategoryId)).ToListAsync();
+            
+            IEnumerable<int> ids5 = itemcategories.Select(x => x.ItemId);
+
+            var list = await _context.Items
+                .Where(x => ids5.Contains(x.Id)).ToListAsync();
+
+            if (list.Any())
+            {
+                foreach (var item in list)
+                {
+                    var categoryPercentage2 = await _context.CategoryDiscounts.Include(x => x.Discount)
+                    .Where(x => x.DiscountId == discount.Id).FirstOrDefaultAsync();
+
+                    decimal discountPercentage1 = categoryPercentage2.Discount.DiscountPercentage;
+
+                    var discountAmount = (discountPercentage1 / 100) * item.Price;
+                
+                    if  (discountAmount > 0)
+                        {          
+                            item.DiscountedPrice = item.DiscountedPrice + discountAmount;
+
+                            if (item.DiscountedPrice == item.Price)
+                            {
+                                item.DiscountedPrice = null;
+                                item.HasDiscountsApplied = null;
+                            }
+                        }
+
+                    _context.Entry(item).State = EntityState.Modified;        
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+       
+
+        public async Task ResetCategoryDiscountedPriceDueToDiscountExpiry(IEnumerable<Item> items)
+        {
+            IEnumerable<int> ids = items.Select(x => x.Id);
+
+            var itemDiscounts = await _context.ItemDiscounts.Include(X => X.Discount).Include(x => x.Item)
+                .Where(x => ids.Contains(x.ItemId)).ToListAsync();
+
+            IEnumerable<int> ids1 = itemDiscounts.Select(x => x.DiscountId);
+
+            var discounts = await _context.Discounts.Where(x => ids1.Contains(x.Id)).ToListAsync();
+
+            if (discounts.Any())
+
+            foreach (var discount in discounts)
+            {
+                if (discount.EndDate < DateTime.Now.AddDays(-1))
+                {
+                    await ResetItemDiscountedPrice(discount);
+                }
+            }             
+        }
+      
+    
     }
 }
 

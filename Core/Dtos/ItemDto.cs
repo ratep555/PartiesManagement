@@ -14,6 +14,11 @@ namespace Core.Dtos
         public int? RateSum { get; set; }
         public int? Count { get; set; }
         public double? AverageVote { get; set; }
+        public bool? NotReturnable { get; set; }
+        public bool? HasDiscountsApplied { get; set; }
+        public decimal? DiscountedPrice { get; set; }
+        public decimal DiscountSum { get; set; }
+
 
         public List<CategoryDto> Categories { get; set; }
         public List<ManufacturerDto> Manufacturers { get; set; }        

@@ -35,7 +35,16 @@
                             </div>
                         </div>
                     </td>
-                    <td class="align-middle"><strong>{{item.price | currency}}</strong></td>
+                    <ng-container>
+                        <td class="align-middle" *ngIf="item?.discountedPrice !== null; else elseBlock">
+                            <strong>{{item.discountedPrice | currency}}</strong>
+                        </td>
+                        <ng-template #elseBlock>
+                            <td class="align-middle">
+                                <strong>{{item.price | currency}}</strong>
+                            </td>
+                        </ng-template>
+                    </ng-container>
                     <td class="align-middle">
                         <div class="d-flex align-items-center"
                         [class.justify-content-center]="!isBasket">
@@ -48,8 +57,19 @@
                                 style="cursor: pointer; font-size: 2em;"></i>
                         </div>
                     </td>
-                    <td class="align-middle">
-                        <strong>{{item.price * item.quantity | currency}}</strong></td>
+                    <ng-container>
+                        <td *ngIf="item?.discountedPrice !== null; else elseBlock" class="align-middle">
+                            <strong>{{item.discountedPrice * item.quantity | currency}}</strong>
+                        </td>
+                        <ng-template #elseBlock>
+                            <td class="align-middle">
+                                <strong>{{item.price * item.quantity | currency}}</strong>
+                            </td>
+                        </ng-template>
+
+                    </ng-container>
+
+                    
                     <td class="align-middle text-center">
                         <a class="text-danger">
                         <button *ngIf="isBasket" (click)="removingItemFromBasket(item)" class="btn btn-outline-danger">

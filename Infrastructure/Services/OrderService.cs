@@ -74,9 +74,15 @@ namespace Infrastructure.Services
                 var basketItemOrdered = new BasketItemOrdered(productItem.Id, productItem.Name);
 
                 var orderItem = new OrderItem(basketItemOrdered, productItem.Price, item.Quantity, productItem.Picture);
+               
+                if (productItem.DiscountedPrice != null)
+                {
+                    orderItem.Price = (decimal)productItem.DiscountedPrice;
+                }
+
                 orderItems.Add(orderItem);
 
-                productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
+               // productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
 
                 await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
             }
@@ -87,7 +93,7 @@ namespace Infrastructure.Services
  
             var subtotal = orderItems.Sum(item => item.Price * item.Quantity);
 
-            var existingOrder = await _unitOfWork.OrderRepository.FindOrderByPaymentIntentId(basket.PaymentIntentId);
+          //  var existingOrder = await _unitOfWork.OrderRepository.FindOrderByPaymentIntentId(basket.PaymentIntentId);
 
             var customerOrder = new CustomerOrder(orderItems, buyerEmail, shippingAddress, shippingOption,
             paymentOption, subtotal, basket.PaymentIntentId);
@@ -107,8 +113,7 @@ namespace Infrastructure.Services
             {
                 var productItem = await _unitOfWork.ItemRepository.GetItemById(item.Id);
 
-                if (productItem.StockQuantity < item.Quantity) return true;              
-
+                if (productItem.StockQuantity < 0) return true;              
             }
             return false;
         }
@@ -127,9 +132,15 @@ namespace Infrastructure.Services
                 var basketItemOrdered = new BasketItemOrdered(productItem.Id, productItem.Name);
 
                 var orderItem = new OrderItem(basketItemOrdered, productItem.Price, item.Quantity, productItem.Picture);
+               
+                if (productItem.DiscountedPrice != null)
+                {
+                    orderItem.Price = (decimal)productItem.DiscountedPrice;
+                }                
+                
                 orderItems.Add(orderItem);
 
-                productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
+              //  productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
 
                 await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
 

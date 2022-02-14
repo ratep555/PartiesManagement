@@ -13,6 +13,9 @@ export interface Item {
     userVote: number;
     count: number;
     stockQuantity?: number;
+    discountedPrice?: number;
+    hasDiscountsApplied?: boolean;
+    discountSum: number;
     discounts: Discount[];
 }
 

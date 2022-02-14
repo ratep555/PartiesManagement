@@ -29,7 +29,7 @@ export class BasketService {
         map((basket: Basket) => {
           this.basketBSubject.next(basket);
           this.shipping = basket.shippingPrice;
-          this.calculateBasketSum();
+          this.calculateBasketSum1();
           console.log(basket);
         })
       );
@@ -38,7 +38,7 @@ export class BasketService {
   editingBasket(basket: Basket) {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: Basket) => {
       this.basketBSubject.next(response);
-      this.calculateBasketSum();
+      this.calculateBasketSum1();
     }, error => {
       console.log(error);
     });
@@ -47,7 +47,7 @@ export class BasketService {
   editingBasket1(basket: Basket) {
     return this.http.post(this.baseUrl + 'basket', basket).subscribe((response: Basket) => {
       this.basketBSubject.next(response);
-      this.calculateBasketSum();
+      this.calculateBasketSum1();
     }, error => {
       console.log(error);
     });
@@ -115,7 +115,7 @@ export class BasketService {
     const basket = this.gettingValueOfBasket();
     basket.shippingOptionId = shippingOption.id;
     basket.shippingPrice = shippingOption.price;
-    this.calculateBasketSum();
+    this.calculateBasketSum1();
     this.editingBasket(basket);
   }
 
@@ -171,8 +171,8 @@ export class BasketService {
       price: item.price,
       picture: item.picture,
       stockQuantity: item.stockQuantity,
+      discountedPrice: item.discountedPrice,
       quantity
-
     };
   }
 
@@ -183,6 +183,24 @@ export class BasketService {
     const subtotal = basket.basketItems.reduce((a, b) => (b.price * b.quantity) + a, 0);
     const total = subtotal + shipping;
     this.basketSumBSubject.next({shipping, total, subtotal});
+  }
+
+    private calculateBasketSum1() {
+    const basket = this.gettingValueOfBasket();
+    const shipping = this.shipping;
+    if (basket.basketItems.some(x => x.discountedPrice !== null)) {
+      const discounttotal = basket.basketItems.filter(x => x.discountedPrice !== null);
+      const regulartotal = basket.basketItems.filter(x => x.discountedPrice === null);
+      const discounttotal1 = discounttotal.reduce((a, b) => (b.discountedPrice * b.quantity) + a, 0);
+      const regulartotal1 = regulartotal.reduce((a, b) => (b.price * b.quantity) + a, 0);
+      const subtotal = discounttotal1 + regulartotal1;
+      const total = subtotal + shipping;
+      this.basketSumBSubject.next({shipping, total, subtotal});
+    } else {
+      const subtotal = basket.basketItems.reduce((a, b) => (b.price * b.quantity) + a, 0);
+      const total = subtotal + shipping;
+      this.basketSumBSubject.next({shipping, total, subtotal});
+    }
   }
 }
 

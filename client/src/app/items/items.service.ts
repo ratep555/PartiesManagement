@@ -120,8 +120,8 @@ export class ItemsService {
 
   private BuildFormData1(item: ItemEdit): FormData {
     const formData = new FormData();
-      formData.append('id', JSON.stringify(item.id));
-    
+    formData.append('id', JSON.stringify(item.id));
+
     formData.append('price', JSON.stringify(item.price));
     if (item.name){
     formData.append('name', item.name);

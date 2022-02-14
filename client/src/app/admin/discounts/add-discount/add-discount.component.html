@@ -1,0 +1,104 @@
+<div class="container" style="margin-top: 100px; margin-bottom: 100px">
+    <div class="d-flex justify-content-center mt-5">
+      <div class="col-6">
+        <form
+          [formGroup]="discountForm"
+          (ngSubmit)="discountForm.valid && onSubmit()"
+        >
+          <h2 class="kiki text-center text-primary">Add Discount</h2>
+          <app-text-input
+            [formControl]="discountForm.controls['name']"
+            [label]="'Discount Name'"
+          ></app-text-input>
+          <app-text-input
+            [formControl]="discountForm.controls['discountPercentage']"
+            [label]="'Percentage'"
+          ></app-text-input>
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input
+                type="text"
+                formControlName="startDate"
+                placeholder="Starts"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{
+                  containerClass: 'theme-green',
+                  dateInputFormat: 'DD.MM.YYYY  HH:mm'
+                }"
+              />
+            </div>
+            <span
+              style="font-size: 14px"
+              class="text-danger ml-3"
+              *ngIf="
+                discountForm.get('startDate').invalid &&
+                discountForm.get('startDate').touched &&
+                discountForm.get('startDate').errors[
+                  'required'
+                ]
+              "
+            >
+              Please select start time
+            </span>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <input
+                type="text"
+                formControlName="endDate"
+                placeholder="Ends"
+                class="form-control"
+                bsDatepicker
+                [bsConfig]="{
+                  containerClass: 'theme-green',
+                  dateInputFormat: 'DD.MM.YYYY  HH:mm'
+                }"
+              />
+            </div>
+            <span
+              style="font-size: 14px"
+              class="text-danger ml-3"
+              *ngIf="
+                discountForm.get('endDate').invalid &&
+                discountForm.get('endDate').touched &&
+                discountForm.get('endDate').errors[
+                  'required'
+                ]
+              "
+            >
+              Please select end time
+            </span>
+          </div>
+
+          <app-text-input
+            [formControl]="discountForm.controls['minimumOrderValue']"
+            [label]="'Minimum order value'"
+          ></app-text-input>
+
+          <h4>Select Item(s)</h4>
+
+          <app-multiple-selector
+            *ngIf="nonSelectedItems"
+            [NonSelectedItems]="nonSelectedItems"
+            [SelectedItems]="selectedItems"
+          ></app-multiple-selector>
+          <div
+            style="margin-top: 50px; margin-bottom: 40px"
+            class="form-group text-center"
+          >
+            <button
+              [disabled]="!discountForm.valid"
+              class="btn btn-success mr-2"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

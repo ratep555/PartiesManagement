@@ -35,6 +35,8 @@ namespace API.Controllers
             
             var list = await _unitOfWork.ItemRepository.GetAllItems(queryParameters);
 
+            await _unitOfWork.ItemRepository.ResetItemDiscountedPriceDueToDiscountExpiry(list);
+
             var data = _mapper.Map<IEnumerable<ItemDto>>(list);
 
             return Ok(new Pagination<ItemDto>(queryParameters.Page, queryParameters.PageCount, count, data));
@@ -71,6 +73,7 @@ namespace API.Controllers
 
             itemToReturn.AverageVote = averageVote;
             itemToReturn.UserVote = userVote;
+            itemToReturn.DiscountSum = await _unitOfWork.ItemRepository.DiscountSum(item);
 
             return Ok(itemToReturn);
         }
@@ -357,11 +360,11 @@ namespace API.Controllers
                     item.StockQuantity = 0;
                 }
             }
-
             await _unitOfWork.SaveAsync();
 
             return NoContent();               
         }
+
 
         // discounts
         [HttpGet("discount/{id}")]
@@ -403,17 +406,125 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpGet("putget1discount1/{id}")]
+        public async Task<ActionResult<DiscountPutGetDto>> GetDiscountByIdForEditing2(int id)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            var discountToReturn = _mapper.Map<DiscountDto>(discount);
+
+            var itemsSelectedIds = discountToReturn.Items.Select(x => x.Id).ToList();
+
+            var nonSelectedItems = await _unitOfWork.ItemRepository
+                .GetNonSelectedItems(itemsSelectedIds);
+
+            var categoriesSelectedIds = discountToReturn.Categories.Select(x => x.Id).ToList();
+
+            var nonSelectedCategories = await _unitOfWork.ItemRepository
+                .GetNonSelectedCategories(itemsSelectedIds);
+
+            var nonSelectedItemsDto = _mapper.Map<IEnumerable<ItemDto>>
+                (nonSelectedItems).OrderBy(x => x.Name);
+
+            var nonSelectedCategoriesDto = _mapper.Map<IEnumerable<CategoryDto>>
+                (nonSelectedCategories).OrderBy(x => x.Name);
+
+            var response = new DiscountPutGetDto();
+
+            response.Discount = discountToReturn;
+            response.SelectedItems = discountToReturn.Items.OrderBy(x => x.Name);
+            response.NonSelectedItems = nonSelectedItemsDto;
+            response.SelectedCategories = discountToReturn.Categories.OrderBy(x => x.Name);
+            response.NonSelectedCategories = nonSelectedCategoriesDto;
+
+            return response;
+        }
+
         [HttpPost("discountpost")]
-        public async Task<ActionResult<DiscountDto>> CreateDiscount([FromBody] DiscountCreateEditDto discountDto)
+        public async Task<ActionResult> CreateDiscount([FromBody] DiscountCreateEditDto discountDto)
         {
             var discount = _mapper.Map<Discount>(discountDto);
 
             await _unitOfWork.ItemRepository.AddDiscount(discount);
 
             await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
+            await _unitOfWork.ItemRepository.UpdateItemWithCategoryDiscount(discount);
 
             return Ok();
+        }
 
+        [HttpPut("discountput/{id}")]
+        public async Task<ActionResult> UpdateDiscount(int id, [FromBody] DiscountCreateEditDto discountDto)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            await _unitOfWork.ItemRepository.ResetItemDiscountedPrice(discount);
+
+            discount = _mapper.Map(discountDto, discount);
+
+            await _unitOfWork.ItemRepository.UpdateDiscount(discount);
+
+            await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
+
+            return NoContent();
+        }
+
+        [HttpPut("discountput1/{id}")]
+        public async Task<ActionResult> UpdateDiscount1(int id, [FromBody] DiscountCreateEditDto discountDto)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            await _unitOfWork.ItemRepository.ResetItemDiscountedPrice(discount);
+            await _unitOfWork.ItemRepository.ResetCategoryDiscountedPrice(discount);
+
+            discount = _mapper.Map(discountDto, discount);
+
+            await _unitOfWork.ItemRepository.UpdateDiscount(discount);
+
+            await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
+
+            await _unitOfWork.ItemRepository.UpdateItemWithCategoryDiscount(discount);
+
+            return NoContent();
+        }
+
+        [HttpDelete("discountdelete/{id}")]
+        public async Task<ActionResult> DeleteDiscount(int id)
+        {
+            var discount = await _unitOfWork.ItemRepository.FindDiscountById(id);
+
+            if (discount == null) return NotFound(new ServerResponse(404));
+
+            await _unitOfWork.ItemRepository.DeleteDiscount(discount);
+
+            return NoContent();
+        }
+
+        [HttpGet("discountlist")]
+        public async Task<ActionResult<Pagination<DiscountDto>>> GetAllDiscounts(
+            [FromQuery] QueryParameters queryParameters)
+        {
+            var count = await _unitOfWork.ItemRepository.GetCountForDiscounts();
+            
+            var list = await _unitOfWork.ItemRepository.GetAllDiscounts(queryParameters);
+
+            var data = _mapper.Map<IEnumerable<DiscountDto>>(list);
+
+            return Ok(new Pagination<DiscountDto>(queryParameters.Page, queryParameters.PageCount, count, data));
+        }
+
+        [HttpGet("discounts/items")]  // možeš u originalu staviti neki dto da ti ne vraća koješta itemdto
+        public async Task<ActionResult<List<ItemDto>>> GetAllItemsForDiscounts()
+        {
+            var list = await _unitOfWork.ItemRepository.GetAllItemsForDiscounts();
+
+            return _mapper.Map<List<ItemDto>>(list);
         }
     }
 }

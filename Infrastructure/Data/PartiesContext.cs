@@ -70,6 +70,9 @@ namespace Infrastructure.Data
 
             modelBuilder.Entity<ItemDiscount>()
                 .HasKey(x => new { x.ItemId, x.DiscountId }); 
+
+            modelBuilder.Entity<CategoryDiscount>()
+                .HasKey(x => new { x.CategoryId, x.DiscountId }); 
             
             modelBuilder.Entity<Rating>()
                 .HasOne(s => s.Customer)
@@ -85,6 +88,7 @@ namespace Infrastructure.Data
             public DbSet<Item> Items { get; set; }
             public DbSet<ItemCategory> ItemCategories { get; set; }
             public DbSet<ItemDiscount> ItemDiscounts { get; set; }
+            public DbSet<CategoryDiscount> CategoryDiscounts { get; set; }
             public DbSet<ItemManufacturer> ItemManufacturers { get; set; }
           //  public DbSet<ItemReview> ItemReviews { get; set; }
             public DbSet<ItemTag> ItemTags { get; set; }

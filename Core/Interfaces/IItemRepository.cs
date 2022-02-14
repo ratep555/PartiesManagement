@@ -43,7 +43,18 @@ namespace Core.Interfaces
         Task<Discount> FindDiscountById(int id);
         Task<List<Item>> GetNonSelectedItems(List<int> ids);
         Task AddDiscount(Discount discount);
+        Task UpdateDiscount(Discount discount);
         Task UpdateItemWithDiscount(Discount discount);
+        Task ResetItemDiscountedPrice(Discount discount);
+        Task<decimal> DiscountSum(Item item);
+        Task DeleteDiscount(Discount discount);
+        Task ResetItemDiscountedPriceDueToDiscountExpiry(IEnumerable<Item> items);
+        Task<List<Discount>> GetAllDiscounts(QueryParameters queryParameters);
+        Task<int> GetCountForDiscounts();
+        Task<List<Item>> GetAllItemsForDiscounts();
+        Task UpdateItemWithCategoryDiscount(Discount discount);
+        Task ResetCategoryDiscountedPrice(Discount discount);
+
 
     }
 }

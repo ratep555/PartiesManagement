@@ -17,6 +17,7 @@ export interface BasketItem {
     quantity: number;
     picture: string;
     stockQuantity?: number;
+    discountedPrice?: number;
 }
 
 export class BasketClass implements Basket {

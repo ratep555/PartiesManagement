@@ -38,7 +38,7 @@ export class AddItemComponent implements OnInit {
         return  {key: discount.id, value: discount.name} as MultipleSelectorModel;
       });
     });
-  
+
     this.itemsService.getAllManufacturers().subscribe(response => {
       this.nonSelectedManufacturers = response.map(manufacturer => {
         return  {key: manufacturer.id, value: manufacturer.name} as MultipleSelectorModel;

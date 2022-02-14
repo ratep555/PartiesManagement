@@ -8,6 +8,8 @@ namespace Core.Entities
         public int Quantity { get; set; }
         public string Picture { get; set; }
         public int? StockQuantity { get; set; }
+        public decimal? DiscountedPrice { get; set; }
+
 
     }
 }

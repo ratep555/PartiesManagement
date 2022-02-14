@@ -19,7 +19,7 @@ export class ItemComponent implements OnInit {
   addingItemToBasket() {
     this.basketService.addingItemToBasket(this.item);
     this.webshopService.decreaseStockQuantity1(this.item.id, 1).subscribe(() => {
-    })
+    });
   }
 
 }

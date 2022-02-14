@@ -33,7 +33,7 @@ export class BasketReviewComponent implements OnInit {
   }
 
   increaseBasketItemQuantity(item: BasketItem) {
-    if (item.stockQuantity > 2) {
+    if (item.stockQuantity > item.quantity) {
       this.webshopservice.decreaseStockQuantity1(item.id, 1).subscribe(() => {
       });
       this.increase.emit(item);

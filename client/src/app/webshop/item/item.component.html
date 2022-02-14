@@ -1,7 +1,7 @@
 <div class="card border-left-primary shadow h-100 py-2">
     <div class="card image position-relative" style="cursor: pointer;">
         <img src="{{item.picture || './assets/kids.jpg'}}" alt="{{item.name}}" class="img-fluid bg-info">
-        <ng-container *ngIf="item.discounts.length > 0">
+        <ng-container *ngIf="item.hasDiscountsApplied === true">
             <div class="position-absolute bg-primary text-white  px-2 m-2">Sale</div>
         </ng-container>
         <ng-container>

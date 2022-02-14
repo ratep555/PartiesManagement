@@ -2,11 +2,21 @@
 <div class="container mt-5">
   <div class="row" *ngIf="item">
       <div class="col-6">
-          <img src="{{item.picture || './assets/kids.jpg'}}" alt="{{item.name}}" class="img-fluid w-100">
+          <img src="{{item.picture || './assets/kids.jpg'}}" alt="{{item.name}}" class="zagi img-fluid w-100">
       </div>
       <div class="col-6">
-          <h3>{{item.name}}</h3>
-          <p style="font-size: 2em;">{{item.price | number: "1.2-2" }} kn</p>
+        <h3>{{item.name}}</h3>
+        <ng-container>
+          <div id="wrapper" *ngIf="item?.discountedPrice !== null" >
+            <p id="first" style="font-size: 2em;">{{item.price | number: "1.2-2" }} kn</p>
+            <p id="second" style="font-size: 1em;">new price</p>
+            <p id="third" style="font-size: 2em;">{{item.discountedPrice | number: "1.2-2" }} kn</p>
+            <span class="sale">{{item?.discountSum}}%</span>
+          </div>
+          <div *ngIf="item?.discountedPrice === null" >
+            <p style="font-size: 2em;">{{item.price | number: "1.2-2" }} kn</p>
+          </div>
+        </ng-container>
           <ng-container>
             <div *ngIf="item?.stockQuantity > 0; else elseBlock" 
             class="d-flex justify-content-start align-items-center">
@@ -17,7 +27,7 @@
               <button [disabled]="item?.stockQuantity < 1" (click)="addingItemToBasket()" class="btn btn-outline-primary btn-lg ml-4">Add to Cart</button>          
               <p class="pip mt-3" 
               *ngIf="item?.stockQuantity < 3 && item?.stockQuantity > null">
-              {{item.stockQuantity - 1}} item(s) remaining </p>      
+              {{item.stockQuantity}} item(s) remaining </p>      
             </div>
             <ng-template #elseBlock>
               <h3 style="color: red;" class="mt-3" 
@@ -59,6 +69,7 @@
    <div>
     <h4 class="mt-3">Description:</h4>
     <p>{{item?.description}}</p> {{item?.stockQuantity}}
+    <p>{{item?.discountedPrice}}</p>
    </div>
 </div>
 
