@@ -186,15 +186,24 @@ namespace Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderStatus1Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("PaymentIntentId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PaymentOptionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PaymentReport")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PaymentStatus1Id")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -210,7 +219,11 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderStatus1Id");
+
                     b.HasIndex("PaymentOptionId");
+
+                    b.HasIndex("PaymentStatus1Id");
 
                     b.HasIndex("ShippingOptionId");
 
@@ -304,6 +317,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool?>("HasDiscountsApplied")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("Manufacturer1Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -320,6 +336,8 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Manufacturer1Id");
 
                     b.ToTable("Items");
                 });
@@ -405,6 +423,21 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("ItemWarehouses");
                 });
 
+            modelBuilder.Entity("Core.Entities.Like", b =>
+                {
+                    b.Property<int>("ApplicationUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationUserId", "ItemId");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("Core.Entities.Manufacturer", b =>
                 {
                     b.Property<int>("Id")
@@ -418,6 +451,36 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Manufacturers");
+                });
+
+            modelBuilder.Entity("Core.Entities.Manufacturer1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Manufacturers1");
+                });
+
+            modelBuilder.Entity("Core.Entities.Manufacturer1Discount", b =>
+                {
+                    b.Property<int>("Manufacturer1Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Manufacturer1Id", "DiscountId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("ManufacturerDiscounts");
                 });
 
             modelBuilder.Entity("Core.Entities.OrderItem", b =>
@@ -449,6 +512,21 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("Core.Entities.OrderStatus1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderStatus1");
+                });
+
             modelBuilder.Entity("Core.Entities.PaymentOption", b =>
                 {
                     b.Property<int>("Id")
@@ -465,6 +543,21 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentOptions");
+                });
+
+            modelBuilder.Entity("Core.Entities.PaymentStatus1", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentStatuses1");
                 });
 
             modelBuilder.Entity("Core.Entities.Rating", b =>
@@ -683,9 +776,17 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.CustomerOrder", b =>
                 {
+                    b.HasOne("Core.Entities.OrderStatus1", "OrderStatus1")
+                        .WithMany()
+                        .HasForeignKey("OrderStatus1Id");
+
                     b.HasOne("Core.Entities.PaymentOption", "PaymentOption")
                         .WithMany()
                         .HasForeignKey("PaymentOptionId");
+
+                    b.HasOne("Core.Entities.PaymentStatus1", "PaymentStatus1")
+                        .WithMany()
+                        .HasForeignKey("PaymentStatus1Id");
 
                     b.HasOne("Core.Entities.ShippingOption", "ShippingOption")
                         .WithMany()
@@ -723,7 +824,11 @@ namespace Infrastructure.Data.Migrations
                                 .HasForeignKey("CustomerOrderId");
                         });
 
+                    b.Navigation("OrderStatus1");
+
                     b.Navigation("PaymentOption");
+
+                    b.Navigation("PaymentStatus1");
 
                     b.Navigation("ShippingAddress");
 
@@ -747,6 +852,15 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Core.Entities.Item", b =>
+                {
+                    b.HasOne("Core.Entities.Manufacturer1", "Manufacturer1")
+                        .WithMany()
+                        .HasForeignKey("Manufacturer1Id");
+
+                    b.Navigation("Manufacturer1");
                 });
 
             modelBuilder.Entity("Core.Entities.ItemCategory", b =>
@@ -842,6 +956,44 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Core.Entities.Like", b =>
+                {
+                    b.HasOne("Core.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("Core.Entities.Manufacturer1Discount", b =>
+                {
+                    b.HasOne("Core.Entities.Discount", "Discount")
+                        .WithMany("ManufacturerDiscounts")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Manufacturer1", "Manufacturer1")
+                        .WithMany()
+                        .HasForeignKey("Manufacturer1Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
+
+                    b.Navigation("Manufacturer1");
                 });
 
             modelBuilder.Entity("Core.Entities.OrderItem", b =>
@@ -958,6 +1110,8 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("CategoryDiscounts");
 
                     b.Navigation("ItemDiscounts");
+
+                    b.Navigation("ManufacturerDiscounts");
                 });
 
             modelBuilder.Entity("Core.Entities.Identity.ApplicationRole", b =>

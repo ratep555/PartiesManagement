@@ -14,6 +14,11 @@ namespace Core.Dtos
 
         [ModelBinder(BinderType = typeof(TypeBinder<decimal>))]
         public decimal Price { get; set; }
+        
+
+        [ModelBinder(BinderType = typeof(TypeBinder<int?>))]
+        public int? Manufacturer1Id { get; set; }
+
 
         public IFormFile Picture { get; set; }
 

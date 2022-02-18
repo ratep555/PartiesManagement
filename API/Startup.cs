@@ -33,6 +33,21 @@ namespace API
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
 
+            // ovako je ok strukturirano
+           /*  services.AddControllers()
+            .AddNewtonsoftJson(jsonOptions =>
+		    {
+                jsonOptions.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; 
+
+			    jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+		    }); */
+		
+            
+            
+            // string enum converter
+            // options.SerializerSettings.Converters.Add(new StringEnumConverter()),
+
+
             services.AddApplicationServices(_config); 
             services.AddIdentityServices(_config);
  

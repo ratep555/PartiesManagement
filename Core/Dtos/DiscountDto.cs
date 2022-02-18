@@ -21,6 +21,7 @@ namespace Core.Dtos
         public decimal? MinimumOrderValue { get; set; }
         public List<ItemDto> Items { get; set; }
         public List<CategoryDto> Categories { get; set; }
+        public List<Manufacturer1Dto> Manufacturers { get; set; }
 
     }
 }

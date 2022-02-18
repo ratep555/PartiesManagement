@@ -3,10 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { AccountService } from 'src/app/account/account.service';
+import { Category } from 'src/app/shared/models/category';
 import { Discount, DiscountCreateEdit, DiscountEditClass, DiscountPutGet } from 'src/app/shared/models/discount';
 import { Item } from 'src/app/shared/models/item';
+import { Manufacturer1 } from 'src/app/shared/models/manufacturer';
 import { UserParams } from 'src/app/shared/models/myparams';
 import { IPaginationForDiscounts } from 'src/app/shared/models/pagination';
+import { Tag } from 'src/app/shared/models/tag';
 import { User } from 'src/app/shared/models/user';
 import { environment } from 'src/environments/environment';
 
@@ -69,16 +72,29 @@ export class DiscountsService {
   }
 
   updateDiscount1(formData){
-    return this.http.put(this.baseUrl + 'items/discountput/' + formData.id, formData);
+    return this.http.put(this.baseUrl + 'items/discountput1/' + formData.id, formData);
   }
 
   putGetDiscount(id: number): Observable<DiscountPutGet>{
-    return this.http.get<DiscountPutGet>(this.baseUrl + 'items/putget1discount/' + id);
+    return this.http.get<DiscountPutGet>(this.baseUrl + 'items/putget1discount1/' + id);
   }
 
   getAllItems() {
     return this.http.get<Item[]>(this.baseUrl + 'items/discounts/items');
   }
+
+  getAllCategories() {
+    return this.http.get<Category[]>(this.baseUrl + 'items/discounts/categories');
+  }
+
+  getAllManufacturers() {
+    return this.http.get<Manufacturer1[]>(this.baseUrl + 'items/discounts/manufacturers');
+  }
+
+  deleteDiscount(id: number) {
+    return this.http.delete(this.baseUrl + 'items/discountdelete/' + id);
+  }
+
 }
 
 

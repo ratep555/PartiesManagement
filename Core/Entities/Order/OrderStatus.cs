@@ -4,16 +4,25 @@ namespace Core.Entities
 {
     public enum OrderStatus
     {
-        [EnumMember(Value = "Pending")]
-        Pending,
+        [EnumMember(Value = "Pending Payment")]
+        PendingPayment,
 
-        [EnumMember(Value = "Processing")]
-        Processing,
+        [EnumMember(Value = "Received Pament")]
+        ReceivedPayment,
 
-        [EnumMember(Value = "Complete")]
-        Complete,
+        [EnumMember(Value = "Failed Payment")]
+        FailedPayment,
 
-        [EnumMember(Value = "Cancelled")]
-        Cancelled
+        [EnumMember(Value = "Not yet Shipped")]
+        NotYetShipped,
+        
+        [EnumMember(Value = "Shipped")]
+        Shipped,
+
+        [EnumMember(Value = "Delivered")]
+        Delivered
     }
 }
+
+
+

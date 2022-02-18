@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Discount } from 'src/app/shared/models/discount';
 import { UserParams } from 'src/app/shared/models/myparams';
 import { DiscountsService } from './discounts.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-discounts',
@@ -16,7 +18,8 @@ export class DiscountsComponent implements OnInit {
   totalCount: number;
 
   constructor(private discountsService: DiscountsService,
-              private  router: Router) {
+              private  router: Router,
+              private toastr: ToastrService) {
     this.userParams = this.discountsService.getUserParams();
      }
 
@@ -55,6 +58,28 @@ export class DiscountsComponent implements OnInit {
       this.discountsService.setUserParams(this.userParams);
       this.getDiscounts();
     }
+}
+
+onDelete(id: number) {
+  Swal.fire({
+    title: 'Are you sure want to delete this record?',
+    text: 'You will not be able to recover it afterwards!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    confirmButtonColor: '#DD6B55',
+    cancelButtonText: 'No, keep it'
+  }).then((result) => {
+    if (result.value) {
+        this.discountsService.deleteDiscount(id)
+    .subscribe(
+      res => {
+        this.getDiscounts();
+        this.toastr.error('Deleted successfully!');
+      }, err => { console.log(err);
+       });
+  }
+});
 }
 
 }

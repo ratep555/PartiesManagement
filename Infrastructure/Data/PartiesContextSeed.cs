@@ -106,6 +106,18 @@ namespace Infrastructure.Data
                     await context.SaveChangesAsync();
                 } 
 
+                if (!context.Manufacturers1.Any())
+                {
+                    var manufacturers1Data = File.ReadAllText("../Infrastructure/Data/SeedData/manufacturers1.json");
+                    var manufacturers1 = JsonSerializer.Deserialize<List<Manufacturer1>>(manufacturers1Data);
+
+                    foreach (var item in manufacturers1)
+                    {
+                        context.Manufacturers1.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
                 if (!context.ShippingOptions.Any())
                 {
                     var shippingData = File.ReadAllText("../Infrastructure/Data/SeedData/shippingoptions.json");
@@ -126,6 +138,30 @@ namespace Infrastructure.Data
                     foreach (var item in paymentoptions)
                     {
                         context.PaymentOptions.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+                
+                if (!context.PaymentStatuses1.Any())
+                {
+                    var paymentstatusData = File.ReadAllText("../Infrastructure/Data/SeedData/paymentstatuses1.json");
+                    var paymenstatuses = JsonSerializer.Deserialize<List<PaymentStatus1>>(paymentstatusData);
+
+                    foreach (var item in paymenstatuses)
+                    {
+                        context.PaymentStatuses1.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.OrderStatus1.Any())
+                {
+                    var orderstatusData = File.ReadAllText("../Infrastructure/Data/SeedData/orderstatuses1.json");
+                    var orderstatuses = JsonSerializer.Deserialize<List<OrderStatus1>>(orderstatusData);
+
+                    foreach (var item in orderstatuses)
+                    {
+                        context.OrderStatus1.Add(item);
                     }
                     await context.SaveChangesAsync();
                 } 

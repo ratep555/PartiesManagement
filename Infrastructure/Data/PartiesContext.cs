@@ -73,6 +73,12 @@ namespace Infrastructure.Data
 
             modelBuilder.Entity<CategoryDiscount>()
                 .HasKey(x => new { x.CategoryId, x.DiscountId }); 
+
+            modelBuilder.Entity<Manufacturer1Discount>()
+                .HasKey(x => new { x.Manufacturer1Id, x.DiscountId }); 
+
+            modelBuilder.Entity<Like>()
+                .HasKey(x => new { x.ApplicationUserId, x.ItemId }); 
             
             modelBuilder.Entity<Rating>()
                 .HasOne(s => s.Customer)
@@ -93,10 +99,15 @@ namespace Infrastructure.Data
           //  public DbSet<ItemReview> ItemReviews { get; set; }
             public DbSet<ItemTag> ItemTags { get; set; }
             public DbSet<ItemWarehouse> ItemWarehouses { get; set; }
+            public DbSet<Like> Likes { get; set; }
             public DbSet<Manufacturer> Manufacturers { get; set; }
+            public DbSet<Manufacturer1Discount> ManufacturerDiscounts { get; set; }
+            public DbSet<Manufacturer1> Manufacturers1 { get; set; }
             public DbSet<CustomerOrder> CustomerOrders { get; set; }
             public DbSet<OrderItem> OrderItems { get; set; }
             public DbSet<PaymentOption> PaymentOptions { get; set; }
+            public DbSet<PaymentStatus1> PaymentStatuses1 { get; set; }
+            public DbSet<OrderStatus1> OrderStatus1 { get; set; }
             public DbSet<Rating> Ratings { get; set; }
             public DbSet<ShippingOption> ShippingOptions { get; set; }
             public DbSet<Tag> Tags { get; set; }

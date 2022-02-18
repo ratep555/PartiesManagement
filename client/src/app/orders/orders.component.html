@@ -9,6 +9,7 @@
                         <th>Total</th>
                         <th>Payment Status</th>
                         <th>Order Status</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +19,18 @@
                         <td>{{order.getTotal | number: "1.2-2" }} kn</td>
                         <td>{{order.paymentStatus}}</td>
                         <td>{{order.orderStatus}}</td>
+                        <td>
+                            <div class="text-center">
+                                <button
+                                  routerLink="/orders/editorder1/{{ order.id }}"
+                                  type="button"
+                                  class="btn btn-success d-inline mr-3"
+                                >
+                                  <i class="fa fa-ticket"></i>
+                                  Edit
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>

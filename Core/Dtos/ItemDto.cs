@@ -18,6 +18,9 @@ namespace Core.Dtos
         public bool? HasDiscountsApplied { get; set; }
         public decimal? DiscountedPrice { get; set; }
         public decimal DiscountSum { get; set; }
+        public int? LikesCount { get; set; }
+        public int? Manufacturer1Id { get; set; }
+
 
 
         public List<CategoryDto> Categories { get; set; }

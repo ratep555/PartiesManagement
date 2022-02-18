@@ -14,6 +14,7 @@ import { ItemsService } from '../items.service';
 export class EditItemComponent implements OnInit {
   model: Item;
   itemForm: FormGroup;
+  manufacturerList = [];
   nonSelectedCategories: MultipleSelectorModel[] = [];
   selectedCategories: MultipleSelectorModel[] = [];
   nonSelectedDiscounts: MultipleSelectorModel[] = [];
@@ -31,6 +32,9 @@ export class EditItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params['id'];
+
+    this.itemsService.getManufacturers1()
+    .subscribe(res => this.manufacturerList = res as []);
 
     this.activatedRoute.params.subscribe(params => {
       this.itemsService.putGetItem(params.id).subscribe(putGet => {
@@ -68,6 +72,7 @@ export class EditItemComponent implements OnInit {
       price: ['', [Validators.required]],
       description: ['', [Validators.required,
         Validators.minLength(10), Validators.maxLength(2000)]],
+      manufacturer1Id: [null],
       categoriesIds: [null],
       discountsIds: [null],
       manufacturersIds: [null],

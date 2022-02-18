@@ -36,8 +36,15 @@ namespace API.Controllers
             var list = await _unitOfWork.ItemRepository.GetAllItems(queryParameters);
 
             await _unitOfWork.ItemRepository.ResetItemDiscountedPriceDueToDiscountExpiry(list);
-
+            await _unitOfWork.ItemRepository.ResetCategoryDiscountedPriceDueToDiscountExpiry(list);
+            await _unitOfWork.ItemRepository.ResetManufacturerDiscountedPriceDueToDiscountExpiry(list);
+            
             var data = _mapper.Map<IEnumerable<ItemDto>>(list);
+
+            foreach (var item in data)
+            {
+                item.LikesCount = await _unitOfWork.ItemRepository.GetCountForLikes(item.Id);
+            }
 
             return Ok(new Pagination<ItemDto>(queryParameters.Page, queryParameters.PageCount, count, data));
         }
@@ -80,7 +87,7 @@ namespace API.Controllers
 
        // [Authorize(Policy = "RequireAdminRole")]
         [HttpPost]
-        public async Task<ActionResult<ItemDto>> CreateItem([FromForm] ItemCreateEditDto itemDto)
+        public async Task<ActionResult> CreateItem([FromForm] ItemCreateEditDto itemDto)
         {
             var item = _mapper.Map<Item>(itemDto);
 
@@ -89,11 +96,10 @@ namespace API.Controllers
                 item.Picture = await _fileStorageService.SaveFile(containerName, itemDto.Picture);
             }
 
-            _unitOfWork.ItemRepository.AddItem(item);
+            await _unitOfWork.ItemRepository.AddItem7(item);
+            await _unitOfWork.ItemRepository.UpdateItemWithDiscount7(item);
 
-            if (await _unitOfWork.SaveAsync()) return Ok();
-
-            return BadRequest("Failed to save item");        
+            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -109,11 +115,12 @@ namespace API.Controllers
             {
                 item.Picture = await _fileStorageService.EditFile(containerName, itemDto.Picture, item.Picture);
             }
+            await _unitOfWork.ItemRepository.ResetItemDiscountedPrice7(item);
 
-          //  await _unitOfWork.ItemRepository.UpdateItemWithDiscount(item);
+            await _unitOfWork.ItemRepository.UpdateItem7(item);
+            await _unitOfWork.ItemRepository.UpdateItemWithDiscount7(item);
 
-            await _unitOfWork.SaveAsync(); return NoContent();
-
+            return NoContent();
         }
 
         [HttpGet("categories")]
@@ -423,13 +430,21 @@ namespace API.Controllers
             var categoriesSelectedIds = discountToReturn.Categories.Select(x => x.Id).ToList();
 
             var nonSelectedCategories = await _unitOfWork.ItemRepository
-                .GetNonSelectedCategories(itemsSelectedIds);
+                .GetNonSelectedCategories(categoriesSelectedIds);
+            
+            var manufacturersSelectedIds = discountToReturn.Manufacturers.Select(x => x.Id).ToList();
+
+            var nonSelectedManufacturers = await _unitOfWork.ItemRepository
+                .GetNonSelectedManufacturers1(manufacturersSelectedIds);
 
             var nonSelectedItemsDto = _mapper.Map<IEnumerable<ItemDto>>
                 (nonSelectedItems).OrderBy(x => x.Name);
 
             var nonSelectedCategoriesDto = _mapper.Map<IEnumerable<CategoryDto>>
                 (nonSelectedCategories).OrderBy(x => x.Name);
+
+            var nonSelectedManufacturersDto = _mapper.Map<IEnumerable<Manufacturer1Dto>>
+                (nonSelectedManufacturers).OrderBy(x => x.Name);
 
             var response = new DiscountPutGetDto();
 
@@ -438,6 +453,8 @@ namespace API.Controllers
             response.NonSelectedItems = nonSelectedItemsDto;
             response.SelectedCategories = discountToReturn.Categories.OrderBy(x => x.Name);
             response.NonSelectedCategories = nonSelectedCategoriesDto;
+            response.SelectedManufacturers = discountToReturn.Manufacturers.OrderBy(x => x.Name);
+            response.NonSelectedManufacturers = nonSelectedManufacturersDto;
 
             return response;
         }
@@ -451,6 +468,7 @@ namespace API.Controllers
 
             await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
             await _unitOfWork.ItemRepository.UpdateItemWithCategoryDiscount(discount);
+            await _unitOfWork.ItemRepository.UpdateItemWithManufacturerDiscount(discount);
 
             return Ok();
         }
@@ -472,7 +490,7 @@ namespace API.Controllers
 
             return NoContent();
         }
-
+        // ovo koristiš!
         [HttpPut("discountput1/{id}")]
         public async Task<ActionResult> UpdateDiscount1(int id, [FromBody] DiscountCreateEditDto discountDto)
         {
@@ -482,14 +500,15 @@ namespace API.Controllers
 
             await _unitOfWork.ItemRepository.ResetItemDiscountedPrice(discount);
             await _unitOfWork.ItemRepository.ResetCategoryDiscountedPrice(discount);
+            await _unitOfWork.ItemRepository.ResetManufacturerDiscountedPrice(discount);
 
             discount = _mapper.Map(discountDto, discount);
 
             await _unitOfWork.ItemRepository.UpdateDiscount(discount);
 
             await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
-
             await _unitOfWork.ItemRepository.UpdateItemWithCategoryDiscount(discount);
+            await _unitOfWork.ItemRepository.UpdateItemWithManufacturerDiscount(discount);
 
             return NoContent();
         }
@@ -526,6 +545,74 @@ namespace API.Controllers
 
             return _mapper.Map<List<ItemDto>>(list);
         }
+
+        [HttpGet("discounts/categories")]  
+        public async Task<ActionResult<List<CategoryDto>>> GetAllCategoriesForDiscounts()
+        {
+            var list = await _unitOfWork.ItemRepository.GetAllCategoriesForDiscounts();
+
+            return _mapper.Map<List<CategoryDto>>(list);
+        }
+
+        [HttpGet("discounts/manufacturers")]
+        public async Task<ActionResult<IEnumerable<Manufacturer1Dto>>> GetManufacturers()
+        {
+            var list = await _unitOfWork.ItemRepository.GetManufacturers();
+
+            var manufacturers = _mapper.Map<IEnumerable<Manufacturer1Dto>>(list);
+
+            return Ok(manufacturers);        
+        }
+
+        [HttpGet("discounts/attributedtoitems")]
+        public async Task<ActionResult<List<Manufacturer1Dto>>> GetManufacturersAttributetToItems()
+        {
+            var list = await _unitOfWork.ItemRepository.GetManufacturersAttributedToItems();
+
+            return _mapper.Map<List<Manufacturer1Dto>>(list);
+        }
+
+        [HttpGet("discounts/tagsattributedtoitems")]
+        public async Task<ActionResult<List<TagDto>>> GetTagsAttributetToItems()
+        {
+            var list = await _unitOfWork.ItemRepository.GetTagsAttributedToItems();
+
+            return _mapper.Map<List<TagDto>>(list);
+        }
+
+        [HttpGet("discounts/categoriesattributedtoitems")]
+        public async Task<ActionResult<List<CategoryDto>>> GetCategoriesAttributetToItems()
+        {
+            var list = await _unitOfWork.ItemRepository.GetCategoriesAttributedToItems();
+
+            return _mapper.Map<List<CategoryDto>>(list);
+        }
+
+        // likes
+        [Authorize]
+        [HttpPost("addlike/{id}")]
+        public async Task<ActionResult> AddLike (int id)
+        {
+            var userId = User.GetUserId();
+
+            var item = await _unitOfWork.ItemRepository.GetItemById(id);
+
+            if (item == null) return NotFound(new ServerResponse(404));
+
+            if (await _unitOfWork.ItemRepository.CheckIfUserHasAlreadyLikedThisProduct(userId, id))
+            return BadRequest("You have already liked this product!");
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                await _unitOfWork.ItemRepository.AddLike(userId, id);
+
+                return Ok();
+            }
+
+            return BadRequest("You must be registered/logged in order to like this product!");
+           
+        }
+
     }
 }
 

@@ -10,8 +10,9 @@ namespace Core.Utilities
             get { return _pageCount; }
             set { _pageCount = (value > MaxPageCount) ? MaxPageCount : value; }
         }
-        public int? SpecialtyId { get; set; }
-        public int? OfficeId { get; set; }
+        public int? ManufacturerId { get; set; }
+        public int? TagId { get; set; }
+        public int? CategoryId { get; set; }
         public string Sort { get; set; }
         public int? Status { get; set; }
         private string _query;

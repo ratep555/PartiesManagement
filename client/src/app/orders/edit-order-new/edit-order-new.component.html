@@ -1,0 +1,49 @@
+<div class="container" style="margin-top: 100px; margin-bottom: 100px">
+    <div class="d-flex justify-content-center mt-5">
+      <div class="col-6">
+        <form
+          [formGroup]="orderForm"
+          (ngSubmit)="orderForm.valid && onSubmit()"
+        >
+          <h2 class="kiki text-center text-primary">Edit Order</h2>
+         
+         
+          <div class="form-group row">
+            <div class="col-md-12">
+              <select class="form-control" formControlName="orderStatus1Id">
+                <option value="null">--Select Order Status--</option>
+                <option
+                  *ngFor="let order of orderstatusesList"
+                  value="{{ order.id }}"
+                >
+                  {{ order.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          
+
+
+         
+
+
+          
+
+          
+          <div
+            style="margin-top: 50px; margin-bottom: 40px"
+            class="form-group text-center"
+          >
+            <button
+              [disabled]="!orderForm.valid"
+              class="btn btn-success mr-2"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

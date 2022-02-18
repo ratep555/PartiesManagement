@@ -36,6 +36,32 @@
     transform: translateX(20px);
 }
 
+#wrapper {
+    overflow: hidden;
+}
+
+#first {
+    float:left;
+    margin-top: 16px;
+}
+
+#second {
+    float:left;
+    margin-top: 16px;
+    margin-left: 75px;
+}
+
+#third {
+    float:left;
+}
+
+
+
+
+
+
+
+
 
 
 

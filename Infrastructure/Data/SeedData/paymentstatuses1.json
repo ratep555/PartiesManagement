@@ -1,0 +1,14 @@
+[
+    {
+      "Name": "Pending"
+    },
+    {
+      "Name": "Paid"
+    },
+    {
+      "Name": "Voided"
+    },
+    {
+      "Name": "Failed"
+    }
+  ]

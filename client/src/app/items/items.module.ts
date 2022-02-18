@@ -10,6 +10,7 @@ import { AddItemFelipeComponent } from './add-item-felipe/add-item-felipe.compon
 import { EditItemFelipeComponent } from './edit-item-felipe/edit-item-felipe.component';
 import { FormItemFelipeComponent } from './form-item-felipe/form-item-felipe.component';
 import { InfoItemTabsComponent } from './info-item-tabs/info-item-tabs.component';
+import { EnumAttemptComponent } from './enum-attempt/enum-attempt.component';
 
 
 
@@ -22,7 +23,8 @@ import { InfoItemTabsComponent } from './info-item-tabs/info-item-tabs.component
     AddItemFelipeComponent,
     EditItemFelipeComponent,
     FormItemFelipeComponent,
-    InfoItemTabsComponent
+    InfoItemTabsComponent,
+    EnumAttemptComponent
   ],
   imports: [
     CommonModule,

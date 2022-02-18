@@ -34,6 +34,10 @@ namespace Core.Entities
 
         [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))]
         public List<int> CategoriesIds { get; set; }    
+        
+
+        [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))]
+        public List<int> ManufacturersIds { get; set; }    
     }
 }
 

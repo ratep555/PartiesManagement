@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Category } from '../shared/models/category';
 import { Item } from '../shared/models/item';
+import { Manufacturer1 } from '../shared/models/manufacturer1';
 import { MyParams } from '../shared/models/myparams';
 import { IPaginationForItems, PaginationForItems } from '../shared/models/pagination';
+import { Tag } from '../shared/models/tag';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +19,9 @@ export class WebshopService {
   pagination = new PaginationForItems();
   myParams = new MyParams();
   itemCache = new Map();
+  tags: Tag[] = [];
+  categories: Category[] = [];
+  manufacturers: Manufacturer1[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -30,6 +36,15 @@ export class WebshopService {
       }
     } */
     let params = new HttpParams();
+    if (this.myParams.manufacturerId !== 0) {
+      params = params.append('manufacturerId', this.myParams.manufacturerId.toString());
+    }
+    if (this.myParams.tagId !== 0) {
+      params = params.append('tagId', this.myParams.tagId.toString());
+    }
+    if (this.myParams.categoryId !== 0) {
+      params = params.append('categoryId', this.myParams.categoryId.toString());
+    }
     if (this.myParams.query) {
       params = params.append('query', this.myParams.query);
     }
@@ -85,6 +100,21 @@ export class WebshopService {
     return this.http.put(this.baseUrl + 'items/increase/' + id, {});
   }
 
+  getAllItemManufacturers() {
+    return this.http.get<Manufacturer1[]>(this.baseUrl + 'items/discounts/attributedtoitems');
+  }
+
+  getAllItemTags() {
+    return this.http.get<Tag[]>(this.baseUrl + 'items/discounts/tagsattributedtoitems');
+  }
+
+  getAllItemCategories() {
+    return this.http.get<Category[]>(this.baseUrl + 'items/discounts/categoriesattributedtoitems');
+  }
+
+  addLike(id: number) {
+    return this.http.post(this.baseUrl + 'items/addlike/' + id, {});
+  }
 
 }
 

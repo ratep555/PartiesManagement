@@ -17,6 +17,8 @@ namespace Core.Dtos
         public decimal GetTotal { get; set; }
         public string OrderStatus { get; set; }
         public string PaymentStatus { get; set; }
+        public int? OrderStatus1Id { get; set; }
+
 
         public List<OrderItemDto> OrderItems { get; set; }
 

@@ -49,11 +49,15 @@ namespace API.Helpers
             
             CreateMap<Discount, DiscountDto>()
                 .ForMember(d => d.Items, o => o.MapFrom(MapForItems))
-                .ForMember(d => d.Categories, o => o.MapFrom(MapForCategories1));
+                .ForMember(d => d.Categories, o => o.MapFrom(MapForCategories1))
+                .ForMember(d => d.Manufacturers, o => o.MapFrom(MapForManufacturers));
             
+            CreateMap<OrderEditDto, CustomerOrder>();
+ 
             CreateMap<DiscountCreateEditDto, Discount>()
                 .ForMember(x => x.ItemDiscounts, options => options.MapFrom(MapDiscountItems))
-                .ForMember(x => x.CategoryDiscounts, options => options.MapFrom(MapDiscountCategories));
+                .ForMember(x => x.CategoryDiscounts, options => options.MapFrom(MapDiscountCategories))
+                .ForMember(x => x.ManufacturerDiscounts, options => options.MapFrom(MapDiscountManufacturers));
 
             CreateMap<Item, ItemDto>()
                 .ForMember(d => d.Categories, o => o.MapFrom(MapForCategories))
@@ -76,9 +80,12 @@ namespace API.Helpers
                 .ForMember(x => x.ItemTags, options => options.MapFrom(MapItemTags1));
 
             CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Manufacturer1, Manufacturer1Dto>().ReverseMap();
+            
             // pazi na redoslijed kojim to navodiš, ovo te zezalo, nemoj duplati!
            // CreateMap<Discount, DiscountDto>().ReverseMap();
             CreateMap<Manufacturer, ManufacturerDto>().ReverseMap();
+            CreateMap<OrderStatus1, OrderStatusDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
         }
 
@@ -104,6 +111,19 @@ namespace API.Helpers
             foreach (var id in discountDto.CategoriesIds)
             {
                 result.Add(new CategoryDiscount() { CategoryId = id });
+            }
+            return result;
+        }
+
+        private List<Manufacturer1Discount> MapDiscountManufacturers(DiscountCreateEditDto discountDto, Discount discount)
+        {
+            var result = new List<Manufacturer1Discount>();
+
+            if (discountDto.ManufacturersIds == null) { return result; }
+
+            foreach (var id in discountDto.ManufacturersIds)
+            {
+                result.Add(new Manufacturer1Discount() { Manufacturer1Id = id });
             }
             return result;
         }
@@ -238,6 +258,22 @@ namespace API.Helpers
             }
             return result;
         }
+
+        private List<Manufacturer1Dto> MapForManufacturers(Discount discount, DiscountDto discountDto)
+        {
+            var result = new List<Manufacturer1Dto>();
+
+            if (discount.ManufacturerDiscounts != null)
+            {
+                foreach (var manufacturer in discount.ManufacturerDiscounts)
+                {
+                    result.Add(new Manufacturer1Dto() { Id = manufacturer.Manufacturer1Id, 
+                    Name = manufacturer.Manufacturer1.Name });
+                }
+            }
+            return result;
+        }
+
         private List<CategoryDto> MapForCategories(Item item, ItemDto itemDto)
         {
             var result = new List<CategoryDto>();

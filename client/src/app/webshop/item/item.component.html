@@ -5,33 +5,38 @@
             <div class="position-absolute bg-primary text-white  px-2 m-2">Sale</div>
         </ng-container>
         <ng-container>
-            <div *ngIf="item?.stockQuantity >= 1; else elseBlock" class="d-flex align-items-center justify-content-center hover-overlay">
-                <button (click)="addingItemToBasket()" type="button" class="btn btn-primary mr-2">
+            <div class="d-flex align-items-center justify-content-center hover-overlay">
+                <button [disabled]="item?.stockQuantity < 1" (click)="addingItemToBasket()" type="button" class="btn btn-primary mr-2">
                     <i class="fa fa-shopping-cart"></i>
                 </button>
                 <button routerLink="/webshop/{{item.id}}" type="button" class="btn btn-primary">
                     <i class="fa fa-info-circle"></i></button>
             </div>
-            <ng-template #elseBlock>
-                <div  class="d-flex align-items-center justify-content-center hover-overlay">
-                    <button [disabled]="item?.id !== null" (click)="addingItemToBasket()" type="button" class="btn btn-primary mr-2">
-                        <i class="fa fa-shopping-cart"></i>
-                    </button>
-                    <button routerLink="/webshop/{{item.id}}" type="button" class="btn btn-primary">
-                        <i class="fa fa-info-circle"></i></button>
-                </div>
-            </ng-template>
-
         </ng-container> 
     </div>
     
     <div class="card-body d-flex flex-column">
         <a routerLink="/webshop/{{item.id}}">
-            <h6 class="text-uppercase">{{item.name}}</h6>
+            <h6 class="text-center text-uppercase">{{item.name}}</h6>
         </a>
-        <span class="mb-2">{{item.price | currency}}
+      <!--   <span class="mb-2">{{item.price | currency}}
             <i class="piki fa fa-share-alt text-muted float-right p-1 my-1"></i>
-            <i class="piki fa fa-heart text-muted float-right p-1 my-1 mr-3"></i>
-        </span>
+            <i class="piki fa fa-heart text-muted float-right p-1 my-1 mr-3"></i> 
+            <i class="piki fa fa-thumbs-up fa-2x float-right p-1 my-1 mr-3" style="color:  #0275d8 
+            ;"></i>
+        </span> -->
+        <div id="wrapper">
+        <span *ngIf="item?.discountedPrice === null" id="first">{{item.price | currency}}</span>
+        <span *ngIf="item?.discountedPrice !== null" id="first">{{item.discountedPrice | currency}}</span>
+        <p *ngIf="item?.likesCount > 0" id="second" style="font-size: 1em; font-weight: bold;">{{item.likesCount}}</p>
+        <i (click)="addLike()" class="piki fa fa-thumbs-up 
+            fa-2x float-right p-1 my-1 mr-3" style="color:  #A569BD; cursor: pointer;"></i>
+        
+        </div>
+       <!--  <span>{{item.price | currency}}
+             <i class="piki fa fa-share-alt text-muted float-right p-1 my-1"></i>
+            <i class="piki fa fa-heart text-muted float-right p-1 my-1 mr-3"></i> 
+            <i id="second" class="piki fa fa-thumbs-up fa-2x float-right p-1 my-1 mr-3" style="color:  #0275d8;"></i>
+        </span> -->
     </div>
   </div>

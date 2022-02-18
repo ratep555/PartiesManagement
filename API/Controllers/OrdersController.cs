@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.ErrorHandling;
@@ -249,6 +250,45 @@ namespace API.Controllers
 
             return NoContent();
         } 
+
+       /*  [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, [FromBody] OrderEditDto orderDto)
+        {
+            var order = await _unitOfWork.ItemRepository.GetOrderByIdForEditing(id);
+
+            if (order == null) return BadRequest("Bad request!");
+
+            order.OrderStatus = (OrderStatus) Enum.Parse(typeof(OrderStatus), orderDto.OrderStatus);
+            
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        } */
+
+        [AllowAnonymous]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, [FromBody] OrderEditDto orderDto)
+        {
+             var order = await _unitOfWork.ItemRepository.GetOrderByIdForEditing(id);
+
+            if (order == null) return BadRequest("Bad request!");  
+
+            order.OrderStatus1Id = orderDto.OrderStatus1Id;
+
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("orderstatuses")]
+        public async Task<ActionResult<List<OrderStatusDto>>> GetAllOrderStatuses()
+        {
+            var list = await _unitOfWork.ItemRepository.GetAllOrderStatuses();
+
+            return _mapper.Map<List<OrderStatusDto>>(list);
+        }
+
      
     }
 }

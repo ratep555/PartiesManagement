@@ -7,7 +7,7 @@ import { AccountService } from '../account/account.service';
 import { Category } from '../shared/models/category';
 import { Discount } from '../shared/models/discount';
 import { Item, ItemCreateEdit, ItemEdit, ItemPutGet } from '../shared/models/item';
-import { Manufacturer } from '../shared/models/manufacturer';
+import { Manufacturer, Manufacturer1 } from '../shared/models/manufacturer';
 import { MyParams, UserParams } from '../shared/models/myparams';
 import { IPaginationForItems, PaginationForItems } from '../shared/models/pagination';
 import { Tag } from '../shared/models/tag';
@@ -91,6 +91,10 @@ export class ItemsService {
     return this.http.get<Tag[]>(this.baseUrl + 'items/tags');
   }
 
+  getManufacturers1() {
+    return this.http.get<Manufacturer1[]>(this.baseUrl + 'items/discounts/manufacturers');
+  }
+
   private BuildFormData(item: ItemCreateEdit): FormData {
     const formData = new FormData();
     formData.append('price', JSON.stringify(item.price));
@@ -102,6 +106,9 @@ export class ItemsService {
     }
     if (item.picture){
       formData.append('picture', item.picture);
+    }
+    if (item.manufacturer1Id) {
+      formData.append('manufacturer1Id', JSON.stringify(item.manufacturer1Id));
     }
     if (item.categoriesIds) {
       formData.append('categoriesIds', JSON.stringify(item.categoriesIds));
@@ -131,6 +138,9 @@ export class ItemsService {
     }
     if (item.picture){
       formData.append('picture', item.picture);
+    }
+    if (item.manufacturer1Id) {
+      formData.append('manufacturer1Id', JSON.stringify(item.manufacturer1Id));
     }
     if (item.categoriesIds) {
       formData.append('categoriesIds', JSON.stringify(item.categoriesIds));

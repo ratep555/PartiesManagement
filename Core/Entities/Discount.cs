@@ -21,6 +21,7 @@ namespace Core.Entities
         public decimal? MinimumOrderValue { get; set; }
         public ICollection<ItemDiscount> ItemDiscounts { get; set; }
         public ICollection<CategoryDiscount> CategoryDiscounts { get; set; }
+        public ICollection<Manufacturer1Discount> ManufacturerDiscounts { get; set; }
 
     }
 }

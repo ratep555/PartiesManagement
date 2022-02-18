@@ -97,6 +97,8 @@ namespace Infrastructure.Services
 
             var customerOrder = new CustomerOrder(orderItems, buyerEmail, shippingAddress, shippingOption,
             paymentOption, subtotal, basket.PaymentIntentId);
+            
+            customerOrder.PaymentReport = _unitOfWork.ItemRepository.PaymentStatusPending();
 
             _unitOfWork.OrderRepository.CreateCustomerOrder(customerOrder);
 

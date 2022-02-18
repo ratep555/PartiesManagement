@@ -15,6 +15,10 @@ export class AddDiscountComponent implements OnInit {
   model: Discount;
   nonSelectedItems: MultipleSelectorModel[] = [];
   selectedItems: MultipleSelectorModel[] = [];
+  nonSelectedCategories: MultipleSelectorModel[] = [];
+  selectedCategories: MultipleSelectorModel[] = [];
+  nonSelectedManufacturers: MultipleSelectorModel[] = [];
+  selectedManufacturers: MultipleSelectorModel[] = [];
 
   constructor(public discountsService: DiscountsService,
               private router: Router,
@@ -24,6 +28,18 @@ export class AddDiscountComponent implements OnInit {
     this.discountsService.getAllItems().subscribe(response => {
       this.nonSelectedItems = response.map(item => {
         return  {key: item.id, value: item.name} as MultipleSelectorModel;
+      });
+    });
+
+    this.discountsService.getAllCategories().subscribe(response => {
+      this.nonSelectedCategories = response.map(category => {
+        return  {key: category.id, value: category.name} as MultipleSelectorModel;
+      });
+    });
+
+    this.discountsService.getAllManufacturers().subscribe(response => {
+      this.nonSelectedManufacturers = response.map(manufacturer => {
+        return  {key: manufacturer.id, value: manufacturer.name} as MultipleSelectorModel;
       });
     });
 
@@ -38,12 +54,20 @@ export class AddDiscountComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       itemsIds: [null],
+      categoriesIds: [null],
+      manufacturersIds: [null]
     });
   }
 
   onSubmit() {
     const itemsIds = this.selectedItems.map(value => value.key);
     this.discountForm.get('itemsIds').setValue(itemsIds);
+
+    const categoriesIds = this.selectedCategories.map(value => value.key);
+    this.discountForm.get('categoriesIds').setValue(categoriesIds);
+
+    const manufacturersIds = this.selectedManufacturers.map(value => value.key);
+    this.discountForm.get('manufacturersIds').setValue(manufacturersIds);
 
     this.discountsService.createDiscount(this.discountForm.value).subscribe(() => {
       this.router.navigateByUrl('discounts');

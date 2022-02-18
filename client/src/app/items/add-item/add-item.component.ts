@@ -13,6 +13,7 @@ import { ItemsService } from '../items.service';
 export class AddItemComponent implements OnInit {
   itemForm: FormGroup;
   model: Item;
+  manufacturerList = [];
   nonSelectedCategories: MultipleSelectorModel[] = [];
   selectedCategories: MultipleSelectorModel[] = [];
   nonSelectedDiscounts: MultipleSelectorModel[] = [];
@@ -27,6 +28,9 @@ export class AddItemComponent implements OnInit {
               private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.itemsService.getManufacturers1()
+    .subscribe(res => this.manufacturerList = res as []);
+
     this.itemsService.getAllCategories().subscribe(response => {
       this.nonSelectedCategories = response.map(category => {
         return  {key: category.id, value: category.name} as MultipleSelectorModel;
@@ -60,6 +64,7 @@ export class AddItemComponent implements OnInit {
       price: ['', [Validators.required]],
       description: ['', [Validators.required,
         Validators.minLength(10), Validators.maxLength(2000)]],
+      manufacturer1Id: [null],
       categoriesIds: [null],
       manufacturersIds: [null],
       tagsIds: [null],

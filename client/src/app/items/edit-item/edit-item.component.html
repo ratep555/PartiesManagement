@@ -17,6 +17,18 @@
           ></app-text-input>
           <div class="form-group row">
             <div class="col-md-12">
+              <select class="form-control" formControlName="manufacturer1Id">
+                <option value="null">--Select manufacturer--</option>
+                <option
+                  *ngFor="let manufacturer of manufacturerList"
+                  value="{{ manufacturer.id }}">
+                  {{ manufacturer.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
               <textarea
                 type="text"
                 placeholder="Description"

@@ -7,6 +7,7 @@ import { EditItemComponent } from './edit-item/edit-item.component';
 import { InfoItemComponent } from './info-item/info-item.component';
 import { AddItemFelipeComponent } from './add-item-felipe/add-item-felipe.component';
 import { EditItemFelipeComponent } from './edit-item-felipe/edit-item-felipe.component';
+import { EnumAttemptComponent } from './enum-attempt/enum-attempt.component';
 
 const routes: Routes = [
   {path: '', component: ItemsComponent},
@@ -15,6 +16,7 @@ const routes: Routes = [
   {path: 'additemfelipe', component: AddItemFelipeComponent},
   {path: 'edititemfelipe/:id', component: EditItemFelipeComponent},
   {path: 'infoitem/:id', component: InfoItemComponent},
+  {path: 'enum', component: EnumAttemptComponent}
 ];
 
 @NgModule({

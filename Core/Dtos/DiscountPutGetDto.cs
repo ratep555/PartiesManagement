@@ -9,5 +9,7 @@ namespace Core.Dtos
         public IEnumerable<ItemDto> NonSelectedItems { get; set; }
         public IEnumerable<CategoryDto> SelectedCategories { get; set; }
         public IEnumerable<CategoryDto> NonSelectedCategories { get; set; }
+        public IEnumerable<Manufacturer1Dto> NonSelectedManufacturers { get; set; }
+        public IEnumerable<Manufacturer1Dto> SelectedManufacturers { get; set; }
     }
 }

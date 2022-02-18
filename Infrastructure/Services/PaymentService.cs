@@ -101,10 +101,12 @@ namespace Infrastructure.Services
             if (order == null) return null;
 
             order.PaymentStatus = PaymentStatus.PaymentReceived;
+            order.OrderStatus = OrderStatus.ReceivedPayment;
             _unitOfWork.OrderRepository.UpdateCustomerOrder(order);
 
             await _unitOfWork.SaveAsync();
 
-            return order;           }
+            return order;           
+        }
     }
 }

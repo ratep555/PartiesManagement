@@ -18,6 +18,10 @@ export class EditDiscountComponent implements OnInit {
   discountForm: FormGroup;
   nonSelectedItems: MultipleSelectorModel[] = [];
   selectedItems: MultipleSelectorModel[] = [];
+  nonSelectedCategories: MultipleSelectorModel[] = [];
+  selectedCategories: MultipleSelectorModel[] = [];
+  nonSelectedManufacturers: MultipleSelectorModel[] = [];
+  selectedManufacturers: MultipleSelectorModel[] = [];
   id: number;
 
   constructor(private fb: FormBuilder,
@@ -37,6 +41,20 @@ export class EditDiscountComponent implements OnInit {
         });
         this.nonSelectedItems = putGet.nonSelectedItems.map(item => {
           return {key: item.id, value: item.name} as MultipleSelectorModel;
+        });
+
+        this.selectedCategories = putGet.selectedCategories.map(category => {
+          return {key: category.id, value: category.name} as MultipleSelectorModel;
+        });
+        this.nonSelectedCategories = putGet.nonSelectedCategories.map(category => {
+          return {key: category.id, value: category.name} as MultipleSelectorModel;
+        });
+
+        this.selectedManufacturers = putGet.selectedManufacturers.map(manufacturer => {
+          return {key: manufacturer.id, value: manufacturer.name} as MultipleSelectorModel;
+        });
+        this.nonSelectedManufacturers = putGet.nonSelectedManufacturers.map(manufacturer => {
+          return {key: manufacturer.id, value: manufacturer.name} as MultipleSelectorModel;
         });
 
       });
@@ -63,7 +81,9 @@ export class EditDiscountComponent implements OnInit {
         name: [discount.name, Validators.required],
         discountPercentage: [discount.discountPercentage, Validators.required],
         minimumOrderValue: [discount.minimumOrderValue, Validators.required],
-        itemsIds: [discount.items, Validators.required],
+        itemsIds: [discount.items],
+        categoriesIds: [discount.categories],
+        manufacturersIds: [discount.manufacturers],
         startDate: [new Date(discount.startDate), Validators.required],
         endDate: [new Date(discount.endDate), Validators.required],
         }));
@@ -75,6 +95,9 @@ export class EditDiscountComponent implements OnInit {
     const itemsIds = this.selectedItems.map(value => value.key);
     this.discountForm.get('itemsIds').setValue(itemsIds);
 
+    const categoriesIds = this.selectedCategories.map(value => value.key);
+    this.discountForm.get('categoriesIds').setValue(categoriesIds);
+
     this.discountsService.updateDiscount(this.id, this.discountForm.value).subscribe(() => {
     this.router.navigateByUrl('discounts');
         }, error => {
@@ -84,8 +107,12 @@ export class EditDiscountComponent implements OnInit {
 
     recordSubmit(fg: FormGroup) {
       const itemsIds = this.selectedItems.map(value => value.key);
+      const categoriesIds = this.selectedCategories.map(value => value.key);
+      const manufacturersIds = this.selectedManufacturers.map(value => value.key);
 
       fg.get('itemsIds').setValue(itemsIds);
+      fg.get('categoriesIds').setValue(categoriesIds);
+      fg.get('manufacturersIds').setValue(manufacturersIds);
 
       this.discountsService.updateDiscount1(fg.value).subscribe(
           (res: any) => {

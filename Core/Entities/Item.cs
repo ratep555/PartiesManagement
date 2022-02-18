@@ -16,6 +16,10 @@ namespace Core.Entities
         public bool? NotReturnable { get; set; }
         public bool? HasDiscountsApplied { get; set; }
 
+        public int? Manufacturer1Id { get; set; }
+        public Manufacturer1 Manufacturer1 { get; set; }
+
+
 
         public ICollection<ItemCategory> ItemCategories { get; set; }
         public ICollection<ItemManufacturer> ItemManufacturers { get; set; }

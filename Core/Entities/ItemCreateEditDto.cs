@@ -16,6 +16,11 @@ namespace Core.Entities
         public decimal Price { get; set; }
 
         public IFormFile Picture { get; set; }
+        
+
+        [ModelBinder(BinderType = typeof(TypeBinder<int?>))]
+        public int? Manufacturer1Id { get; set; }
+
 
 
         [ModelBinder(BinderType = typeof(TypeBinder<List<int>>))]

@@ -85,6 +85,22 @@
             [NonSelectedItems]="nonSelectedItems"
             [SelectedItems]="selectedItems"
           ></app-multiple-selector>
+
+          <h4>Select Category(ies)</h4>
+
+          <app-multiple-selector
+            *ngIf="nonSelectedCategories"
+            [NonSelectedItems]="nonSelectedCategories"
+            [SelectedItems]="selectedCategories"
+          ></app-multiple-selector>
+
+          <h4>Select Manufacturer(s)</h4>
+
+          <app-multiple-selector
+            *ngIf="nonSelectedManufacturers"
+            [NonSelectedItems]="nonSelectedManufacturers"
+            [SelectedItems]="selectedManufacturers"
+          ></app-multiple-selector>
           <div
             style="margin-top: 50px; margin-bottom: 40px"
             class="form-group text-center"

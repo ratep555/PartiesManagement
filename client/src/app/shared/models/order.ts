@@ -26,4 +26,5 @@ export interface Order {
     getTotal: number;
     orderStatus: string;
     paymentStatus: string;
+    orderStatus1Id?: number;
 }

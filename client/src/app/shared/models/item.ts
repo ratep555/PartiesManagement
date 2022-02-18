@@ -15,6 +15,7 @@ export interface Item {
     stockQuantity?: number;
     discountedPrice?: number;
     hasDiscountsApplied?: boolean;
+    likesCount?: number;
     discountSum: number;
     discounts: Discount[];
 }
@@ -24,6 +25,7 @@ export interface ItemCreateEdit {
     description: string;
     price: number;
     picture: File;
+    manufacturer1Id?: number;
     categoriesIds: number[];
     manufacturersIds: number[];
     tagsIds: number[];
@@ -36,6 +38,7 @@ export interface ItemEdit {
     description: string;
     price: number;
     picture: File;
+    manufacturer1Id?: number;
     categoriesIds: number[];
     manufacturersIds: number[];
     tagsIds: number[];

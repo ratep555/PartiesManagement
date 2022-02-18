@@ -53,7 +53,7 @@ namespace Core.Entities
         public string PhoneNumber { get; set; }
         public bool Shipped { get; set; }
         public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Pending;
-        public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+        public OrderStatus OrderStatus { get; set; } = OrderStatus.PendingPayment;
         
         public int ShippingOptionId { get; set; }
         public ShippingOption ShippingOption { get; set; }
@@ -63,6 +63,15 @@ namespace Core.Entities
 
         public string PaymentIntentId { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
+
+        
+        public int? PaymentStatus1Id { get; set; }
+        public PaymentStatus1 PaymentStatus1 { get; set; }
+
+        public int? OrderStatus1Id { get; set; }
+        public OrderStatus1 OrderStatus1 { get; set; }
+
+        public string PaymentReport { get; set; }
 
         // razmisli treba li ti gettotal, radio si dva dto-a, možda da samo to
         // na klijentu zbrojiš
