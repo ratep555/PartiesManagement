@@ -13,6 +13,9 @@
                         <div class="py-2 text-uppercase">Quantity</div>
                     </th>
                     <th scope="col" class="border-0">
+                        <div class="py-2 text-uppercase">Stock Quantity</div>
+                    </th>
+                    <th scope="col" class="border-0">
                         <div class="py-2 text-uppercase">Total</div>
                     </th>
                     <th *ngIf="isBasket" scope="col" class="border-0">
@@ -56,6 +59,9 @@
                             <i *ngIf="isBasket" (click)="increaseBasketItemQuantity(item)" class="fa fa-plus-circle text-primary mx-2"
                                 style="cursor: pointer; font-size: 2em;"></i>
                         </div>
+                    </td>
+                    <td class="align-middle">
+                        {{item.stockQuantity}}
                     </td>
                     <ng-container>
                         <td *ngIf="item?.discountedPrice !== null; else elseBlock" class="align-middle">

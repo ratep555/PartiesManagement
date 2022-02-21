@@ -1,0 +1,51 @@
+<div class="container" style="margin-top: 100px; margin-bottom: 100px">
+    <div class="d-flex justify-content-center mt-5">
+      <div class="col-6">
+        <form
+          [formGroup]="itemWarehouseForm"
+          (ngSubmit)="itemWarehouseForm.valid && onSubmit()"
+        >
+          <h2 class="kiki text-center text-primary">Add Item Warehouse</h2>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <select class="form-control" formControlName="itemId">
+                <option value="null">--Select Item--</option>
+                <option
+                  *ngFor="let item of itemsList"
+                  value="{{ item.id }}"
+                >
+                  {{ item.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <select class="form-control" formControlName="warehouseId">
+                <option value="null">--Select Warehouse--</option>
+                <option
+                  *ngFor="let warehouse of warehousesList"
+                  value="{{ warehouse.id }}"
+                >
+                  {{ warehouse.warehouseName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div
+            style="margin-top: 50px; margin-bottom: 40px"
+            class="form-group text-center"
+          >
+            <button
+              [disabled]="!itemWarehouseForm.valid"
+              class="btn btn-success mr-2"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

@@ -241,15 +241,6 @@ namespace API.Controllers
 
             return orderDto;
         } 
-        
-        // warehouse attempt
-        [HttpPut("warehouse/{id}")]
-        public async Task<ActionResult> FillingWarehousesQuantity(int id)
-        {
-            await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(id, 6);
-
-            return NoContent();
-        } 
 
        /*  [HttpPut("{id}")]
         public async Task<ActionResult> UpdateOrder(int id, [FromBody] OrderEditDto orderDto)
@@ -289,6 +280,15 @@ namespace API.Controllers
             return _mapper.Map<List<OrderStatusDto>>(list);
         }
 
+
+        // warehouse attempt
+        [HttpPut("warehouse/{id}")]
+        public async Task<ActionResult> FillingWarehousesQuantity(int id)
+        {
+            await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(id, 6);
+
+            return NoContent();
+        } 
      
     }
 }

@@ -84,7 +84,7 @@ namespace Infrastructure.Services
 
                // productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
 
-                await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
+               // await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
             }
 
             var shippingOption = await _unitOfWork.ShippingOptionRepository.GetShippingOptionById(shippingOptionId);
@@ -144,7 +144,7 @@ namespace Infrastructure.Services
 
               //  productItem.StockQuantity = productItem.StockQuantity - item.Quantity;
 
-                await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
+              //  await _unitOfWork.OrderRepository.FillingItemWarehousesQuantity(productItem.Id, item.Quantity);
 
             }
 

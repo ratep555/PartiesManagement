@@ -99,6 +99,9 @@ namespace Infrastructure.Data.Repositories
             return await _context.PaymentOptions.OrderBy(x => x.Name).ToListAsync();
         }
 
+
+        //
+
         public async Task FillingItemWarehousesQuantity(int id, int basketItemQuantity)
         {
             var list = await _context.ItemWarehouses.Where(x => x.ItemId == id).ToListAsync();
@@ -142,10 +145,6 @@ namespace Infrastructure.Data.Repositories
                 model.StockQuantity = stockquantity - sum;
                 await _context.SaveChangesAsync();  */
             }
-
-
-
-
         }
     }
 }

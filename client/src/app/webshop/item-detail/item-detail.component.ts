@@ -4,6 +4,8 @@ import { BasketService } from 'src/app/basket/basket.service';
 import { Item } from 'src/app/shared/models/item';
 import { WebshopService } from '../webshop.service';
 import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -14,13 +16,16 @@ import Swal from 'sweetalert2';
 export class ItemDetailComponent implements OnInit {
   item: Item;
   quantity = 1;
+  result: number;
 
   constructor(private webshopService: WebshopService,
               private activatedRoute: ActivatedRoute,
-              private basketService: BasketService) { }
+              private basketService: BasketService,
+              private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadProduct();
+   // this.result = this.item.stockQuantity - this.quantity;
   }
 
   loadProduct() {
@@ -32,7 +37,20 @@ export class ItemDetailComponent implements OnInit {
   }
 
   addingItemToBasket() {
-    this.basketService.addingItemToBasket(this.item, this.quantity);
+    const result = this.item.stockQuantity - this.quantity;
+    if (result >= 0) {
+      this.basketService.addingItemToBasket(this.item, this.quantity);
+    } else {
+      this.toastr.error('Insuficient quantity!');
+    }
+    this.webshopService.decreaseStockQuantity1(this.item.id, this.quantity).subscribe(() => {
+      this.loadProduct();
+    });
+
+  }
+
+  addingItemToBasket1() {
+    this.basketService.addingItemToBasket1(this.item, this.quantity, this.item.stockQuantity);
     this.webshopService.decreaseStockQuantity1(this.item.id, this.quantity).subscribe(() => {
       this.loadProduct();
     });
@@ -43,16 +61,16 @@ export class ItemDetailComponent implements OnInit {
   }
 
   increaseQuantity() {
-    if (this.item.stockQuantity > 1) {
+    if (this.item.stockQuantity > 1 && this.quantity < this.item.stockQuantity) {
       this.quantity++;
-      this.item.stockQuantity--;
+     // this.item.stockQuantity--;
     }
   }
 
   decreaseQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
-      this.item.stockQuantity++;
+   //   this.item.stockQuantity++;
     }
   }
 

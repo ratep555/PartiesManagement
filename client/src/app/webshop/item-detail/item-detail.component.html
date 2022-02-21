@@ -27,7 +27,7 @@
               <button [disabled]="item?.stockQuantity < 1" (click)="addingItemToBasket()" class="btn btn-outline-primary btn-lg ml-4">Add to Cart</button>          
               <p class="pip mt-3" 
               *ngIf="item?.stockQuantity < 3 && item?.stockQuantity > null">
-              {{item.stockQuantity}} item(s) remaining </p>      
+              {{item?.stockQuantity}} item(s) remaining </p>      
             </div>
             <ng-template #elseBlock>
               <h3 style="color: red;" class="mt-3" 
@@ -60,7 +60,7 @@
               ></app-rating>
             </ng-container>
             <div class="kiki1" *ngFor="let discount of item.discounts">
-              <li>{{discount.name}} {{discount.discountPercentage}} % valid untill {{discount.endDate}}</li>
+              <li>{{discount.name}} {{discount.discountPercentage}} % valid untill {{discount.endDate | date: "dd.MM.yyyy"}}</li>
             </div>
           </div>
     </div>
@@ -70,6 +70,7 @@
     <h4 class="mt-3">Description:</h4>
     <p>{{item?.description}}</p> {{item?.stockQuantity}}
     <p>{{item?.discountedPrice}}</p>
+    <p>{{item?.stockQuantity - quantity}}</p>
    </div>
 </div>
 

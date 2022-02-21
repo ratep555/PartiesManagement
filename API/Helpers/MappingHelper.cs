@@ -87,6 +87,19 @@ namespace API.Helpers
             CreateMap<Manufacturer, ManufacturerDto>().ReverseMap();
             CreateMap<OrderStatus1, OrderStatusDto>().ReverseMap();
             CreateMap<Tag, TagDto>().ReverseMap();
+
+            CreateMap<ItemWarehouse, ItemWarehouseDto>()
+                .ForMember(d => d.Item, o => o.MapFrom(s => s.Item.Name))
+                .ForMember(d => d.Warehouse, o => o.MapFrom(s => s.Warehouse.WarehouseName));
+            
+            CreateMap<ItemWarehouseDto, ItemWarehouse>();
+
+
+            CreateMap<ItemWarehouseCreateEditDto, ItemWarehouse>();
+
+            CreateMap<Warehouse, WarehouseDto>()
+                .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name));
+
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)

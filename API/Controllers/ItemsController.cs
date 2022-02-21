@@ -346,17 +346,26 @@ namespace API.Controllers
         public async Task<ActionResult> IncreaseStockQuantity1(int id, int quantity)
         {
             var item = await _unitOfWork.ItemRepository.GetItemById(id);
+
             item.StockQuantity = item.StockQuantity + quantity;
 
-            if (await _unitOfWork.SaveAsync()) return NoContent();
+            await _unitOfWork.SaveAsync();
 
-            return BadRequest("Failed to decrease quantity");               
+            await _unitOfWork.ItemRepository.RemovingReservedQuantityFromItemWarehouses(id, quantity);
+
+            await _unitOfWork.ItemRepository.IncreasingItemWarehousesQuantity(id, quantity);
+            return NoContent();
         }
 
         [HttpPut("decrease1/{id}/{quantity}")]
         public async Task<ActionResult> DecreaseStockQuantity1(int id, int quantity)
         {
             var item = await _unitOfWork.ItemRepository.GetItemById(id);
+
+            if (quantity > item.StockQuantity)
+            {
+                return BadRequest("There are only " + (item.StockQuantity) + " items on stock right now.");
+            }
 
             if (item.StockQuantity > 0)
             {
@@ -368,6 +377,17 @@ namespace API.Controllers
                 }
             }
             await _unitOfWork.SaveAsync();
+
+             if (quantity <= 1)
+            {
+                await _unitOfWork.ItemRepository.DecreasingItemWarehousesQuantity(id, quantity);
+            }
+
+            if (quantity > 1)
+            {
+                await _unitOfWork.ItemRepository.DecreasingItemWarehousesQuantity1(id, quantity);
+            } 
+
 
             return NoContent();               
         }
@@ -610,7 +630,101 @@ namespace API.Controllers
             }
 
             return BadRequest("You must be registered/logged in order to like this product!");
-           
+        }
+
+
+        // itemwarehouses
+
+        [HttpGet("itemwarehouse")]
+        public async Task<ActionResult<Pagination<ItemWarehouseDto>>> GetAllItemWarehouses(
+            [FromQuery] QueryParameters queryParameters)
+        {
+            var count = await _unitOfWork.ItemRepository.GetCountForItemWarehouses();
+            
+            var list = await _unitOfWork.ItemRepository.GetAllItemWarehouses(queryParameters);
+
+            var data = _mapper.Map<IEnumerable<ItemWarehouseDto>>(list);
+
+            return Ok(new Pagination<ItemWarehouseDto>(queryParameters.Page, queryParameters.PageCount, count, data));
+        }
+
+        // ovdje možeš kasnije createdataction pa ćeš i vraćati nešto
+        [HttpPost("itemwarehousecreate")]
+        public async Task<ActionResult> CreateItemWarehouse([FromBody] ItemWarehouseDto itemWarehouseDto)
+        {
+            var itemWarehouse = _mapper.Map<ItemWarehouse>(itemWarehouseDto);
+
+            await _unitOfWork.ItemRepository.AddItemWarehouse(itemWarehouse);
+
+            var item = await _unitOfWork.ItemRepository.GetItemById(itemWarehouseDto.ItemId);
+
+            if (item.StockQuantity.HasValue)
+            {
+                item.StockQuantity = item.StockQuantity += itemWarehouseDto.StockQuantity;
+            }
+            else
+            {
+                item.StockQuantity = itemWarehouseDto.StockQuantity;
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("itemwarehouseedit/{id}/{warehouseid}")]
+        public async Task<ActionResult> EditItemWarehouse(
+            int id, int warehouseid, [FromBody] ItemWarehouseCreateEditDto itemWarehouseDto)
+        {
+            var itemWarehouse = _mapper.Map<ItemWarehouse>(itemWarehouseDto);
+
+            if (id != itemWarehouse.ItemId && warehouseid != itemWarehouse.WarehouseId) 
+            return BadRequest("Bad request!");        
+
+            await _unitOfWork.ItemRepository.UpdateItemWarehouse(itemWarehouse);
+
+            var item = await _unitOfWork.ItemRepository.GetItemById(itemWarehouseDto.ItemId);
+
+            if (item.StockQuantity.HasValue)
+            {
+                item.StockQuantity = item.StockQuantity += itemWarehouseDto.StockQuantity;
+            }
+            else
+            {
+                item.StockQuantity = itemWarehouseDto.StockQuantity;
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            return Ok();
+        }
+
+        [HttpGet("itemwarehouse/{id}/{warehouseid}")]
+        public async Task<ActionResult<ItemWarehouseDto>> GetItemWarehouseByItemIdAndHospitalId(
+            int id, int warehouseId)
+        {
+            var itemwarehouse = await _unitOfWork.ItemRepository
+                .FindItemWarehouseByItemIdAndWarehouseId(id, warehouseId);
+
+            if (itemwarehouse == null) return NotFound(new ServerResponse(404));
+
+            return _mapper.Map<ItemWarehouseDto>(itemwarehouse);
+        }
+        
+        [HttpGet("itemwarehouses/items")]
+        public async Task<ActionResult<List<ItemDto>>> GetAllItemsForItemWarehouses()
+        {
+            var list = await _unitOfWork.ItemRepository.GetAllItemsForItemWarehouses();
+
+            return _mapper.Map<List<ItemDto>>(list);
+        }
+
+        [HttpGet("itemwarehouses/warehouses")]
+        public async Task<ActionResult<List<WarehouseDto>>> GetAllWarehousesForItemWarehouses()
+        {
+            var list = await _unitOfWork.ItemRepository.GetAllWarehousesForItemWarehouse();
+
+            return _mapper.Map<List<WarehouseDto>>(list);
         }
 
     }

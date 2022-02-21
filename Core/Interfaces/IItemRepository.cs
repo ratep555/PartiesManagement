@@ -84,10 +84,21 @@ namespace Core.Interfaces
         // orders
         Task<CustomerOrder> GetOrderByIdForEditing(int id);
         Task<List<OrderStatus1>> GetAllOrderStatuses();
-
-
-
         
+
+        // itemwarehouses
+        Task DecreasingItemWarehousesQuantity(int id, int quantity);
+        Task IncreasingItemWarehousesQuantity(int id, int quantity);
+        Task DecreasingItemWarehousesQuantity1(int id, int quantity);
+        Task RemovingReservedQuantityFromItemWarehouses(int itemId, int quantity);
+        Task AddItemWarehouse(ItemWarehouse itemWarehouse);
+        Task UpdateItemWarehouse(ItemWarehouse itemWarehouse);
+        Task<List<ItemWarehouse>> GetAllItemWarehouses(QueryParameters queryParameters);
+        Task<int> GetCountForItemWarehouses();
+        Task<ItemWarehouse> FindItemWarehouseByItemIdAndWarehouseId(int itemId, int warehouseId);
+        Task<List<Item>> GetAllItemsForItemWarehouses();
+        Task<List<Warehouse>> GetAllWarehousesForItemWarehouse();
+
     }
 }
 

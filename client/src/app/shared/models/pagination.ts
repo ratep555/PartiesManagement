@@ -1,11 +1,19 @@
 import { Discount } from './discount';
 import { Item } from './item';
+import { ItemWarehouse } from './itemWarehouses';
 
 export interface IPaginationForItems {
     page: number;
     pageCount: number;
     count: number;
     data: Item[];
+  }
+
+export interface IPaginationForItemWarehouses {
+    page: number;
+    pageCount: number;
+    count: number;
+    data: ItemWarehouse[];
   }
 
 export interface IPaginationForDiscounts {
@@ -21,3 +29,5 @@ export class PaginationForItems implements IPaginationForItems {
     count: number;
     data: Item[];
   }
+
+

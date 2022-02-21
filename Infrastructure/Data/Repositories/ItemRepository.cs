@@ -858,6 +858,7 @@ namespace Infrastructure.Data.Repositories
             return _context.PaymentStatuses1.FirstOrDefaultAsync(x => x.Name =="Voided").Id;
         }
 
+
         // likes
         public async Task AddLike(int userId, int itemId)
         {
@@ -887,6 +888,7 @@ namespace Infrastructure.Data.Repositories
             return await _context.Likes.Where(x => x.ItemId == itemId).CountAsync();
         }
 
+
         // orders
         public async Task<CustomerOrder> GetOrderByIdForEditing(int id)
         {
@@ -899,8 +901,188 @@ namespace Infrastructure.Data.Repositories
         }
 
 
+        // itemwarehouses
+        public async Task DecreasingItemWarehousesQuantity(int id, int quantity)
+        {
+            var list = await _context.ItemWarehouses
+                .Where(x => x.ItemId == id && x.StockQuantity > 0).ToListAsync();
+
+            foreach (var item in list)
+            {
+                int? reservedquantity  = item.ReservedQuantity;
+                    
+                if (item.StockQuantity >= quantity)
+                {
+                    item.StockQuantity = item.StockQuantity - quantity;
+                 //   item.ReservedQuantity = ++item.ReservedQuantity ?? 1;
+                  //  await _context.SaveChangesAsync();
+                    quantity = 0;
+                   // number = 0;
+                }
+
+                else if(item.StockQuantity < quantity)
+                {
+                    var model = await _context.ItemWarehouses
+                        .FirstOrDefaultAsync(x => x.ItemId == item.ItemId && x.StockQuantity > 0);  
+
+                    model.StockQuantity = model.StockQuantity - quantity;
+                //    model.ReservedQuantity = ++model.ReservedQuantity ?? 1;
+                    await _context.SaveChangesAsync();          
+                }
+                quantity = 0;
+            }
+
+            var model1 = await _context.ItemWarehouses
+                .FirstOrDefaultAsync(X => X.ItemId == id && X.StockQuantity > 0);
+
+            model1.ReservedQuantity = ++model1.ReservedQuantity ?? 1;
+            
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DecreasingItemWarehousesQuantity1(int id, int quantity)
+        {
+            var list = await _context.ItemWarehouses
+                .Where(x => x.ItemId == id && x.StockQuantity > 0).ToListAsync();
+
+            foreach (var item in list)
+            {
+                int result = 0;
+
+                if (quantity > 1)
+                {
+                    if (item.StockQuantity >= 0)
+                    {
+                        if (item.StockQuantity >= quantity)
+                        {
+                            item.StockQuantity = item.StockQuantity - quantity;
+                            item.ReservedQuantity = item.ReservedQuantity + quantity ?? quantity;
+                            await _context.SaveChangesAsync();
+                        }
+                        else if (item.StockQuantity < quantity)
+                        {
+                            item.ReservedQuantity = item.StockQuantity;
+                            result = quantity - item.StockQuantity; 
+                            item.StockQuantity = 0;
+                            await _context.SaveChangesAsync();
+                            
+                            var model = await _context.ItemWarehouses
+                                .FirstOrDefaultAsync(x => x.StockQuantity > 0);
+                            
+                            model.StockQuantity = model.StockQuantity - result;
+                            model.ReservedQuantity = result;
+                            await _context.SaveChangesAsync();
+                        }
+                        quantity = 0;
+                    }
+                }
+            }
+            
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task IncreasingItemWarehousesQuantity(int id, int quantity)
+        {
+            var list = await _context.ItemWarehouses.Where(x => x.ItemId == id
+                && x.ReservedQuantity != null && x.ReservedQuantity > 0).ToListAsync();
+
+            foreach (var item in list)
+            {
+                    if (item.StockQuantity != 0)
+                    {
+                        item.StockQuantity = item.StockQuantity += quantity;
+                        item.ReservedQuantity = item.ReservedQuantity - quantity;
+                        await _context.SaveChangesAsync();
+                        
+                    }
+
+                    else if (item.StockQuantity == 0)
+                    {
+                        item.StockQuantity = item.StockQuantity += quantity;
+                        item.ReservedQuantity = item.ReservedQuantity - quantity;
+                        await _context.SaveChangesAsync();          
+                    }
+                    quantity = 0;
+            }
+        }
+        public async Task RemovingReservedQuantityFromItemWarehouses(int itemId, int quantity)
+        {
+            var list = await _context.ItemWarehouses.Where(x => x.ItemId == itemId
+                && x.ReservedQuantity != null && x.ReservedQuantity > 0).ToListAsync();
+
+            if (quantity > 1)
+            {
+                foreach (var item in list)
+                {
+                    item.StockQuantity = item.StockQuantity += (int)item.ReservedQuantity;
+                    item.ReservedQuantity = 0;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddItemWarehouse(ItemWarehouse itemWarehouse)
+        {
+            _context.ItemWarehouses.Add(itemWarehouse);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateItemWarehouse(ItemWarehouse itemWarehouse)
+        {
+            _context.Entry(itemWarehouse).State = EntityState.Modified;        
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<ItemWarehouse>> GetAllItemWarehouses(QueryParameters queryParameters)
+        {
+            IQueryable<ItemWarehouse> itemWarehouses = _context.ItemWarehouses.Include(x => x.Item)
+                .Include(x => x.Warehouse).AsQueryable().OrderBy(x => x.Item.Name);
+
+            if (queryParameters.HasQuery())
+            {
+                itemWarehouses = itemWarehouses.Where(t => t.Item.Name.Contains(queryParameters.Query));
+            }
+
+            itemWarehouses = itemWarehouses.Skip(queryParameters.PageCount * (queryParameters.Page - 1))
+                .Take(queryParameters.PageCount);
+
+            return await itemWarehouses.ToListAsync();
+        }
+
+        public async Task<int> GetCountForItemWarehouses()
+        {
+            return await _context.ItemWarehouses.CountAsync();
+        }
+
+        public async Task<ItemWarehouse> FindItemWarehouseByItemIdAndWarehouseId(int itemId, int warehouseId)
+        {
+            return await _context.ItemWarehouses.Include(x => x.Item).Include(x => x.Warehouse)
+                .FirstOrDefaultAsync(x => x.ItemId == itemId && x.WarehouseId == warehouseId);
+        }
+
+        public async Task<List<Item>> GetAllItemsForItemWarehouses()
+        {
+            return await _context.Items.OrderBy(x => x.Name).ToListAsync();
+        }
+
+        public async Task<List<Warehouse>> GetAllWarehousesForItemWarehouse()
+        {
+            return await _context.Warehouses.Include(x => x.Country).OrderBy(x => x.WarehouseName).ToListAsync();
+        }
+
+      
     }
 }
+
+
+
+
+
+
+
 
 
 

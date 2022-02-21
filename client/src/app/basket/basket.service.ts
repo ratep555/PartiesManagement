@@ -202,6 +202,29 @@ export class BasketService {
       this.basketSumBSubject.next({shipping, total, subtotal});
     }
   }
+
+  // moj pokušaj za addingitem
+  addingItemToBasket1(item: Item, quantity = 1, stockQuantity = 1) {
+    const addedItem: BasketItem = this.mapItemToBasketItem1(item, quantity);
+    const basket = this.gettingValueOfBasket() ?? this.creatingBasket();
+    basket.basketItems = this.addingOrUpdatingBasketItem1(basket.basketItems, addedItem, quantity, stockQuantity);
+    this.editingBasket(basket);
+  }
+
+  private addingOrUpdatingBasketItem1(basketitems: BasketItem[], itemToAdd: BasketItem,
+                                      quantity: number, stockQuantity: number): BasketItem[] {
+const index = basketitems.findIndex(i => i.id === itemToAdd.id);
+if (index === -1) {
+itemToAdd.quantity = quantity;
+itemToAdd.stockQuantity = quantity;
+basketitems.push(itemToAdd);
+} else {
+basketitems[index].quantity += quantity;
+basketitems[index].stockQuantity -= quantity;
+}
+return basketitems;
+}
+
 }
 
 

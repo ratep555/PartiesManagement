@@ -1,13 +1,9 @@
-namespace Core.Entities
+namespace Core.Dtos
 {
-    public class ItemWarehouse
+    public class ItemWarehouseCreateEditDto
     {
         public int ItemId { get; set; }
-        public Item Item { get; set; }
-
         public int WarehouseId { get; set; }
-        public Warehouse Warehouse { get; set; }
-
         public int StockQuantity { get; set; }
         public int? ReservedQuantity { get; set; }
     }
