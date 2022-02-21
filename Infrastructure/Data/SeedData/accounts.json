@@ -1,0 +1,14 @@
+[
+    {
+      "BankName": "Zagrebačka banka  d.d.",
+      "IBAN": "HR31236000065383783"
+    },
+    {
+      "BankName": "Ljubljanska Banka d.d.",
+      "IBAN": "SLO77532970124577"
+    },
+    {
+      "BankName": "Privredna Banka Zagreb d.d.",
+      "IBAN": "HR4223400094723848884"
+    }
+  ]

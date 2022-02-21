@@ -25,6 +25,7 @@ namespace Core.Entities
         public ICollection<ItemManufacturer> ItemManufacturers { get; set; }
         public ICollection<ItemTag> ItemTags { get; set; }
         public ICollection<ItemDiscount> ItemDiscounts { get; set; }
+        public ICollection<ItemWarehouse> ItemWarehouses { get; set; }
 
     }
 }

@@ -27,6 +27,7 @@ namespace Core.Dtos
         public List<ManufacturerDto> Manufacturers { get; set; }        
         public List<TagDto> Tags { get; set; }    
         public List<DiscountDto> Discounts { get; set; }    
+        public List<WarehouseDto> Warehouses { get; set; }    
 
     }
 }

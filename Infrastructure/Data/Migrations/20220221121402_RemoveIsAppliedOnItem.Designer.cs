@@ -4,39 +4,22 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20220221121402_RemoveIsAppliedOnItem")]
+    partial class RemoveIsAppliedOnItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Core.Entities.Account", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BankName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IBAN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Accounts");
-                });
 
             modelBuilder.Entity("Core.Entities.Address", b =>
                 {
@@ -455,38 +438,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("Core.Entities.Location", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Point>("Located")
-                        .HasColumnType("geography");
-
-                    b.Property<string>("Picture")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Core.Entities.Manufacturer", b =>
@@ -993,7 +944,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.ItemWarehouse", b =>
                 {
                     b.HasOne("Core.Entities.Item", "Item")
-                        .WithMany("ItemWarehouses")
+                        .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1026,17 +977,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("Core.Entities.Location", b =>
-                {
-                    b.HasOne("Core.Entities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Core.Entities.Manufacturer1Discount", b =>
@@ -1190,8 +1130,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("ItemManufacturers");
 
                     b.Navigation("ItemTags");
-
-                    b.Navigation("ItemWarehouses");
                 });
 #pragma warning restore 612, 618
         }

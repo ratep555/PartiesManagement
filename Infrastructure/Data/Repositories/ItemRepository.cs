@@ -56,14 +56,12 @@ namespace Infrastructure.Data.Repositories
                     if (item.DiscountedPrice == null)
                     {
                         item.DiscountedPrice = item.Price - discountAmount;
-                        discountPercentage2.IsAppliedOnItem = true;
                         item.HasDiscountsApplied = true;
                     }
 
                     else if (item.DiscountedPrice != null)
                     {
                         item.DiscountedPrice = item.DiscountedPrice - discountAmount;
-                        discountPercentage2.IsAppliedOnItem = true;
                     }   
                 }
                 _context.Entry(item).State = EntityState.Modified;        
@@ -197,7 +195,6 @@ namespace Infrastructure.Data.Repositories
                     if  (discountAmount > 0)
                         {          
                             item.DiscountedPrice = item.DiscountedPrice + discountAmount;
-                            discountPercentage2.IsAppliedOnItem = false;
 
                             if (item.DiscountedPrice == item.Price)
                             {
@@ -419,14 +416,12 @@ namespace Infrastructure.Data.Repositories
                     if (item.DiscountedPrice == null)
                     {
                         item.DiscountedPrice = item.Price - discountAmount;
-                        discountPercentage2.IsAppliedOnItem = true;
                         item.HasDiscountsApplied = true;
                     }
 
                     else if (item.DiscountedPrice != null)
                     {
                         item.DiscountedPrice = item.DiscountedPrice - discountAmount;
-                        discountPercentage2.IsAppliedOnItem = true;
                     }   
                 }
                 _context.Entry(item).State = EntityState.Modified;        
@@ -457,7 +452,6 @@ namespace Infrastructure.Data.Repositories
                     if  (discountAmount > 0)
                         {          
                             item.DiscountedPrice = item.DiscountedPrice + discountAmount;
-                            discountPercentage2.IsAppliedOnItem = false;
 
                             if (item.DiscountedPrice == item.Price)
                             {
@@ -961,7 +955,7 @@ namespace Infrastructure.Data.Repositories
                         }
                         else if (item.StockQuantity < quantity)
                         {
-                            item.ReservedQuantity = item.StockQuantity;
+                            item.ReservedQuantity = item.ReservedQuantity + item.StockQuantity ?? item.StockQuantity;
                             result = quantity - item.StockQuantity; 
                             item.StockQuantity = 0;
                             await _context.SaveChangesAsync();
@@ -970,7 +964,7 @@ namespace Infrastructure.Data.Repositories
                                 .FirstOrDefaultAsync(x => x.StockQuantity > 0);
                             
                             model.StockQuantity = model.StockQuantity - result;
-                            model.ReservedQuantity = result;
+                            model.ReservedQuantity = model.ReservedQuantity + result ?? result;
                             await _context.SaveChangesAsync();
                         }
                         quantity = 0;
@@ -1071,6 +1065,29 @@ namespace Infrastructure.Data.Repositories
         public async Task<List<Warehouse>> GetAllWarehousesForItemWarehouse()
         {
             return await _context.Warehouses.Include(x => x.Country).OrderBy(x => x.WarehouseName).ToListAsync();
+        }
+
+        public async Task UpdatingItemStockQuantityBasedOnWarehousesQuantity(List<Item> items)
+        {
+            IEnumerable<int> ids = items.Select(x => x.Id);
+
+            foreach (var item in items)
+            {
+                
+                item.StockQuantity = await _context.ItemWarehouses
+                    .Where(x => ids.Contains(x.ItemId) && x.ItemId == item.Id)
+                    .SumAsync(x => x.StockQuantity);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddingNewStockQuantityToItemAndRemovingOldOne(Item item)
+        {
+            item.StockQuantity = await _context.ItemWarehouses.Where(x => x.ItemId == item.Id)
+                .SumAsync(x => x.StockQuantity);
+
+            await _context.SaveChangesAsync();
         }
 
       

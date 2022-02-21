@@ -4,6 +4,5 @@ namespace Core.Dtos
     {
          public int ItemId { get; set; }
         public int DiscountId { get; set; }
-        public bool IsAppliedOnItem { get; set; }
     }
 }

@@ -86,6 +86,7 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.NoAction);   
         }
 
+            public DbSet<Account> Accounts { get; set; }
             public DbSet<Address> Addresses { get; set; }
             public DbSet<Category> Categories { get; set; }
            // public DbSet<Client> Clients { get; set; }
@@ -100,6 +101,7 @@ namespace Infrastructure.Data
             public DbSet<ItemTag> ItemTags { get; set; }
             public DbSet<ItemWarehouse> ItemWarehouses { get; set; }
             public DbSet<Like> Likes { get; set; }
+            public DbSet<Location> Locations { get; set; }
             public DbSet<Manufacturer> Manufacturers { get; set; }
             public DbSet<Manufacturer1Discount> ManufacturerDiscounts { get; set; }
             public DbSet<Manufacturer1> Manufacturers1 { get; set; }

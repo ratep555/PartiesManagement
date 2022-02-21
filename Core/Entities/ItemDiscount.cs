@@ -11,6 +11,5 @@ namespace Core.Entities
         [ForeignKey("DiscountId")]
         public Discount Discount { get; set; }
 
-        public bool IsAppliedOnItem { get; set; }
     }
 }

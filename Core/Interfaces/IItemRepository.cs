@@ -98,6 +98,8 @@ namespace Core.Interfaces
         Task<ItemWarehouse> FindItemWarehouseByItemIdAndWarehouseId(int itemId, int warehouseId);
         Task<List<Item>> GetAllItemsForItemWarehouses();
         Task<List<Warehouse>> GetAllWarehousesForItemWarehouse();
+        Task UpdatingItemStockQuantityBasedOnWarehousesQuantity(List<Item> items);
+        Task AddingNewStockQuantityToItemAndRemovingOldOne(Item item);
 
     }
 }

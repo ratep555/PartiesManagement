@@ -35,11 +35,15 @@ namespace API.Controllers
             
             var list = await _unitOfWork.ItemRepository.GetAllItems(queryParameters);
 
-            await _unitOfWork.ItemRepository.ResetItemDiscountedPriceDueToDiscountExpiry(list);
-            await _unitOfWork.ItemRepository.ResetCategoryDiscountedPriceDueToDiscountExpiry(list);
-            await _unitOfWork.ItemRepository.ResetManufacturerDiscountedPriceDueToDiscountExpiry(list);
+            // ovo si stavio zato što pagination vraća samo 12 podataka sa klijenta
+            var listforreset = await _unitOfWork.ItemRepository.GetAllItemsForItemWarehouses();
+
+            await _unitOfWork.ItemRepository.ResetItemDiscountedPriceDueToDiscountExpiry(listforreset);
+            await _unitOfWork.ItemRepository.ResetCategoryDiscountedPriceDueToDiscountExpiry(listforreset);
+            await _unitOfWork.ItemRepository.ResetManufacturerDiscountedPriceDueToDiscountExpiry(listforreset);
+            await _unitOfWork.ItemRepository.UpdatingItemStockQuantityBasedOnWarehousesQuantity(listforreset);
             
-            var data = _mapper.Map<IEnumerable<ItemDto>>(list);
+            var data = _mapper.Map<IEnumerable<ItemDto>>(listforreset);
 
             foreach (var item in data)
             {
@@ -378,7 +382,7 @@ namespace API.Controllers
             }
             await _unitOfWork.SaveAsync();
 
-             if (quantity <= 1)
+            if (quantity <= 1)
             {
                 await _unitOfWork.ItemRepository.DecreasingItemWarehousesQuantity(id, quantity);
             }
@@ -656,7 +660,7 @@ namespace API.Controllers
 
             await _unitOfWork.ItemRepository.AddItemWarehouse(itemWarehouse);
 
-            var item = await _unitOfWork.ItemRepository.GetItemById(itemWarehouseDto.ItemId);
+           /*  var item = await _unitOfWork.ItemRepository.GetItemById(itemWarehouseDto.ItemId);
 
             if (item.StockQuantity.HasValue)
             {
@@ -667,7 +671,7 @@ namespace API.Controllers
                 item.StockQuantity = itemWarehouseDto.StockQuantity;
             }
 
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync(); */
 
             return Ok();
         }
@@ -685,22 +689,13 @@ namespace API.Controllers
 
             var item = await _unitOfWork.ItemRepository.GetItemById(itemWarehouseDto.ItemId);
 
-            if (item.StockQuantity.HasValue)
-            {
-                item.StockQuantity = item.StockQuantity += itemWarehouseDto.StockQuantity;
-            }
-            else
-            {
-                item.StockQuantity = itemWarehouseDto.StockQuantity;
-            }
-
-            await _unitOfWork.SaveAsync();
+            await _unitOfWork.ItemRepository.AddingNewStockQuantityToItemAndRemovingOldOne(item);
 
             return Ok();
         }
 
         [HttpGet("itemwarehouse/{id}/{warehouseid}")]
-        public async Task<ActionResult<ItemWarehouseDto>> GetItemWarehouseByItemIdAndHospitalId(
+        public async Task<ActionResult<ItemWarehouseDto>> GetItemWarehouseByItemIdAndItemWarehouseId(
             int id, int warehouseId)
         {
             var itemwarehouse = await _unitOfWork.ItemRepository

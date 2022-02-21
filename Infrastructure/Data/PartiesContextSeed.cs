@@ -46,6 +46,18 @@ namespace Infrastructure.Data
         {
             try
             {
+                if (!context.Accounts.Any())
+                {
+                    var accountsData = File.ReadAllText("../Infrastructure/Data/SeedData/accounts.json");
+                    var accounts = JsonSerializer.Deserialize<List<Account>>(accountsData);
+
+                    foreach (var item in accounts)
+                    {
+                        context.Accounts.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
                 if (!context.Items.Any())
                 {
                     var itemsData = File.ReadAllText("../Infrastructure/Data/SeedData/items.json");
@@ -186,6 +198,18 @@ namespace Infrastructure.Data
                     foreach (var item in warehouses)
                     {
                         context.Warehouses.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.Locations.Any())
+                {
+                    var locationsData = File.ReadAllText("../Infrastructure/Data/SeedData/locations.json");
+                    var locations = JsonSerializer.Deserialize<List<Location>>(locationsData);
+
+                    foreach (var item in locations)
+                    {
+                        context.Locations.Add(item);
                     }
                     await context.SaveChangesAsync();
                 } 

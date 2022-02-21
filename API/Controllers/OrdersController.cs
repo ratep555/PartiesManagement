@@ -113,7 +113,7 @@ namespace API.Controllers
            {
                 // order.PaymentIntentId = null;
 
-                _emailService.GeneratePdf(order.Id, total, orderDto.ShippingAddress.FirstName, 
+                _emailService.GeneratePdf1(order.Id, total, orderDto.ShippingAddress.FirstName,
                     orderDto.ShippingAddress.LastName);
 
                 string url = $"{_config["AngularAppUrl"]}/orders/{order.Id}";
@@ -205,7 +205,7 @@ namespace API.Controllers
         {
             int orderNo = 20;
 
-            _pdfService.GeneratePdf(orderNo);
+            _pdfService.GeneratePdf1(orderNo);
 
             return Ok();        
         }

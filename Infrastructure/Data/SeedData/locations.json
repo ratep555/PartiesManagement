@@ -1,0 +1,21 @@
+[
+    {
+      "Street": "Petrova 77",
+      "City": "Zagreb",
+      "Description": "The best there is.",
+      "CountryId": 2
+    },
+    {
+      "Street": "Prešernova 77",
+      "City": "Ljubljana",
+      "Description": "The best there is.",
+      "CountryId": 1
+    },
+    {
+      "Street": "Riječka 77",
+      "City": "Rijeka",
+      "Description": "The best there is.",
+      "CountryId": 2
+    }
+   
+  ]
