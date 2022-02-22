@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Core.Dtos;
+using Core.Dtos.Birthday;
 using Core.Entities;
 using Core.Entities.Order;
 using NetTopologySuite.Geometries;
@@ -99,7 +100,18 @@ namespace API.Helpers
 
             CreateMap<Warehouse, WarehouseDto>()
                 .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name));
+            
+            //birthdays
+            CreateMap<BirthdayCreateDto, Birthday>();
+            CreateMap<BirthdayEditDto, Birthday>();
+            CreateMap<ServiceIncluded, ServiceIncludedDto>().ReverseMap();
 
+            CreateMap<Birthday, BirthdayDto>()
+                .ForMember(d => d.Location, o => o.MapFrom(s => s.Location.City))
+                .ForMember(d => d.BirthdayPackage, o => o.MapFrom(s => s.BirthdayPackage.PackageName));
+            
+            CreateMap<BirthdayPackage, BirthdayPackageDto>()
+                .ForMember(d => d.ServicesIncluded, o => o.MapFrom(MapForServicesIncluded));
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)
@@ -347,6 +359,39 @@ namespace API.Helpers
             }
             return result;
         }
+
+        // birthdays
+        private List<ServiceIncludedDto> MapForServicesIncluded(
+            BirthdayPackage birthdayPackage, BirthdayPackageDto birthdayPackageDto)
+        {
+            var result = new List<ServiceIncludedDto>();
+
+            if (birthdayPackage.BirthdayPackageServices != null)
+            {
+                foreach (var service in birthdayPackage.BirthdayPackageServices)
+                {
+                    result.Add(new ServiceIncludedDto() { Id = service.ServiceIncludedId, 
+                    Name = service.ServiceIncluded.Name });
+                }
+            }
+            return result;
+        }
+
+        private List<CategoryDto> MapForCategories7(Item item, ItemDto itemDto)
+        {
+            var result = new List<CategoryDto>();
+
+            if (item.ItemCategories != null)
+            {
+                foreach (var category in item.ItemCategories)
+                {
+                    result.Add(new CategoryDto() { Id = category.CategoryId, 
+                    Name = category.Category.Name });
+                }
+            }
+            return result;
+        }
+
     }
 }
 

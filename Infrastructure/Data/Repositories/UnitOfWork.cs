@@ -12,10 +12,9 @@ namespace Infrastructure.Data.Repositories
             _context = context;
         }
         public IItemRepository ItemRepository => new ItemRepository(_context);
-
         public IShippingOptionRepository ShippingOptionRepository => new ShippingOptionRepository(_context);
-
         public IOrderRepository OrderRepository => new OrderRepository(_context);
+        public IBirthdayRepository BirthdayRepository => new BirthdayRepository(_context);
 
         public async Task<bool> SaveAsync()
         {

@@ -1,0 +1,50 @@
+[
+    {
+      "PackageName": "KidsParties Pack",
+      "NumberOfParticipants": 8,
+      "Price": 1950,
+      "Duration": 210,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    },
+    {
+      "PackageName": "Trampolini Pack",
+      "NumberOfParticipants": 8,
+      "Price": 1350,
+      "Duration": 120,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    },
+    {
+      "PackageName": "Cyber Pack",
+      "NumberOfParticipants": 8,
+      "Price": 1700,
+      "Duration": 180,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    },
+    {
+      "PackageName": "Adventure Pack",
+      "NumberOfParticipants": 8,
+      "Price": 1700,
+      "Duration": 180,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    },
+    {
+      "PackageName": "Karting + Adventure Pack",
+      "NumberOfParticipants": 8,
+      "Price": 2350,
+      "Duration": 195,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    },
+    {
+      "PackageName": "Karting + Trampolini Pack",
+      "NumberOfParticipants": 8,
+      "Price": 1950,
+      "Duration": 165,
+      "Description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna."
+    }
+  ]
+
+
+
+
+
+

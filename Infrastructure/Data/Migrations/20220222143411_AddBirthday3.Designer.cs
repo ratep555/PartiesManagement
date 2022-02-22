@@ -4,15 +4,17 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20220222143411_AddBirthday3")]
+    partial class AddBirthday3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,12 +179,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderStatus1Id")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Remarks")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,8 +190,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("BirthdayPackageId");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("OrderStatus1Id");
 
                     b.ToTable("Birthdays");
                 });
@@ -932,7 +926,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.Birthday", b =>
                 {
                     b.HasOne("Core.Entities.BirthdayPackage", "BirthdayPackage")
-                        .WithMany("Birthdays")
+                        .WithMany()
                         .HasForeignKey("BirthdayPackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -943,15 +937,9 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.OrderStatus1", "OrderStatus1")
-                        .WithMany()
-                        .HasForeignKey("OrderStatus1Id");
-
                     b.Navigation("BirthdayPackage");
 
                     b.Navigation("Location");
-
-                    b.Navigation("OrderStatus1");
                 });
 
             modelBuilder.Entity("Core.Entities.BirthdayPackageService", b =>
@@ -1332,8 +1320,6 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.BirthdayPackage", b =>
                 {
                     b.Navigation("BirthdayPackageServices");
-
-                    b.Navigation("Birthdays");
                 });
 
             modelBuilder.Entity("Core.Entities.CustomerOrder", b =>

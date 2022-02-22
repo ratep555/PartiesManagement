@@ -16,5 +16,11 @@
     },
     {
       "Name": "Delivered"
+    },
+    {
+      "Name": "Order Accepted"
+    },
+    {
+      "Name": "Order Rejected"
     }
   ]

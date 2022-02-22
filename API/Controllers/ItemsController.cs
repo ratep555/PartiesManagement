@@ -43,7 +43,7 @@ namespace API.Controllers
             await _unitOfWork.ItemRepository.ResetManufacturerDiscountedPriceDueToDiscountExpiry(listforreset);
             await _unitOfWork.ItemRepository.UpdatingItemStockQuantityBasedOnWarehousesQuantity(listforreset);
             
-            var data = _mapper.Map<IEnumerable<ItemDto>>(listforreset);
+            var data = _mapper.Map<IEnumerable<ItemDto>>(list);
 
             foreach (var item in data)
             {
@@ -70,6 +70,7 @@ namespace API.Controllers
 
             if (HttpContext.User.Identity.IsAuthenticated)
             {
+                // ovdje ti treba userid, dvojbeno je možeš li registraciju putem googlea
                 var userId = User.GetUserId();
 
                 var ratingDb = await _unitOfWork.ItemRepository.FindCurrentRate(id, userId);

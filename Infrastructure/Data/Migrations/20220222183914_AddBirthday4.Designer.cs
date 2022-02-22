@@ -4,15 +4,17 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20220222183914_AddBirthday4")]
+    partial class AddBirthday4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,6 +152,9 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool?>("Accepted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("BirthdayGirlBoyName")
                         .HasColumnType("nvarchar(max)");
 
@@ -177,12 +182,6 @@ namespace Infrastructure.Data.Migrations
                     b.Property<int>("NumberOfGuests")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderStatus1Id")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Remarks")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,8 +193,6 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("BirthdayPackageId");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("OrderStatus1Id");
 
                     b.ToTable("Birthdays");
                 });
@@ -943,15 +940,9 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.OrderStatus1", "OrderStatus1")
-                        .WithMany()
-                        .HasForeignKey("OrderStatus1Id");
-
                     b.Navigation("BirthdayPackage");
 
                     b.Navigation("Location");
-
-                    b.Navigation("OrderStatus1");
                 });
 
             modelBuilder.Entity("Core.Entities.BirthdayPackageService", b =>

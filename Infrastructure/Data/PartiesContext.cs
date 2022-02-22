@@ -79,6 +79,9 @@ namespace Infrastructure.Data
 
             modelBuilder.Entity<Like>()
                 .HasKey(x => new { x.ApplicationUserId, x.ItemId }); 
+
+            modelBuilder.Entity<BirthdayPackageService>()
+                .HasKey(x => new { x.BirthdayPackageId, x.ServiceIncludedId }); 
             
             modelBuilder.Entity<Rating>()
                 .HasOne(s => s.Customer)
@@ -87,6 +90,9 @@ namespace Infrastructure.Data
         }
 
             public DbSet<Account> Accounts { get; set; }
+            public DbSet<Birthday> Birthdays { get; set; }
+            public DbSet<BirthdayPackage> BirthdayPackages { get; set; }
+            public DbSet<BirthdayPackageService> BirthdayPackageServices { get; set; }
             public DbSet<Address> Addresses { get; set; }
             public DbSet<Category> Categories { get; set; }
            // public DbSet<Client> Clients { get; set; }
@@ -111,6 +117,7 @@ namespace Infrastructure.Data
             public DbSet<PaymentStatus1> PaymentStatuses1 { get; set; }
             public DbSet<OrderStatus1> OrderStatus1 { get; set; }
             public DbSet<Rating> Ratings { get; set; }
+            public DbSet<ServiceIncluded> ServicesIncluded { get; set; }
             public DbSet<ShippingOption> ShippingOptions { get; set; }
             public DbSet<Tag> Tags { get; set; }
             public DbSet<Warehouse> Warehouses { get; set; }

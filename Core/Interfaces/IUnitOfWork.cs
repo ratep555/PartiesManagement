@@ -7,6 +7,7 @@ namespace Core.Interfaces
         IItemRepository ItemRepository {get; }
         IShippingOptionRepository ShippingOptionRepository {get; }
         IOrderRepository OrderRepository {get; }
+        IBirthdayRepository BirthdayRepository {get; }
         Task<bool> SaveAsync();
 
 

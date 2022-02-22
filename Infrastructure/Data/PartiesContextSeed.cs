@@ -213,6 +213,30 @@ namespace Infrastructure.Data
                     }
                     await context.SaveChangesAsync();
                 } 
+
+                if (!context.ServicesIncluded.Any())
+                {
+                    var servicesincludedData = File.ReadAllText("../Infrastructure/Data/SeedData/servicesincluded.json");
+                    var servicesincluded = JsonSerializer.Deserialize<List<ServiceIncluded>>(servicesincludedData);
+
+                    foreach (var item in servicesincluded)
+                    {
+                        context.ServicesIncluded.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
+
+                if (!context.BirthdayPackages.Any())
+                {
+                    var birthdaypackagesData = File.ReadAllText("../Infrastructure/Data/SeedData/birthdaypackages.json");
+                    var birthdaypackages = JsonSerializer.Deserialize<List<BirthdayPackage>>(birthdaypackagesData);
+
+                    foreach (var item in birthdaypackages)
+                    {
+                        context.BirthdayPackages.Add(item);
+                    }
+                    await context.SaveChangesAsync();
+                } 
             
             }
             catch (Exception ex)
