@@ -205,7 +205,7 @@ namespace Infrastructure.Data
                 if (!context.Locations.Any())
                 {
                     var locationsData = File.ReadAllText("../Infrastructure/Data/SeedData/locations.json");
-                    var locations = JsonSerializer.Deserialize<List<Location>>(locationsData);
+                    var locations = JsonSerializer.Deserialize<List<Location1>>(locationsData);
 
                     foreach (var item in locations)
                     {

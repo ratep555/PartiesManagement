@@ -513,6 +513,11 @@ namespace API.Controllers
 
             await _unitOfWork.ItemRepository.UpdateItemWithDiscount(discount);
 
+           // ovo ne koristiiš jer tu ne stvaraš discount za birthdaypackage, kad budeš ponovo radio 
+           // projekt razmisli želiš li tu dodati birthdayypackages
+           
+           // await _unitOfWork.BirthdayRepository.UpdateBirthdayPackageWithDiscount(discount);
+
             return NoContent();
         }
         // ovo koristiš!

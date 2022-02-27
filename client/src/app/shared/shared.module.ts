@@ -18,6 +18,9 @@ import { BasketReviewComponent } from './components/basket-review/basket-review.
 import { ImgInputComponent } from './components/img-input/img-input.component';
 import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
 import { RatingComponent } from './components/rating/rating.component';
+import { LeafletModule} from '@asymmetrik/ngx-leaflet';
+import 'leaflet/dist/images/marker-icon-2x.png';
+import { MapComponent } from './components/map/map.component';
 
 
 @NgModule({
@@ -30,7 +33,8 @@ import { RatingComponent } from './components/rating/rating.component';
     BasketReviewComponent,
     ImgInputComponent,
     MultipleSelectorComponent,
-    RatingComponent
+    RatingComponent,
+    MapComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +47,8 @@ import { RatingComponent } from './components/rating/rating.component';
     PaginationModule.forRoot(),
     TabsModule.forRoot(),
     ModalModule.forRoot(),
-    CdkStepperModule
+    CdkStepperModule,
+    LeafletModule
   ],
   exports: [
     BsDropdownModule,
@@ -63,7 +68,8 @@ import { RatingComponent } from './components/rating/rating.component';
     BasketReviewComponent,
     ImgInputComponent,
     MultipleSelectorComponent,
-    RatingComponent
+    RatingComponent,
+    LeafletModule
     ]
 })
 export class SharedModule { }

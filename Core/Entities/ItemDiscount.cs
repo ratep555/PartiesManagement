@@ -8,7 +8,6 @@ namespace Core.Entities
         public Item Item { get; set; }
 
         public int DiscountId { get; set; }
-        [ForeignKey("DiscountId")]
         public Discount Discount { get; set; }
 
     }

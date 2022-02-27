@@ -27,6 +27,7 @@ export class WebshopService {
 
   getItems() {
    /*  if (useCache === false) {
+
       this.itemCache = new Map();
     }
     if (this.itemCache.size > 0 && useCache === true) {

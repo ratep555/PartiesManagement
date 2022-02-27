@@ -2,6 +2,7 @@ import { User } from './user';
 
 export class MyParams {
     manufacturerId = 0;
+    sort = 'something';
     tagId = 0;
     categoryId = 0;
     query: string;
@@ -11,6 +12,7 @@ export class MyParams {
 
 export class UserParams {
     manufacturerId = 0;
+    sort = 'something';
     tagId = 0;
     categoryId = 0;
     query: string;

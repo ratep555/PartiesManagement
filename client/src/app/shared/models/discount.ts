@@ -21,6 +21,7 @@ export interface DiscountCreateEdit {
     minimumOrderValue?: number;
     items: Item[];
     categories: Category[];
+    manufacturers: Manufacturer1[];
 }
 
 export class DiscountEditClass {

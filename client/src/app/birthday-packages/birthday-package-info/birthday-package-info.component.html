@@ -1,0 +1,61 @@
+<div class="container" style="margin-top: 100px; margin-bottom: 50px">
+    <div class="row" *ngIf="birthdayPackage">
+      <div class="col-4">
+        <div class="wow1 card">
+            <img src="{{birthdayPackage.picture || './assets/birthdaypackages1.jpg'}}" 
+          a class="card-img" />
+          <div class="card-body">
+            &nbsp;
+            <div class="text-center">
+              <h4>{{ birthdayPackage.packageName }}</h4>
+            </div>
+            &nbsp;
+      <div class="wow btn-group d-flex">
+      <button
+    routerLink="{{ birthdayPackage.id }}"
+    class="btn btn-primary"
+    >
+    Make Reservation
+  </button>
+</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-8">
+        <tabset class="member-tabset">
+          <tab heading="General Data">
+            &nbsp;
+            <div>
+              <strong>Price: </strong>
+              {{birthdayPackage.price | number: "1.2-2" }} kn for {{birthdayPackage.numberOfParticipants}} participants
+          </div>          
+            <div class="wow2">
+              <strong>Duration: </strong>
+              {{birthdayPackage.duration}} minutes
+          </div>          
+            <div class="wow2">
+              <strong>Additional billing per participant: </strong>
+              {{birthdayPackage.additionalBillingPerParticipant | number: "1.2-2" }} kn
+          </div>          
+        </tab>
+          <tab heading="Description/Remarks">
+            <div class="kiki">
+              <strong>{{ birthdayPackage.description }}</strong>
+            </div>
+          </tab>
+          <tab heading="Services included">
+            <hr />
+            <div *ngIf="birthdayPackage.servicesIncluded !== null">
+              <ul
+                style="list-style-type: none"
+                *ngFor="let item of birthdayPackage.servicesIncluded"
+              >
+                <li><strong>- {{ item.name }}</strong></li>
+              </ul>
+            </div>
+          </tab>
+        </tabset>
+      </div>
+    </div>
+  </div>
+  

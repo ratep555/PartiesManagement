@@ -1,5 +1,6 @@
 using System;
 using Core.Entities;
+using Core.Entities.Birthday;
 using Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -80,6 +81,9 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Like>()
                 .HasKey(x => new { x.ApplicationUserId, x.ItemId }); 
 
+            modelBuilder.Entity<BirthdayPackageDiscount>()
+                .HasKey(x => new { x.BirthdayPackageId, x.DiscountId }); 
+
             modelBuilder.Entity<BirthdayPackageService>()
                 .HasKey(x => new { x.BirthdayPackageId, x.ServiceIncludedId }); 
             
@@ -87,11 +91,13 @@ namespace Infrastructure.Data
                 .HasOne(s => s.Customer)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);   
+
         }
 
             public DbSet<Account> Accounts { get; set; }
-            public DbSet<Birthday> Birthdays { get; set; }
+            public DbSet<Birthday1> Birthdays { get; set; }
             public DbSet<BirthdayPackage> BirthdayPackages { get; set; }
+            public DbSet<BirthdayPackageDiscount> BirthdayPackageDiscounts { get; set; }
             public DbSet<BirthdayPackageService> BirthdayPackageServices { get; set; }
             public DbSet<Address> Addresses { get; set; }
             public DbSet<Category> Categories { get; set; }
@@ -107,7 +113,7 @@ namespace Infrastructure.Data
             public DbSet<ItemTag> ItemTags { get; set; }
             public DbSet<ItemWarehouse> ItemWarehouses { get; set; }
             public DbSet<Like> Likes { get; set; }
-            public DbSet<Location> Locations { get; set; }
+            public DbSet<Location1> Locations { get; set; }
             public DbSet<Manufacturer> Manufacturers { get; set; }
             public DbSet<Manufacturer1Discount> ManufacturerDiscounts { get; set; }
             public DbSet<Manufacturer1> Manufacturers1 { get; set; }

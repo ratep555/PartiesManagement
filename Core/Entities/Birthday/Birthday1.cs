@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities
 {
-    public class Birthday : BaseEntity
+    public class Birthday1 : BaseEntity
     {
-        public int LocationId { get; set; }
-        public Location Location { get; set; }
+        public int Location1Id { get; set; }
+        public Location1 Location { get; set; }
 
         public int BirthdayPackageId { get; set; }
         public BirthdayPackage BirthdayPackage { get; set; }
@@ -30,6 +30,5 @@ namespace Core.Entities
 
         public int? OrderStatus1Id { get; set; }
         public OrderStatus1 OrderStatus1 { get; set; }
-
     }
 }

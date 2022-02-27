@@ -5,7 +5,7 @@ namespace Core.Dtos.Birthday
 {
     public class BirthdayCreateDto
     {
-        public int LocationId { get; set; }
+        public int Location1Id { get; set; }
         public int BirthdayPackageId { get; set; }
         public string ClientName { get; set; }
         public string BirthdayGirlBoyName { get; set; }

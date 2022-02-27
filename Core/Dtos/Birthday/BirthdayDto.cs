@@ -8,6 +8,7 @@ namespace Core.Dtos.Birthday
         public int Id { get; set; }
         public string Location { get; set; }
         public string BirthdayPackage { get; set; }
+        public string OrderStatus { get; set; }
         public string ClientName { get; set; }
         public string BirthdayGirlBoyName { get; set; }
         public string ContactPhone { get; set; }
@@ -26,5 +27,7 @@ namespace Core.Dtos.Birthday
         public DateTime EndDateAndTime { get; set; }
 
         public int? OrderStatus1Id { get; set; }
+        public int Location1Id { get; set; }
+        public int BirthdayPackageId { get; set; }
     }
 }

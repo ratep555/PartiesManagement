@@ -143,7 +143,22 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Core.Entities.Birthday", b =>
+            modelBuilder.Entity("Core.Entities.Birthday.BirthdayPackageDiscount", b =>
+                {
+                    b.Property<int>("BirthdayPackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BirthdayPackageId", "DiscountId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("BirthdayPackageDiscounts");
+                });
+
+            modelBuilder.Entity("Core.Entities.Birthday1", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +186,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<DateTime>("EndDateAndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LocationId")
+                    b.Property<int>("Location1Id")
                         .HasColumnType("int");
 
                     b.Property<int>("NumberOfGuests")
@@ -193,7 +208,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasIndex("BirthdayPackageId");
 
-                    b.HasIndex("LocationId");
+                    b.HasIndex("Location1Id");
 
                     b.HasIndex("OrderStatus1Id");
 
@@ -207,11 +222,20 @@ namespace Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("AdditionalBillingPerParticipant")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("DiscountedPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<bool?>("HasDiscountsApplied")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfParticipants")
                         .HasColumnType("int");
@@ -559,7 +583,7 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("Core.Entities.Location", b =>
+            modelBuilder.Entity("Core.Entities.Location1", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -929,7 +953,26 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Core.Entities.Birthday", b =>
+            modelBuilder.Entity("Core.Entities.Birthday.BirthdayPackageDiscount", b =>
+                {
+                    b.HasOne("Core.Entities.BirthdayPackage", "BirthdayPackage")
+                        .WithMany()
+                        .HasForeignKey("BirthdayPackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.Discount", "Discount")
+                        .WithMany()
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BirthdayPackage");
+
+                    b.Navigation("Discount");
+                });
+
+            modelBuilder.Entity("Core.Entities.Birthday1", b =>
                 {
                     b.HasOne("Core.Entities.BirthdayPackage", "BirthdayPackage")
                         .WithMany("Birthdays")
@@ -937,9 +980,9 @@ namespace Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Core.Entities.Location", "Location")
+                    b.HasOne("Core.Entities.Location1", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId")
+                        .HasForeignKey("Location1Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1195,7 +1238,7 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("Core.Entities.Location", b =>
+            modelBuilder.Entity("Core.Entities.Location1", b =>
                 {
                     b.HasOne("Core.Entities.Country", "Country")
                         .WithMany()

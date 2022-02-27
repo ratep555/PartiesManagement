@@ -2,7 +2,7 @@ using NetTopologySuite.Geometries;
 
 namespace Core.Entities
 {
-    public class Location : BaseEntity
+    public class Location1 : BaseEntity
     {
         public string Street { get; set; }
         public string City { get; set; }

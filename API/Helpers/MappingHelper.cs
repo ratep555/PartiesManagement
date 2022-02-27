@@ -4,6 +4,7 @@ using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.Birthday;
 using Core.Entities;
+using Core.Entities.Birthday;
 using Core.Entities.Order;
 using NetTopologySuite.Geometries;
 
@@ -102,16 +103,29 @@ namespace API.Helpers
                 .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name));
             
             //birthdays
-            CreateMap<BirthdayCreateDto, Birthday>();
-            CreateMap<BirthdayEditDto, Birthday>();
+            CreateMap<BirthdayCreateDto, Birthday1>();
+            CreateMap<BirthdayEditDto, Birthday1>();
             CreateMap<ServiceIncluded, ServiceIncludedDto>().ReverseMap();
 
-            CreateMap<Birthday, BirthdayDto>()
+            CreateMap<Birthday1, BirthdayDto>()
                 .ForMember(d => d.Location, o => o.MapFrom(s => s.Location.City))
-                .ForMember(d => d.BirthdayPackage, o => o.MapFrom(s => s.BirthdayPackage.PackageName));
+                .ForMember(d => d.BirthdayPackage, o => o.MapFrom(s => s.BirthdayPackage.PackageName))
+                .ForMember(d => d.OrderStatus, o => o.MapFrom(s => s.OrderStatus1.Name));
             
+            // birthdaypackages
             CreateMap<BirthdayPackage, BirthdayPackageDto>()
-                .ForMember(d => d.ServicesIncluded, o => o.MapFrom(MapForServicesIncluded));
+                .ForMember(d => d.ServicesIncluded, o => o.MapFrom(MapForServicesIncluded))
+                .ForMember(d => d.Discounts, o => o.MapFrom(MapForDiscounts));
+
+            CreateMap<Location1, LocationDto>()
+                .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name))
+                .ForMember(d => d.Latitude, o => o.MapFrom(s => s.Located.Y))
+                .ForMember(d => d.Longitude, o => o.MapFrom(s => s.Located.X)); 
+            
+            CreateMap<BirthdayPackageCreateEditDto, BirthdayPackage>()
+                .ForMember(x => x.Picture, options => options.Ignore())
+                .ForMember(x => x.BirthdayPackageDiscounts, options => options.MapFrom(MapBirthdayPackageDisounts))
+                .ForMember(x => x.BirthdayPackageServices, options => options.MapFrom(MapBirthdayPackageServices));
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)
@@ -149,6 +163,34 @@ namespace API.Helpers
             foreach (var id in discountDto.ManufacturersIds)
             {
                 result.Add(new Manufacturer1Discount() { Manufacturer1Id = id });
+            }
+            return result;
+        }
+
+        private List<BirthdayPackageDiscount> MapBirthdayPackageDisounts(
+                BirthdayPackageCreateEditDto birthdayDto, BirthdayPackage birthdayPackage)
+        {
+            var result = new List<BirthdayPackageDiscount>();
+
+            if (birthdayDto.DiscountsIds == null) { return result; }
+
+            foreach (var id in birthdayDto.DiscountsIds)
+            {
+                result.Add(new BirthdayPackageDiscount() { DiscountId = id });
+            }
+            return result;
+        }
+
+        private List<BirthdayPackageService> MapBirthdayPackageServices(
+                BirthdayPackageCreateEditDto birthdayDto, BirthdayPackage birthdayPackage)
+        {
+            var result = new List<BirthdayPackageService>();
+
+            if (birthdayDto.ServicesIds == null) { return result; }
+
+            foreach (var id in birthdayDto.ServicesIds)
+            {
+                result.Add(new BirthdayPackageService() { ServiceIncludedId = id });
             }
             return result;
         }
@@ -372,6 +414,21 @@ namespace API.Helpers
                 {
                     result.Add(new ServiceIncludedDto() { Id = service.ServiceIncludedId, 
                     Name = service.ServiceIncluded.Name });
+                }
+            }
+            return result;
+        }
+        private List<DiscountDto> MapForDiscounts(
+            BirthdayPackage birthdayPackage, BirthdayPackageDto birthdayPackageDto)
+        {
+            var result = new List<DiscountDto>();
+
+            if (birthdayPackage.BirthdayPackageDiscounts != null)
+            {
+                foreach (var discount in birthdayPackage.BirthdayPackageDiscounts)
+                {
+                    result.Add(new DiscountDto() { Id = discount.DiscountId, 
+                    Name = discount.Discount.Name });
                 }
             }
             return result;
