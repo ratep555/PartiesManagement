@@ -1,0 +1,21 @@
+<div class="container" style="margin-top: 55px;">
+    <div class="row">
+        <div *ngIf="coordinates.length > 0" class="col-6">
+            <app-map
+            [initialCoordinates]="coordinates"
+            [editMode]="false"
+          ></app-map>
+        </div>
+        <div class="col-6">
+            <div class="wrapper">
+                <p><strong>Description:</strong> {{location?.description}}</p>
+                <p><strong>Country:</strong> {{location?.country}}</p>
+                <p><strong>City:</strong> {{location?.city}}</p>
+                <p><strong>Street:</strong> {{location?.street}}</p>
+                <p><strong>Email:</strong> {{location?.email}}</p>
+                <p><strong>Phone:</strong> {{location?.phone}}</p>
+                <p><strong>Working Hours:</strong> {{location?.workingHours}}</p>
+            </div>
+        </div>
+    </div>
+</div>

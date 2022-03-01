@@ -599,13 +599,22 @@ namespace Infrastructure.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Point>("Located")
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Point>("Location")
                         .HasColumnType("geography");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Street")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkingHours")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -658,6 +667,38 @@ namespace Infrastructure.Data.Migrations
                     b.HasIndex("DiscountId");
 
                     b.ToTable("ManufacturerDiscounts");
+                });
+
+            modelBuilder.Entity("Core.Entities.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApplicationUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MessageContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SendingDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Core.Entities.OrderItem", b =>
@@ -956,7 +997,7 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Core.Entities.Birthday.BirthdayPackageDiscount", b =>
                 {
                     b.HasOne("Core.Entities.BirthdayPackage", "BirthdayPackage")
-                        .WithMany()
+                        .WithMany("BirthdayPackageDiscounts")
                         .HasForeignKey("BirthdayPackageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1268,6 +1309,17 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("Manufacturer1");
                 });
 
+            modelBuilder.Entity("Core.Entities.Message", b =>
+                {
+                    b.HasOne("Core.Entities.ApplicationUser", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+                });
+
             modelBuilder.Entity("Core.Entities.OrderItem", b =>
                 {
                     b.HasOne("Core.Entities.CustomerOrder", null)
@@ -1374,6 +1426,8 @@ namespace Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Core.Entities.BirthdayPackage", b =>
                 {
+                    b.Navigation("BirthdayPackageDiscounts");
+
                     b.Navigation("BirthdayPackageServices");
 
                     b.Navigation("Birthdays");

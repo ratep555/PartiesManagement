@@ -17,10 +17,10 @@ export class MapComponent implements OnInit {
 layers: Marker<any>[] = [];
   options = {
     layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: 'Office Location' })
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: 'Office Location' })
     ],
-    zoom: 7,
-    center: latLng(44.815183840035594, 15.99454538427381)
+    zoom: 8,
+    center: latLng(45.815183840035594, 14.99454538427381)
   };
 
   constructor() { }

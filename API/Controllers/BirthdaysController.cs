@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -234,6 +235,68 @@ namespace API.Controllers
             await _unitOfWork.BirthdayRepository.UpdateBirthdayPackageWithDiscount1(birthdayPackage);
 
             return NoContent();
+        }
+
+        // locations
+        [HttpGet("locations/{id}")]
+        public async Task<ActionResult<LocationDto>> GetLocationById(int id)
+        {
+            var location = await _unitOfWork.BirthdayRepository.FindLocationById(id);
+
+            if (location == null) return NotFound(new ServerResponse(404));
+
+            return _mapper.Map<LocationDto>(location);
+        }
+
+        [HttpGet("locations")]
+        public async Task<ActionResult<Pagination<LocationDto>>> GetAllLocations(
+            [FromQuery] QueryParameters queryParameters)
+        {
+            var count = await _unitOfWork.BirthdayRepository.GetCountForLocations();
+            
+            var list = await _unitOfWork.BirthdayRepository.GetAllLocations(queryParameters);
+            
+            var data = _mapper.Map<IEnumerable<LocationDto>>(list);
+
+            return Ok(new Pagination<LocationDto>
+                (queryParameters.Page, queryParameters.PageCount, count, data));
+        }
+
+        [HttpPost("locations")]
+        public async Task<ActionResult> CreateLocation([FromBody] LocationCreateEditDto locationDto)
+        {
+            var location = _mapper.Map<Location1>(locationDto);
+           
+            await _unitOfWork.BirthdayRepository.CreateLocation(location);
+
+            return Ok();
+        }
+
+        [HttpPut("locations/{id}")]
+        public async Task<ActionResult> UpdateLocation(int id, [FromBody] LocationCreateEditDto locationDto)
+        {
+            var location = await _unitOfWork.BirthdayRepository.FindLocationById(id);
+
+            if (location == null) return NotFound(new ServerResponse(404));   
+
+            location = _mapper.Map(locationDto, location);
+
+            await _unitOfWork.BirthdayRepository.UpdateLocation(location);
+
+            return NoContent();
+        }
+
+        // messages
+        [HttpPost("messages")]
+        public async Task<ActionResult> CreateMessage([FromBody] MessageCreateDto messageDto)
+        {
+            var message = _mapper.Map<Message>(messageDto);
+            message.ApplicationUserId = _unitOfWork.BirthdayRepository.GetAdminId();
+            message.SendingDate = DateTime.Now.ToLocalTime();
+           
+            await _unitOfWork.BirthdayRepository.CreateMessage(message);
+
+            return Ok();
         }
         
     }

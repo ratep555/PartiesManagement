@@ -19,6 +19,7 @@ import { ImgInputComponent } from './components/img-input/img-input.component';
 import { MultipleSelectorComponent } from './components/multiple-selector/multiple-selector.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { LeafletModule} from '@asymmetrik/ngx-leaflet';
+import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import { MapComponent } from './components/map/map.component';
 
@@ -69,7 +70,8 @@ import { MapComponent } from './components/map/map.component';
     ImgInputComponent,
     MultipleSelectorComponent,
     RatingComponent,
-    LeafletModule
+    LeafletModule,
+    MapComponent
     ]
 })
 export class SharedModule { }

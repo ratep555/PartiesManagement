@@ -115,6 +115,7 @@ namespace Infrastructure.Data
             public DbSet<Like> Likes { get; set; }
             public DbSet<Location1> Locations { get; set; }
             public DbSet<Manufacturer> Manufacturers { get; set; }
+            public DbSet<Message> Messages { get; set; }
             public DbSet<Manufacturer1Discount> ManufacturerDiscounts { get; set; }
             public DbSet<Manufacturer1> Manufacturers1 { get; set; }
             public DbSet<CustomerOrder> CustomerOrders { get; set; }

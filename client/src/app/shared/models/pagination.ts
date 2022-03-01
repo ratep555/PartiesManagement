@@ -3,6 +3,7 @@ import { BirthdayPackage } from './birthdays/birthdaypackage';
 import { Discount } from './discount';
 import { Item } from './item';
 import { ItemWarehouse } from './itemWarehouses';
+import { Location1 } from './location';
 
 export interface IPaginationForItems {
     page: number;
@@ -16,6 +17,13 @@ export interface IPaginationForItemWarehouses {
     pageCount: number;
     count: number;
     data: ItemWarehouse[];
+  }
+
+export interface IPaginationForLocations {
+    page: number;
+    pageCount: number;
+    count: number;
+    data: Location1[];
   }
 
 export interface IPaginationForDiscounts {

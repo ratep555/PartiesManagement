@@ -7,6 +7,8 @@ import { Birthday, BirthdayByIdForEdit, BirthdayCreate, BirthdayEdit } from '../
 import { BirthdayPackage, BirthdayPackageCreateEdit, BirthdayPackageCreateEditClass, BirthdayPackagePutGet } from '../shared/models/birthdays/birthdaypackage';
 import { ServiceIncluded } from '../shared/models/birthdays/serviceincluded';
 import { ItemPutGet } from '../shared/models/item';
+import { Location1 } from '../shared/models/location';
+import { MessageCreate } from '../shared/models/message';
 import { MyParams } from '../shared/models/myparams';
 import { IPaginationForBirthdayPackages, PaginationForBirthdayPackages, PaginationForBirthdays } from '../shared/models/pagination';
 
@@ -73,6 +75,10 @@ export class BirthdayPackagesService {
     return this.http.get<BirthdayPackage>(this.baseUrl + 'birthdays/birthdaypackages/' + id);
   }
 
+  getLocation(id: number) {
+    return this.http.get<Location1>(this.baseUrl + 'birthdays/locations/' + id);
+  }
+
   getBirthdayPackage1(id: number) {
     return this.http.get<BirthdayPackageCreateEditClass>(this.baseUrl + 'birthdays/birthdaypackages/' + id);
   }
@@ -122,6 +128,10 @@ export class BirthdayPackagesService {
 
   getAllServices() {
     return this.http.get<ServiceIncluded[]>(this.baseUrl + 'birthdays/birthdaypackages/services');
+  }
+
+  createMessage(message: MessageCreate) {
+    return this.http.post(this.baseUrl + 'birthdays/messages', message);
   }
 
   private BuildFormData(birthdayPackage: BirthdayPackageCreateEdit): FormData {

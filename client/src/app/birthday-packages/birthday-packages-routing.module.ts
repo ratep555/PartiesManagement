@@ -10,6 +10,9 @@ import { BirtdayPackagesAdminComponent } from './birtday-packages-admin/birtday-
 import { AddBirthdayPackageAdminComponent } from './add-birthday-package-admin/add-birthday-package-admin.component';
 import { EditBirthdayPackageAdminComponent } from './edit-birthday-package-admin/edit-birthday-package-admin.component';
 import { EditBirthdayPackageAdmin1Component } from './edit-birthday-package-admin1/edit-birthday-package-admin1.component';
+import { LocationInfoComponent } from './location-info/location-info.component';
+import { LocationsComponent } from './locations/locations.component';
+import { SendMessageComponent } from './send-message/send-message.component';
 
 
 const routes: Routes = [
@@ -20,8 +23,11 @@ const routes: Routes = [
   {path: 'editbirthdaypackageadmin/:id', component: EditBirthdayPackageAdminComponent},
   {path: 'editbirthdaypackageadmin1/:id', component: EditBirthdayPackageAdmin1Component},
   {path: 'birthdaypackageinfo/:id', component: BirthdayPackageInfoComponent},
+  {path: 'locationinfo/:id', component: LocationInfoComponent},
+  {path: 'locations', component: LocationsComponent},
   {path: 'editbirthday/:id', component: EditBirthdayAdminComponent},
   {path: 'addbirthday', component: AddBirthdayClientComponent},
+  {path: 'sendmessage', component: SendMessageComponent},
 ];
 
 @NgModule({

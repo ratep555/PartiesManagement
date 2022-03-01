@@ -116,16 +116,25 @@ namespace API.Helpers
             CreateMap<BirthdayPackage, BirthdayPackageDto>()
                 .ForMember(d => d.ServicesIncluded, o => o.MapFrom(MapForServicesIncluded))
                 .ForMember(d => d.Discounts, o => o.MapFrom(MapForDiscounts));
-
-            CreateMap<Location1, LocationDto>()
-                .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name))
-                .ForMember(d => d.Latitude, o => o.MapFrom(s => s.Located.Y))
-                .ForMember(d => d.Longitude, o => o.MapFrom(s => s.Located.X)); 
             
             CreateMap<BirthdayPackageCreateEditDto, BirthdayPackage>()
                 .ForMember(x => x.Picture, options => options.Ignore())
                 .ForMember(x => x.BirthdayPackageDiscounts, options => options.MapFrom(MapBirthdayPackageDisounts))
                 .ForMember(x => x.BirthdayPackageServices, options => options.MapFrom(MapBirthdayPackageServices));
+            
+             
+            // location
+            CreateMap<Location1, LocationDto>()
+                .ForMember(d => d.Country, o => o.MapFrom(s => s.Country.Name))
+                .ForMember(d => d.Latitude, o => o.MapFrom(s => s.Location.Y))
+                .ForMember(d => d.Longitude, o => o.MapFrom(s => s.Location.X)); 
+
+            CreateMap<LocationCreateEditDto, Location1>()
+               .ForMember(x => x.Location, x => x.MapFrom(dto =>
+                geometryFactory.CreatePoint(new Coordinate(dto.Longitude, dto.Latitude))));
+
+            CreateMap<MessageCreateDto, Message>().ReverseMap();
+
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)

@@ -34,6 +34,14 @@ namespace Core.Interfaces
         Task<decimal> DiscountSum(BirthdayPackage birthdayPackage);
         Task DiscountSum1(IEnumerable<BirthdayPackage> birthdayPackages,
             IEnumerable<BirthdayPackageDto> birthdayPackagesDto);
+        Task<Location1> FindLocationById(int id);
+        Task<List<Location1>> GetAllLocations(QueryParameters queryParameters);
+        Task<int> GetCountForLocations();
+        Task CreateLocation(Location1 location);
+        Task UpdateLocation(Location1 location);
+        int GetAdminId();
+        Task CreateMessage(Message message);
+
 
     }
 }

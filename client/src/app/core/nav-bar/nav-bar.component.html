@@ -34,6 +34,14 @@
             >Birthdays</a
           >
         </li>
+       <!--  <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/birthdaypackages/locations"
+            routerLinkActive="active"
+            >Info</a
+          >
+        </li> -->
         <ng-container>
         <div class="dropdown" dropdown>
           <a
@@ -44,8 +52,41 @@
             >Info</a
           >
           <div class="dropdown-menu" *dropdownMenu>
-            <a routerLink="/doctors/infodoctormyprofile" class="dropdown-item">
-              <i class="fa fa-user-md mr-3"></i> My Profile</a
+            <a 
+            routerLink="/birthdaypackages/locations"
+            class="dropdown-item">
+              <i class="fa fa-info mr-4"></i>Locations</a
+            >
+            <div class="dropdown-divider"></div>
+            <a routerLink="/birthdaypackages/sendmessage" class="dropdown-item">
+              <i class="fa fa-envelope mr-3"></i>Contact Us</a
+            >
+            <a
+              routerLink="/appointments/appointmentslistdoctor"
+              class="dropdown-item"
+            >
+              <i class="fa fa-phone mr-3"></i>My Appointments</a
+            >
+            <a routerLink="/patients/patientslistdoctor" class="dropdown-item">
+              <i class="fa fa-stethoscope mr-2 ml-1"></i> My Patients</a
+            >
+
+          </div>
+        </div>
+      </ng-container>
+       <!--  <ng-container>
+        <div class="dropdown" dropdown>
+          <a
+            class="pero nav-link text-uppercase dropdown-toggle text-white"
+            dropdownToggle
+            (click)="(false)"
+            routerLinkActive="active"
+            >Info</a
+          >
+          <div class="dropdown-menu" *dropdownMenu>
+            <a *ngFor="let location of locationList" 
+            routerLink="/birthdaypackages/locationinfo/{{location.id}}" class="dropdown-item">
+              <i class="fa fa-info mr-3"></i>{{location.city}}</a
             >
             <div class="dropdown-divider"></div>
             <a routerLink="/offices/officeslistdoctor" class="dropdown-item">
@@ -74,15 +115,7 @@
           >
           </div>
         </div>
-      </ng-container>
-        <li class="nav-item">
-          <a
-            class="nav-link text-uppercase"
-            routerLink="/appointments"
-            routerLinkActive="active"
-            >Info</a
-          >
-        </li>
+      </ng-container> -->
         <li class="nav-item">
           <a
             class="nav-link text-uppercase"
@@ -184,6 +217,12 @@
                 class="dropdown-item"
               >
                 <i class="fa fa-bar-chart mr-2"></i>Birthday Packages</a
+              >
+              <a
+                routerLink="/locations"
+                class="dropdown-item"
+              >
+                <i class="fa fa-bar-chart mr-2"></i>Locations</a
               >
             </div>
           </div>

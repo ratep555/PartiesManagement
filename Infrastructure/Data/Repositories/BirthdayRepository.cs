@@ -408,6 +408,57 @@ namespace Infrastructure.Data.Repositories
             }
         }
 
+        // locations
+        public async Task<Location1> FindLocationById(int id)
+        {
+            return await _context.Locations.Include(x => x.Country).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Location1>> GetAllLocations(QueryParameters queryParameters)
+        {
+            IQueryable<Location1> locations = _context.Locations
+                .Include(x => x.Country).AsQueryable().OrderBy(x => x.City);
+
+            if (queryParameters.HasQuery())
+            {
+                locations = locations.Where(t => t.City.Contains(queryParameters.Query));
+            }
+
+            locations = locations.Skip(queryParameters.PageCount * (queryParameters.Page - 1))
+                .Take(queryParameters.PageCount);
+
+            return await locations.ToListAsync();
+        }
+
+        public async Task<int> GetCountForLocations()
+        {
+            return await _context.Locations.CountAsync();
+        }
+
+        public async Task CreateLocation(Location1 location)
+        {
+            _context.Locations.Add(location);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateLocation(Location1 location)
+        {
+            _context.Entry(location).State = EntityState.Modified;        
+            await _context.SaveChangesAsync();
+        }
+
+        // messages
+        public int GetAdminId()
+        {
+            return _context.Users.FirstOrDefaultAsync(x => x.UserName == "admin").Id;
+        }
+
+        public async Task CreateMessage(Message message)
+        {
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+        }
+
 
     }
 }

@@ -12,6 +12,9 @@ import { BirtdayPackagesAdminComponent } from './birtday-packages-admin/birtday-
 import { AddBirthdayPackageAdminComponent } from './add-birthday-package-admin/add-birthday-package-admin.component';
 import { EditBirthdayPackageAdminComponent } from './edit-birthday-package-admin/edit-birthday-package-admin.component';
 import { EditBirthdayPackageAdmin1Component } from './edit-birthday-package-admin1/edit-birthday-package-admin1.component';
+import { LocationInfoComponent } from './location-info/location-info.component';
+import { LocationsComponent } from './locations/locations.component';
+import { SendMessageComponent } from './send-message/send-message.component';
 
 
 
@@ -26,7 +29,10 @@ import { EditBirthdayPackageAdmin1Component } from './edit-birthday-package-admi
     BirtdayPackagesAdminComponent,
     AddBirthdayPackageAdminComponent,
     EditBirthdayPackageAdminComponent,
-    EditBirthdayPackageAdmin1Component
+    EditBirthdayPackageAdmin1Component,
+    LocationInfoComponent,
+    LocationsComponent,
+    SendMessageComponent
   ],
   imports: [
     CommonModule,
