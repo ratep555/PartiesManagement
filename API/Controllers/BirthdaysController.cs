@@ -24,6 +24,7 @@ namespace API.Controllers
         private readonly IPdfService _pdfService;
         private readonly IEmailService _emailService;
         private string containerName = "birthdaypackages";
+        private string containerName1 = "activities";
 
         public BirthdaysController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config,
             IFileStorageService fileStorageService, IPdfService pdfService, IEmailService emailService)
@@ -291,13 +292,78 @@ namespace API.Controllers
         public async Task<ActionResult> CreateMessage([FromBody] MessageCreateDto messageDto)
         {
             var message = _mapper.Map<Message>(messageDto);
-            message.ApplicationUserId = _unitOfWork.BirthdayRepository.GetAdminId();
+
+            var adminuser = await _unitOfWork.BirthdayRepository.GetAdmin();
+            message.ApplicationUserId = adminuser.Id;
             message.SendingDate = DateTime.Now.ToLocalTime();
            
             await _unitOfWork.BirthdayRepository.CreateMessage(message);
 
             return Ok();
         }
+
+        // servicesincluded
+        [HttpPost("servicesincluded")]
+        public async Task<ActionResult> CreateServiceIncluded([FromForm] ServiceIncludedCreateEditDto serviceDto)
+        {
+            var serviceincluded = _mapper.Map<ServiceIncluded>(serviceDto);
+
+            if (serviceDto.Picture != null)
+            {
+                serviceincluded.Picture = await _fileStorageService.SaveFile(containerName1, serviceDto.Picture);
+            }
+
+            await _unitOfWork.BirthdayRepository.AddServiceIncluded(serviceincluded);
+
+            return Ok();
+        }
+
+        [HttpPut("servicesincluded/{id}")]
+        public async Task<ActionResult> UpdateServiceIncluded(
+                int id, [FromForm] ServiceIncludedCreateEditDto serviceDto)
+        {
+            var serviceIncluded = await _unitOfWork.BirthdayRepository.GetServiceIncludedById(id);
+
+            if (serviceIncluded == null) return NotFound(new ServerResponse(404));
+
+            serviceIncluded = _mapper.Map(serviceDto, serviceIncluded);
+            
+            if (serviceDto.Picture != null)
+            {
+                serviceIncluded.Picture = await _fileStorageService
+                    .EditFile(containerName1, serviceDto.Picture, serviceIncluded.Picture);
+            }
+
+            await _unitOfWork.BirthdayRepository.UpdateServiceIncluded(serviceIncluded);
+
+            return NoContent();
+        }
+
+        [HttpGet("servicesincluded")]
+        public async Task<ActionResult<Pagination<ServiceIncludedDto>>> GetAllServicesIncluded(
+            [FromQuery] QueryParameters queryParameters)
+        {
+            var count = await _unitOfWork.BirthdayRepository.GetCountForServicesIncluded();
+            
+            var list = await _unitOfWork.BirthdayRepository.GetAllServicesIncluded(queryParameters);
+   
+            var data = _mapper.Map<IEnumerable<ServiceIncludedDto>>(list);
+
+            return Ok(new Pagination<ServiceIncludedDto>
+                (queryParameters.Page, queryParameters.PageCount, count, data));
+        }
+
+        [HttpGet("servicesincluded/{id}")]
+        public async Task<ActionResult<ServiceIncludedDto>> GetServiceIncludedById(int id)
+        {
+            var serviceIncluded = await _unitOfWork.BirthdayRepository.GetServiceIncludedById(id);
+
+            if (serviceIncluded == null) return NotFound(new ServerResponse(404));
+
+            return _mapper.Map<ServiceIncludedDto>(serviceIncluded);
+        }
+
+   
         
     }
 }

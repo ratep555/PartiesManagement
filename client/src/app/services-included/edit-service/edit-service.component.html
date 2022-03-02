@@ -1,0 +1,83 @@
+<div class="container" style="margin-top: 100px; margin-bottom: 100px">
+    <div class="d-flex justify-content-center mt-5">
+      <div class="col-6">
+        <form
+          [formGroup]="serviceIncludedForm"
+          (ngSubmit)="serviceIncludedForm.valid && onSubmit()"
+        >
+          <h2 class="kiki text-center text-primary">Edit Activity</h2>
+          <input formControlName="id" id="id" class="form-control" hidden />
+          <app-text-input
+            [formControl]="serviceIncludedForm.controls['name']"
+            [label]="'Activity Name'"
+          ></app-text-input>
+          <app-text-input
+            [formControl]="serviceIncludedForm.controls['videoClip']"
+            [label]="'Video Clip'"
+          ></app-text-input>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <textarea
+                type="text"
+                placeholder="Description"
+                class="form-control"
+                formControlName="description"
+                rows="10"
+              ></textarea>
+            </div>
+            <span
+              style="font-size: 14px"
+              class="text-danger ml-3"
+              *ngIf="
+                serviceIncludedForm.get('description').invalid &&
+                serviceIncludedForm.get('description').touched &&
+                serviceIncludedForm.get('description').errors['required']
+              "
+            >
+              Please enter a Description
+            </span>
+            <span
+              style="font-size: 14px"
+              class="text-danger ml-3"
+              *ngIf="
+                serviceIncludedForm.get('description').invalid &&
+                serviceIncludedForm.get('description').touched &&
+                serviceIncludedForm.get('description').errors['minlength']
+              "
+            >
+              Please enter at least 100 characters
+            </span>
+            <span
+              style="font-size: 14px"
+              class="text-danger ml-3"
+              *ngIf="
+                serviceIncludedForm.get('description').invalid &&
+                serviceIncludedForm.get('description').touched &&
+                serviceIncludedForm.get('description').errors['maxlength']
+              "
+            >
+              Please enter at most 2000 characters
+            </span>
+          </div>
+
+          <app-img-input
+          [urlCurrentImage]="serviceIncluded?.picture"
+          (onImageSelected)="onImageSelected($event)"> 
+          </app-img-input>
+          <div
+            style="margin-top: 50px; margin-bottom: 40px"
+            class="form-group text-center"
+          >
+            <button
+              [disabled]="!serviceIncludedForm.valid"
+              class="btn btn-success mr-2"
+              type="submit"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

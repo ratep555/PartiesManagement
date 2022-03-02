@@ -448,9 +448,9 @@ namespace Infrastructure.Data.Repositories
         }
 
         // messages
-        public int GetAdminId()
+        public async Task<ApplicationUser> GetAdmin()
         {
-            return _context.Users.FirstOrDefaultAsync(x => x.UserName == "admin").Id;
+            return await _context.Users.FirstOrDefaultAsync(x => x.UserName == "admin");
         }
 
         public async Task CreateMessage(Message message)
@@ -458,6 +458,49 @@ namespace Infrastructure.Data.Repositories
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
         }
+
+        // servicesincluded
+        public async Task AddServiceIncluded(ServiceIncluded serviceIncluded)
+        {
+            _context.ServicesIncluded.Add(serviceIncluded);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<ServiceIncluded> GetServiceIncludedById(int id)
+        {
+            return await _context.ServicesIncluded.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task UpdateServiceIncluded(ServiceIncluded serviceIncluded)
+        {    
+            _context.Entry(serviceIncluded).State = EntityState.Modified;        
+             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<ServiceIncluded>> GetAllServicesIncluded(QueryParameters queryParameters)
+        {
+            IQueryable<ServiceIncluded> servicesIncluded = _context.ServicesIncluded
+                .AsQueryable().OrderBy(x => x.Name);
+
+            if (queryParameters.HasQuery())
+            {
+                servicesIncluded = servicesIncluded.Where(t => t.Name.Contains(queryParameters.Query));
+            }
+
+            servicesIncluded = servicesIncluded.Skip(queryParameters.PageCount * (queryParameters.Page - 1))
+                .Take(queryParameters.PageCount);
+
+            return await servicesIncluded.ToListAsync();
+        }
+
+        public async Task<int> GetCountForServicesIncluded()
+        {
+            return await _context.ServicesIncluded.CountAsync();
+        }
+
+
+
 
 
     }

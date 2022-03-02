@@ -10,7 +10,7 @@ import { ItemPutGet } from '../shared/models/item';
 import { Location1 } from '../shared/models/location';
 import { MessageCreate } from '../shared/models/message';
 import { MyParams } from '../shared/models/myparams';
-import { IPaginationForBirthdayPackages, PaginationForBirthdayPackages, PaginationForBirthdays } from '../shared/models/pagination';
+import { IPaginationForBirthdayPackages, PaginationForBirthdayPackages, PaginationForBirthdays, PaginationForServicesIncluded } from '../shared/models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,7 @@ export class BirthdayPackagesService {
   birthdayPackages: BirthdayPackage[] = [];
   pagination = new PaginationForBirthdayPackages();
   pagination1 = new PaginationForBirthdays();
+  pagination2 = new PaginationForServicesIncluded();
   myParams = new MyParams();
   itemCache = new Map();
   servicesIncluded: ServiceIncluded[] = [];
@@ -63,6 +64,24 @@ export class BirthdayPackagesService {
        );
    }
 
+  getServicesIncluded() {
+     let params = new HttpParams();
+     if (this.myParams.query) {
+       params = params.append('query', this.myParams.query);
+     }
+     params = params.append('sort', this.myParams.sort);
+     params = params.append('page', this.myParams.page.toString());
+     params = params.append('pageCount', this.myParams.pageCount.toString());
+     return this.http.get<PaginationForServicesIncluded>
+     (this.baseUrl + 'birthdays/servicesincluded', { observe: 'response', params })
+       .pipe(
+         map(response => {
+           this.pagination2 = response.body;
+           return this.pagination2;
+         })
+       );
+   }
+
    setMyParams(params: MyParams) {
     this.myParams = params;
   }
@@ -77,6 +96,10 @@ export class BirthdayPackagesService {
 
   getLocation(id: number) {
     return this.http.get<Location1>(this.baseUrl + 'birthdays/locations/' + id);
+  }
+
+  getServiceIncludedById(id: number) {
+    return this.http.get<ServiceIncluded>(this.baseUrl + 'birthdays/servicesincluded/' + id);
   }
 
   getBirthdayPackage1(id: number) {

@@ -1,0 +1,25 @@
+<div class="container" style="margin-top: 95px;">
+    <div class="row">
+        <div class="col-6">
+            <img src="{{serviceIncluded.picture || './assets/activity.jpg'}}" alt="{{serviceIncluded.name}}" class="zagi img-fluid w-100">
+        </div>
+        <div class="col-6">
+            <div class="wrapper">
+                <div *ngIf="serviceIncluded.videoClip">
+                    <iframe
+                      width="560"
+                      height="357"
+                      [src]="videoClipURL"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    >
+                    </iframe>
+                  </div>            </div>
+        </div>
+    </div>
+    <div>
+        <h4 class="mt-3">Description:</h4>
+        <p>{{serviceIncluded?.description}}</p> 
+       </div>
+</div>

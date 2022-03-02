@@ -4,15 +4,17 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(PartiesContext))]
-    partial class PartiesContextModelSnapshot : ModelSnapshot
+    [Migration("20220302105004_AddVideoClip")]
+    partial class AddVideoClip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

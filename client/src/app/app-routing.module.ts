@@ -10,6 +10,8 @@ const routes: Routes = [
   () => import('./birthday-packages/birthday-packages.module').then(mod => mod.BirthdayPackagesModule)},
   {path: 'items', loadChildren: () => import('./items/items.module').then(mod => mod.ItemsModule)},
   {path: 'discounts', loadChildren: () => import('./admin/discounts/discounts.module').then(mod => mod.DiscountsModule)},
+  {path: 'services', loadChildren:
+   () => import('./services-included/services-included.module').then(mod => mod.ServicesIncludedModule)},
   {path: 'locations', loadChildren: () => import('./admin/locations/locations.module').then(mod => mod.LocationsModule)},
   {path: 'itemwarehouses', loadChildren:
   () => import('./admin/item-warehouses/item-warehouses.module').then(mod => mod.ItemWarehousesModule)},

@@ -32,6 +32,7 @@ export class SendMessageComponent implements OnInit {
 
   onSubmit() {
     this.birthdayPackagesService.createMessage(this.messageForm.value).subscribe(() => {
+      this.messageForm.reset();
       this.toastr.success('Your message has been sent!');
     },
     error => {

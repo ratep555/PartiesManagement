@@ -34,6 +34,31 @@
             >Birthdays</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/webshop"
+            routerLinkActive="active"
+            >Webshop</a
+          >
+        </li>
+  
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/birthdaypackages/servicesincluded"
+            routerLinkActive="active"
+            >Activities</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link text-uppercase"
+            routerLink="/birthdaypackages/servi"
+            routerLinkActive="active"
+            >Blog</a
+          >
+        </li>
        <!--  <li class="nav-item">
           <a
             class="nav-link text-uppercase"
@@ -116,61 +141,7 @@
           </div>
         </div>
       </ng-container> -->
-        <li class="nav-item">
-          <a
-            class="nav-link text-uppercase"
-            routerLink="/webshop"
-            routerLinkActive="active"
-            >Webshop</a
-          >
-        </li>
-        <ng-container
-          *ngIf="
-            (currentUser$ | async) &&
-            (currentUser$ | async)?.roles.includes('Doctor')
-          "
-        >
-          <div class="dropdown" dropdown>
-            <a
-              class="pero nav-link text-uppercase dropdown-toggle text-white"
-              dropdownToggle
-              (click)="(false)"
-              routerLinkActive="active"
-              >Doctor</a
-            >
-            <div class="dropdown-menu" *dropdownMenu>
-              <a routerLink="/doctors/infodoctormyprofile" class="dropdown-item">
-                <i class="fa fa-user-md mr-3"></i> My Profile</a
-              >
-              <div class="dropdown-divider"></div>
-              <a routerLink="/offices/officeslistdoctor" class="dropdown-item">
-                <i class="fa fa-paperclip mr-3"></i>My Offices</a
-              >
-              <a
-                routerLink="/appointments/appointmentslistdoctor"
-                class="dropdown-item"
-              >
-                <i class="fa fa-phone mr-3"></i>My Appointments</a
-              >
-              <a routerLink="/patients/patientslistdoctor" class="dropdown-item">
-                <i class="fa fa-stethoscope mr-2 ml-1"></i> My Patients</a
-              >
-              <a
-                routerLink="/patients/medicalrecordslistdoctor"
-                class="dropdown-item"
-              >
-                <i class="fa fa-ambulance mr-2"></i> Medical Records</a
-              >
-              <a
-              routerLink="/doctors/statisticsdoctor"
-              class="dropdown-item"
-            >
-              <i class="fa fa-bar-chart mr-2"></i> My Statistics</a
-            >
-            </div>
-          </div>
-        </ng-container>
-  
+      
         <ng-container>
           <div class="dropdown" dropdown>
             <a
@@ -223,6 +194,12 @@
                 class="dropdown-item"
               >
                 <i class="fa fa-bar-chart mr-2"></i>Locations</a
+              >
+              <a
+                routerLink="/services"
+                class="dropdown-item"
+              >
+                <i class="fa fa-bar-chart mr-2"></i>Activities</a
               >
             </div>
           </div>

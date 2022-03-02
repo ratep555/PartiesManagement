@@ -39,9 +39,14 @@ namespace Core.Interfaces
         Task<int> GetCountForLocations();
         Task CreateLocation(Location1 location);
         Task UpdateLocation(Location1 location);
-        int GetAdminId();
+        Task<ApplicationUser> GetAdmin();
         Task CreateMessage(Message message);
-
+        Task AddServiceIncluded(ServiceIncluded serviceIncluded);
+        Task<ServiceIncluded> GetServiceIncludedById(int id);
+        Task UpdateServiceIncluded(ServiceIncluded serviceIncluded);
+        Task<List<ServiceIncluded>> GetAllServicesIncluded(QueryParameters queryParameters);
+        Task<int> GetCountForServicesIncluded();
+       
 
     }
 }

@@ -133,7 +133,14 @@ namespace API.Helpers
                .ForMember(x => x.Location, x => x.MapFrom(dto =>
                 geometryFactory.CreatePoint(new Coordinate(dto.Longitude, dto.Latitude))));
 
+            // messages
             CreateMap<MessageCreateDto, Message>().ReverseMap();
+
+            // servicesincluded
+            CreateMap<ServiceIncluded, ServiceIncludedDto>();
+
+            CreateMap<ServiceIncludedCreateEditDto, ServiceIncluded>()
+                .ForMember(x => x.Picture, options => options.Ignore());
 
         }
 

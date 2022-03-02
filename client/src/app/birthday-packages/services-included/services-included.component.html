@@ -1,0 +1,21 @@
+<div class="container" style="margin-top: 75px;">
+    <div class="row">
+        <section class="col-12">
+            <div class="row">
+                <div class="col-4 mb-4" *ngFor="let item of servicesIncluded">
+                    <app-service-included [serviceIncluded]="item"></app-service-included>
+                </div>
+            </div>
+            <div style="margin-bottom: 100px" class="d-flex justify-content-center" *ngIf="totalCount > 0">
+                <app-pager 
+                    [pageSize]="myParams.pageCount" 
+                    [totalCount]="totalCount"
+                    [pageNumber]="myParams.page"
+                    (pageChanged)="onPageChanged($event)"
+                >
+                </app-pager>
+            </div>
+
+        </section>
+    </div>
+</div>

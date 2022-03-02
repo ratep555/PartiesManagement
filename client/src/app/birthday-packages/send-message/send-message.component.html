@@ -1,5 +1,4 @@
 
-
   <header id="home-section" class="mb-4">
     <div class="dark-overlay">
       <div class="home-inner container" style="margin-top: 100px">
@@ -7,63 +6,52 @@
           <div class="wrapper card col-10 p-3">
             <div class="card-header bg-primary text-light">
               <div class="col-12 d-none d-md-block col-md-6 pb-1">
-                <i class="fa fa-envelope"></i>
+                <i class="fa fa-envelope">
+                  <span style="margin-left: 15px; font-size: 1em;">Feel free to send us message</span></i>
               </div>
             </div>
             <div class="card-body">
               <div class="container-rounded p-2">
                 <div class="row">
                   <div class="col-12 pb-4">
-                    <div class="row my-1">
-                      <div class="col-3">
-                        <strong>Patient Name:</strong>
-                      </div>
-                      <div class="col-9">
-                        <input
-                          type="text"
-                          class="form-control"
-                          readonly="readonly"
-                        />
-                      </div>
-                    </div>
-                    <div class="row my-1">
-                      <div class="col-3">
-                        <strong>Doctor Name:</strong>
-                      </div>
-                      <div class="col-9">
-                        <input
-                          type="text"
-                          class="form-control"
-                          readonly="readonly"
-                        />
-                      </div>
-                    </div>
-                    <div class="row my-1">
-                      <div class="col-3">
-                          <strong>Office Address:</strong>
-                      </div>
-                      <div class="col-9">
-                          <input type="text" class="form-control" 
-                          readonly="readonly"              >
-                      </div>
-                  </div>  
                     <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
                       <div class="row my-1">
                         <div class="col-3">
-                          <strong>Created:</strong>
+                          <strong>Your Name:</strong>
                         </div>
                         <div class="col-9">
-                          <input
-                            type="text"
-                            formControlName="created"
-                            placeholder="Select date:"
-                            class="form-control"
-                            bsDatepicker
-                            [bsConfig]="{
-                              containerClass: 'theme-green',
-                              dateInputFormat: 'DD.MM.YYYY  HH:mm'
-                            }"
-                          />
+                          <app-text-input
+                          [formControl]="messageForm.controls['firstLastName']"
+                          [label]="'Name'"
+                        ></app-text-input>
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                        </div>
+                      </div>
+                      <div class="row my-1">
+                        <div class="col-3">
+                          <strong>Email:</strong>
+                        </div>
+                        <div class="col-9">
+                          <app-text-input
+                          [formControl]="messageForm.controls['email']"
+                          [label]="'Email'"
+                        ></app-text-input>
+                        </div>
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                        </div>
+                      </div>
+                      <div class="row my-1">
+                        <div class="col-3">
+                          <strong>Phone:</strong>
+                        </div>
+                        <div class="col-9">
+                          <app-text-input
+                          [formControl]="messageForm.controls['phone']"
+                          [label]="'Phone'"
+                        ></app-text-input>
                         </div>
                         <div class="col-3"></div>
                         <div class="col-9">
@@ -79,7 +67,7 @@
                           <textarea
                             type="text"
                             class="form-control"
-                            formControlName="anamnesisDiagnosisTherapy"
+                            formControlName="messageContent"
                             cols="20"
                             rows="10"
                           ></textarea>
@@ -88,11 +76,11 @@
                           style="font-size: 14px"
                           class="text-danger ml-3"
                           *ngIf="
-                            messageForm.get('anamnesisDiagnosisTherapy')
+                            messageForm.get('messageContent')
                               .invalid &&
-                            messageForm.get('anamnesisDiagnosisTherapy')
+                            messageForm.get('messageContent')
                               .touched &&
-                            messageForm.get('anamnesisDiagnosisTherapy').errors[
+                            messageForm.get('messageContent').errors[
                               'required'
                             ]
                           "
@@ -100,13 +88,13 @@
                           Please enter Anamnesys, Diagnosys, and Therapy
                         </span>
                       </div>
-                      <div class="form-group text-center mt-5">
+                      <div class="form-group text-center mt-5 mb-20">
                         <button
                           [disabled]="!messageForm.valid"
                           class="btn btn-success mr-2"
                           type="submit"
                         >
-                          Save
+                          Send
                         </button>
                       </div>
                     </form>

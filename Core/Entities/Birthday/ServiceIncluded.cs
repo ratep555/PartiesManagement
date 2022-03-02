@@ -9,6 +9,7 @@ namespace Core.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public string Picture { get; set; }
+        public string VideoClip { get; set; }
 
         public ICollection<BirthdayPackageService> BirthdayPackageServices { get; set; }
     }
