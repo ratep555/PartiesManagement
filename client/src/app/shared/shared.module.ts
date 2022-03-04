@@ -22,6 +22,7 @@ import { LeafletModule} from '@asymmetrik/ngx-leaflet';
 import 'leaflet/dist/images/marker-shadow.png';
 import 'leaflet/dist/images/marker-icon-2x.png';
 import { MapComponent } from './components/map/map.component';
+import { SummaryPipe } from './pipes/summary.pipe';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { MapComponent } from './components/map/map.component';
     ImgInputComponent,
     MultipleSelectorComponent,
     RatingComponent,
-    MapComponent
+    MapComponent,
+    SummaryPipe
   ],
   imports: [
     CommonModule,
@@ -71,7 +73,8 @@ import { MapComponent } from './components/map/map.component';
     MultipleSelectorComponent,
     RatingComponent,
     LeafletModule,
-    MapComponent
-    ]
+    MapComponent,
+    SummaryPipe
+      ]
 })
 export class SharedModule { }

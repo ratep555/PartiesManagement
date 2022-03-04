@@ -5,6 +5,7 @@ using Core.Dtos;
 using Core.Dtos.Birthday;
 using Core.Entities;
 using Core.Entities.Birthday;
+using Core.Entities.Blogs;
 using Core.Entities.Order;
 using NetTopologySuite.Geometries;
 
@@ -142,6 +143,13 @@ namespace API.Helpers
             CreateMap<ServiceIncludedCreateEditDto, ServiceIncluded>()
                 .ForMember(x => x.Picture, options => options.Ignore());
 
+            // blogs
+            CreateMap<Blog, BlogDto>()
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName));
+
+
+            CreateMap<BlogCreateEditDto, Blog>()
+                .ForMember(x => x.Picture, options => options.Ignore());
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)

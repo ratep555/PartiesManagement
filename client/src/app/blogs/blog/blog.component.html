@@ -1,0 +1,14 @@
+<div style="margin-bottom: 10px;" class="card border-left-primary shadow h-100 py-2">
+    <div class="card image position-relative" style="cursor: pointer;">
+        <a routerLink="/blogs/infoblog/{{blog.id}}">
+            <img src="{{blog.picture || './assets/blog.jpg'}}" 
+            alt="{{blog.title}}" class="img-fluid bg-info">
+        </a>
+        </div>
+    <div class="card-body d-flex flex-column">
+        <h4 class="card-title text-center">
+            {{blog.title}}
+        </h4>
+        <p class="card-text">{{blog.blogContent | summary:400}}</p>
+    </div>
+  </div>

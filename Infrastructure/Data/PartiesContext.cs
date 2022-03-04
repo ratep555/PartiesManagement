@@ -1,6 +1,7 @@
 using System;
 using Core.Entities;
 using Core.Entities.Birthday;
+using Core.Entities.Blogs;
 using Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -92,14 +93,19 @@ namespace Infrastructure.Data
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);   
 
+            modelBuilder.Entity<BlogComments>()
+                .HasOne(s => s.Blog)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);   
         }
-
             public DbSet<Account> Accounts { get; set; }
+            public DbSet<Address> Addresses { get; set; }
+            public DbSet<Blog> Blogs { get; set; }
+            public DbSet<BlogComments> BlogComments { get; set; }
             public DbSet<Birthday1> Birthdays { get; set; }
             public DbSet<BirthdayPackage> BirthdayPackages { get; set; }
             public DbSet<BirthdayPackageDiscount> BirthdayPackageDiscounts { get; set; }
             public DbSet<BirthdayPackageService> BirthdayPackageServices { get; set; }
-            public DbSet<Address> Addresses { get; set; }
             public DbSet<Category> Categories { get; set; }
            // public DbSet<Client> Clients { get; set; }
             public DbSet<Country> Countries { get; set; }

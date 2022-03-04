@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.ErrorHandling;
+using API.Extensions;
 using AutoMapper;
 using Core.Dtos;
 using Core.Dtos.Birthday;
 using Core.Entities;
+using Core.Entities.Blogs;
 using Core.Interfaces;
 using Core.Utilities;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -25,6 +28,7 @@ namespace API.Controllers
         private readonly IEmailService _emailService;
         private string containerName = "birthdaypackages";
         private string containerName1 = "activities";
+        private string containerName2 = "blogs";
 
         public BirthdaysController(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config,
             IFileStorageService fileStorageService, IPdfService pdfService, IEmailService emailService)
@@ -361,6 +365,95 @@ namespace API.Controllers
             if (serviceIncluded == null) return NotFound(new ServerResponse(404));
 
             return _mapper.Map<ServiceIncludedDto>(serviceIncluded);
+        }
+
+        // blogs
+        [Authorize]
+        [HttpPost("blogs")]
+        public async Task<ActionResult> CreateBlog([FromForm] BlogCreateEditDto blogDto)
+        {
+            var blog = _mapper.Map<Blog>(blogDto);
+
+            var userId = User.GetUserId();
+
+            if (blogDto.Picture != null)
+            {
+                blog.Picture = await _fileStorageService.SaveFile(containerName2, blogDto.Picture);
+            }
+            
+            blog.ApplicationUserId = userId;
+            blog.PublishedOn = DateTime.Now.ToLocalTime();
+
+            await _unitOfWork.BirthdayRepository.AddBlog(blog);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPut("blogs/{id}")]
+        public async Task<ActionResult> UpdateBlog(
+                int id, [FromForm] BlogCreateEditDto blogDto)
+        {
+            var blog = await _unitOfWork.BirthdayRepository.GetBlogById(id);
+
+            if (blog == null) return NotFound(new ServerResponse(404));
+
+            var userId = User.GetUserId();
+
+            blog = _mapper.Map(blogDto, blog);
+            
+            if (blogDto.Picture != null)
+            {
+                blog.Picture = await _fileStorageService
+                    .EditFile(containerName2, blogDto.Picture, blog.Picture);
+            }
+
+            blog.ApplicationUserId = userId;
+            blog.UpdatedOn = DateTime.Now.ToLocalTime();
+
+            await _unitOfWork.BirthdayRepository.UpdateBlog(blog);
+
+            return NoContent();
+        }
+
+        [HttpGet("blogs/{id}")]
+        public async Task<ActionResult<BlogDto>> GetBlogById(int id)
+        {
+            var blog = await _unitOfWork.BirthdayRepository.GetBlogById(id);
+
+            if (blog == null) return NotFound(new ServerResponse(404));
+
+            return _mapper.Map<BlogDto>(blog);
+        }
+
+        [Authorize]
+        [HttpGet("blogs")]
+        public async Task<ActionResult<Pagination<BlogDto>>> GetAllBlogsForUser(
+            [FromQuery] QueryParameters queryParameters)
+        {
+            var userId = User.GetUserId();
+
+            var count = await _unitOfWork.BirthdayRepository.GetCountForBlogsForUser(userId);
+            
+            var list = await _unitOfWork.BirthdayRepository.GetAllBlogsForUser(userId, queryParameters);
+   
+            var data = _mapper.Map<IEnumerable<BlogDto>>(list);
+
+            return Ok(new Pagination<BlogDto>
+                (queryParameters.Page, queryParameters.PageCount, count, data));
+        }
+
+        [HttpGet("blogslist")]
+        public async Task<ActionResult<Pagination<BlogDto>>> GetAllBlogs([FromQuery] QueryParameters queryParameters)
+        {
+            var count = await _unitOfWork.BirthdayRepository.GetCountForBlogs();
+            
+            var list = await _unitOfWork.BirthdayRepository.GetAllBlogs(queryParameters);
+   
+            var data = _mapper.Map<IEnumerable<BlogDto>>(list);
+
+            return Ok(new Pagination<BlogDto>
+                (queryParameters.Page, queryParameters.PageCount, count, data));
         }
 
    

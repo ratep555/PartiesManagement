@@ -1,0 +1,23 @@
+<div class="container" *ngIf="blog">
+
+    <div class="d-flex justify-content-center">
+        <h1 class="display-4 mt-5 text-center">{{blog.title}}</h1>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <h6>Written by {{blog.username}} - {{blog.publishedOn | date: "dd.MM.yyyy HH:mm"}}
+            <span *ngIf="blog.updatedOn > blog.publishedOn"> 
+                | Updated on {{blog.updatedOn | date: "dd.MM.yyyy HH:mm"}}</span>
+        </h6>
+    </div>
+    <!-- img-fluid – it minimisez and maximisez based on the device -->
+    <div class="mt-4">
+        <img src="{{blog.picture}}" class="blog-image img-fluid text-wrapper">
+        <p class="blog-content">
+            {{blog.blogContent}}
+        </p>
+    </div>
+
+     <app-comment-functionality *ngIf="blog" [id]="blog.id"></app-comment-functionality>
+ 
+</div>

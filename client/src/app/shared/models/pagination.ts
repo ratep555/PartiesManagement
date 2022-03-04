@@ -1,6 +1,7 @@
 import { Birthday } from './birthdays/birthday';
 import { BirthdayPackage } from './birthdays/birthdaypackage';
 import { ServiceIncluded } from './birthdays/serviceincluded';
+import { Blog } from './blog';
 import { Discount } from './discount';
 import { Item } from './item';
 import { ItemWarehouse } from './itemWarehouses';
@@ -25,6 +26,20 @@ export interface IPaginationForLocations {
     pageCount: number;
     count: number;
     data: Location1[];
+  }
+
+export interface IPaginationForBlogs {
+    page: number;
+    pageCount: number;
+    count: number;
+    data: Blog[];
+  }
+
+export class PaginationForBlogs implements IPaginationForBlogs {
+    page: number;
+    pageCount: number;
+    count: number;
+    data: Blog[];
   }
 
 export interface IPaginationFofServicesIncluded {

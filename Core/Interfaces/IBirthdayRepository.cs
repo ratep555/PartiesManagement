@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.Dtos.Birthday;
 using Core.Entities;
+using Core.Entities.Blogs;
 using Core.Utilities;
 
 namespace Core.Interfaces
@@ -46,6 +47,15 @@ namespace Core.Interfaces
         Task UpdateServiceIncluded(ServiceIncluded serviceIncluded);
         Task<List<ServiceIncluded>> GetAllServicesIncluded(QueryParameters queryParameters);
         Task<int> GetCountForServicesIncluded();
+        Task AddBlog(Blog blog);
+        Task<List<Blog>> GetAllBlogsForUser(int userId, QueryParameters queryParameters);  
+        Task<int> GetCountForBlogsForUser(int userId);
+        Task<List<Blog>> GetAllBlogs(QueryParameters queryParameters);
+        Task<int> GetCountForBlogs();
+
+        Task<Blog> GetBlogById(int id);
+        Task UpdateBlog(Blog blog);
+
        
 
     }
