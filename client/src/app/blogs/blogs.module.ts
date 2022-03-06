@@ -9,6 +9,8 @@ import { ListBlogsAdminComponent } from './list-blogs-admin/list-blogs-admin.com
 import { BlogComponent } from './blog/blog.component';
 import { InfoBlogComponent } from './info-blog/info-blog.component';
 import { CommentFunctionalityComponent } from './comment-functionality/comment-functionality.component';
+import { CommentsComponent } from './comments/comments.component';
+import { CommentBoxComponent } from './comment-box/comment-box.component';
 
 
 
@@ -20,7 +22,9 @@ import { CommentFunctionalityComponent } from './comment-functionality/comment-f
     ListBlogsAdminComponent,
     BlogComponent,
     InfoBlogComponent,
-    CommentFunctionalityComponent
+    CommentFunctionalityComponent,
+    CommentsComponent,
+    CommentBoxComponent
   ],
   imports: [
     CommonModule,

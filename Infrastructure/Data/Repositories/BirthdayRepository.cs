@@ -558,17 +558,45 @@ namespace Infrastructure.Data.Repositories
             return await _context.Blogs.CountAsync();
         }
 
-
-
-
         public async Task<Blog> GetBlogById(int id)
         {
             return await _context.Blogs.Include(x => x.ApplicationUser).FirstOrDefaultAsync(p => p.Id == id);
         }
 
+        // blogcomments
+        public async Task AddBlogComment(BlogComment blogComment)
+        {
+            _context.BlogComments.Add(blogComment);
 
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task UpdateBlogComment(BlogComment blogComment)
+        {    
+            _context.Entry(blogComment).State = EntityState.Modified;        
+             await _context.SaveChangesAsync();
+        }
 
+        public async Task<BlogComment> GetBlogCommentById(int id)
+        {
+            return await _context.BlogComments.Include(x => x.ApplicationUser).FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<List<BlogComment>> GetAllBlogComments(int blogId)
+        {
+            return await _context.BlogComments.Include(x => x.ApplicationUser)
+                .Where(x => x.BlogId == blogId).ToListAsync();
+        }
+
+        public void DeleteBlogComment(BlogComment blogComment)
+        {
+            _context.BlogComments.Remove(blogComment);
+        }
+
+        public async Task<int> Complete()
+        {
+            return await _context.SaveChangesAsync();
+        }
 
 
     }

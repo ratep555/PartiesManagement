@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.Entities.Blogs
 {
-    public class BlogComments : BaseEntity
+    public class BlogComment : BaseEntity
     {
         public int? ParentBlogCommentId { get; set; }
 

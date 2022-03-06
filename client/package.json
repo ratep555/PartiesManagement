@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~11.2.1",
     "@angular/router": "~11.2.1",
     "@asymmetrik/ngx-leaflet": "^8.1.0",
+    "angularx-social-login": "^3.2.1",
     "bootstrap": "^4.6.0",
     "bootswatch": "^4.5.2",
     "font-awesome": "^4.7.0",

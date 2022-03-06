@@ -19,18 +19,67 @@ namespace API.Controllers
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _config;
-
+        private readonly IGoogleAuthService _googleAuthService;
 
         public AccountController(UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager, ITokenService tokenService, 
-            IMapper mapper, IConfiguration config)
+            IMapper mapper, IConfiguration config, IGoogleAuthService googleAuthService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _mapper = mapper;
             _tokenService = tokenService;
             _config = config;
+            _googleAuthService = googleAuthService;
         }
+
+        [HttpPost("externallogin")]
+		public async Task<ActionResult<UserDto>> ExternalLogin([FromBody] ExternalAuthDto externalAuth)
+		{
+			var payload =  await _googleAuthService.VerifyGoogleToken(externalAuth);
+
+			if(payload == null)
+				return BadRequest("Invalid External Authentication.");
+
+			var info = new UserLoginInfo(externalAuth.Provider, payload.Subject, externalAuth.Provider);
+
+			var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+			if (user == null)
+			{
+				user = await _userManager.FindByEmailAsync(payload.Email);
+
+				if (user == null)
+				{
+					user = new ApplicationUser 
+                    { 
+                        Email = payload.Email, 
+                        UserName = payload.Email, 
+                        DisplayName = payload.Email,
+                        EmailConfirmed = true 
+                    };
+
+					await _userManager.CreateAsync(user);
+
+					await _userManager.AddLoginAsync(user, info);
+				}
+				else
+				{
+					await _userManager.AddLoginAsync(user, info);
+				}
+			}
+
+			if (user == null)
+				return BadRequest("Invalid External Authentication.");
+
+			var token = await _tokenService.CreateToken(user);
+
+            return new UserDto
+            {
+                Email = user.Email,
+                Token = token,
+                DisplayName = user.Email
+            };
+		}
 
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)

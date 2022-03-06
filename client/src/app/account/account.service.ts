@@ -7,7 +7,8 @@ import { User } from '../shared/models/user';
 import { map } from 'rxjs/operators';
 import { Address } from '../shared/models/address';
 import { Country } from '../shared/models/country';
-
+import { SocialAuthService } from 'angularx-social-login';
+import { GoogleLoginProvider } from 'angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,9 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient,
+              private router: Router,
+              private externalAuthService: SocialAuthService) { }
 
   login(values: any) {
     return this.http.post(this.baseUrl + 'account/login', values)
@@ -47,6 +50,25 @@ export class AccountService {
     Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
+  }
+
+  public signInWithGoogle = () => {
+    return this.externalAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  externalLogin(values: any) {
+    return this.http.post(this.baseUrl + 'account/externallogin', values).pipe(
+      map((user: User) => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.currentUserSource.next(user);
+        }
+      })
+    );
+  }
+
+  public signOutExternal = () => {
+    this.externalAuthService.signOut();
   }
 
   logout() {

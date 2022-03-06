@@ -147,9 +147,14 @@ namespace API.Helpers
             CreateMap<Blog, BlogDto>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName));
 
-
             CreateMap<BlogCreateEditDto, Blog>()
                 .ForMember(x => x.Picture, options => options.Ignore());
+            
+            //blogcomment
+            CreateMap<BlogComment, BlogCommentDto>()
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.ApplicationUser.UserName));
+
+            CreateMap<BlogCommentCreateEditDto, BlogComment>();
         }
 
         private List<ItemDiscount> MapDiscountItems(DiscountCreateEditDto discountDto, Discount discount)

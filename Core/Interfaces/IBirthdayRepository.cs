@@ -52,11 +52,15 @@ namespace Core.Interfaces
         Task<int> GetCountForBlogsForUser(int userId);
         Task<List<Blog>> GetAllBlogs(QueryParameters queryParameters);
         Task<int> GetCountForBlogs();
-
         Task<Blog> GetBlogById(int id);
         Task UpdateBlog(Blog blog);
+        Task AddBlogComment(BlogComment blogComment);
+        Task UpdateBlogComment(BlogComment blogComment);
+        Task<BlogComment> GetBlogCommentById(int id);
+        Task<List<BlogComment>> GetAllBlogComments(int blogId);
+        void DeleteBlogComment(BlogComment blogComment);
+        Task<int> Complete();
 
-       
 
     }
 }

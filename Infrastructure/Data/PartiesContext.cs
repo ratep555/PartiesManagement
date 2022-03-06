@@ -93,7 +93,7 @@ namespace Infrastructure.Data
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);   
 
-            modelBuilder.Entity<BlogComments>()
+            modelBuilder.Entity<BlogComment>()
                 .HasOne(s => s.Blog)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);   
@@ -101,7 +101,7 @@ namespace Infrastructure.Data
             public DbSet<Account> Accounts { get; set; }
             public DbSet<Address> Addresses { get; set; }
             public DbSet<Blog> Blogs { get; set; }
-            public DbSet<BlogComments> BlogComments { get; set; }
+            public DbSet<BlogComment> BlogComments { get; set; }
             public DbSet<Birthday1> Birthdays { get; set; }
             public DbSet<BirthdayPackage> BirthdayPackages { get; set; }
             public DbSet<BirthdayPackageDiscount> BirthdayPackageDiscounts { get; set; }

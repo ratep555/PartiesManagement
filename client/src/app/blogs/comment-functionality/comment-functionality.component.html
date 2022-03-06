@@ -1,1 +1,10 @@
-<p>comment-functionality works!</p>
+<div *ngIf="(currentUser$ | async) && !!standAloneComment">
+
+    <div class="mb-3">
+      <!--  $event is saved comment -->
+        <app-comment-box
+           [comment]="standAloneComment"
+           (commentSaved)="onCommentSaved($event)"></app-comment-box> 
+   </div>
+
+  <app-comments [comments]="blogCommentsClientOnly" *ngIf="!!blogCommentsClientOnly"></app-comments>  

@@ -30,7 +30,6 @@ namespace API.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.DisplayName)
-
             };
 
             var roles = await _userManager.GetRolesAsync(user);

@@ -64,7 +64,6 @@ namespace API.Controllers
             if (birthday == null) return NotFound(new ServerResponse(404));
 
             return _mapper.Map<BirthdayDto>(birthday);
-
         }
 
         [HttpPost]
@@ -456,8 +455,71 @@ namespace API.Controllers
                 (queryParameters.Page, queryParameters.PageCount, count, data));
         }
 
-   
-        
+        // blogcomments
+        [Authorize]
+        [HttpPost("blogcomments")]
+        public async Task<ActionResult<BlogCommentDto>> UpsertBlogComment([FromBody] BlogCommentCreateEditDto blogCommentDto)
+        {
+            var blogComment = _mapper.Map<BlogComment>(blogCommentDto);
+
+            var userId = User.GetUserId();
+
+            if (blogCommentDto.Id == -1)
+            {
+                blogComment.ApplicationUserId = userId;
+                blogComment.PublishedOn = DateTime.Now.ToLocalTime();
+                blogComment.Id = 0;
+
+                await _unitOfWork.BirthdayRepository.AddBlogComment(blogComment);
+            }
+            else
+            {
+                blogComment.ApplicationUserId = userId;
+                blogComment.UpdatedOn = DateTime.Now.ToLocalTime();
+
+                 await _unitOfWork.BirthdayRepository.UpdateBlogComment(blogComment);
+            }
+            var commentToReturn = _mapper.Map<BlogCommentDto>(blogComment);
+
+            var comment1 = await _unitOfWork.BirthdayRepository.GetBlogCommentById(commentToReturn.Id);
+
+            commentToReturn.Username = comment1.ApplicationUser.UserName;
+
+            return Ok(commentToReturn);
+        }
+
+        [HttpGet("blogcomments/{blogId}")]
+        public async Task<ActionResult<IEnumerable<BlogCommentDto>>> GetAllBlogComments(int blogId)
+        {
+            var blogComments = await _unitOfWork.BirthdayRepository.GetAllBlogComments(blogId);
+
+            var data = _mapper.Map<IEnumerable<BlogCommentDto>>(blogComments);
+
+            return Ok(data);
+        }
+
+        [HttpDelete("blogcomments/{id}")]
+        public async Task<ActionResult<int>> DeleteBlogComment(int id)
+        {
+            var userId = User.GetUserId();
+
+            var blogComment = await _unitOfWork.BirthdayRepository.GetBlogCommentById(id);
+
+            if (blogComment == null) return NotFound(new ServerResponse(404));
+
+            if (blogComment.ApplicationUserId == userId)
+            {
+                _unitOfWork.BirthdayRepository.DeleteBlogComment(blogComment);
+
+                var affectedRows = await _unitOfWork.BirthdayRepository.Complete();
+
+                return Ok(affectedRows);
+            }
+            else
+            {
+                return BadRequest("This comment was not created by the current user.");
+            }
+        }
     }
 }
 

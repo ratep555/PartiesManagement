@@ -1,0 +1,56 @@
+<div class="container">
+    <div *ngFor="let comment of comments">
+
+        <div class="row mb-3 d-block comment-box">
+
+            <div class="card p-3">
+
+                <p class="font-italic">{{comment.username}} said on {{comment.updatedOn | date:'medium'}}</p>
+
+                <blockquote *ngIf="!comment.isEditable && !comment.isReplying" class="blockquote">
+                    {{comment.commentContent}}
+                </blockquote>
+
+                <app-comment-box
+                    *ngIf="(!!comment.isEditable && (currentUser$ | async).displayName === (comment.username)) 
+                    || !!comment.isReplying"
+                    [comment]="comment"
+                    (commentSaved)="onCommentSaved($event, comment)"
+                    >    
+                </app-comment-box>
+
+                <div class="button-box" *ngIf="!comment.isEditable && !comment.isReplying">
+              <!-- here we need to know who the user is, you don't want to be able to edit comment
+                                that is not your's -->
+               <button 
+                        *ngIf="!comment.isEditable && (currentUser$ | async).displayName === (comment.username)" 
+                        class="btn btn-sm btn-info mr-1"
+                        (click)="editComment(comment)">Edit</button>
+
+                    <!-- for replying we don't really need to know who the user is -->
+                    <button 
+                        *ngIf="!comment.isReplying && !!(currentUser$ | async)" 
+                        class="btn btn-sm btn-primary mr-1"
+                        (click)="replyComment(comment)">Reply</button>
+
+                    <button 
+                        *ngIf="!comment.deleteConfirm && (currentUser$ | async).displayName === (comment.username)" 
+                        class="btn btn-sm btn-danger"
+                        (click)="showDeleteConfirm(comment)">Delete</button>
+                        
+                         <!-- if this is true -->
+                    <div *ngIf="!!comment.deleteConfirm">
+                        Sure?
+                        <button class="btn btn-link p-1" (click)="deleteConfirm(comment, comments)">Yes</button>
+                        <button class="btn btn-link p-1" (click)="cancelDeleteConfirm(comment)">No</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- ovo su odgovori na komentare, recursively, nested one inside each other -->
+        <app-comments [comments]="comment.comments" *ngIf="comment.comments"></app-comments>
+    </div>
+</div>

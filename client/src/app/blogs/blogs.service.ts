@@ -1,9 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AccountService } from '../account/account.service';
 import { Blog, BlogCreateEdit } from '../shared/models/blog';
+import { BlogCommentClass, BlogCommentCreateEditClass } from '../shared/models/blogcomment';
 import { MyParams, UserParams } from '../shared/models/myparams';
 import { IPaginationForBlogs, PaginationForBlogs } from '../shared/models/pagination';
 import { User } from '../shared/models/user';
@@ -92,6 +94,18 @@ getMyParams() {
   updateBlog(id: number, blog: BlogCreateEdit){
     const formData = this.BuildFormData(blog);
     return this.http.put(this.baseUrl + 'birthdays/blogs/' + id, formData);
+  }
+
+  upsertBlogComment(model: BlogCommentCreateEditClass): Observable<BlogCommentClass>{
+    return this.http.post<BlogCommentClass>(this.baseUrl + 'birthdays/blogcomments', model);
+  }
+
+  getAllBlogComments(blogId: number): Observable<BlogCommentClass[]> {
+    return this.http.get<BlogCommentClass[]>(this.baseUrl + 'birthdays/blogcomments/' + blogId);
+  }
+
+  deleteBlogComment(id: number): Observable<number>  {
+    return this.http.delete<number>(this.baseUrl + 'birthdays/blogcomments/' + id);
   }
 
   private BuildFormData(blog: BlogCreateEdit): FormData {

@@ -1,41 +1,96 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { Router, NavigationExtras } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { catchError, delay } from 'rxjs/operators';
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { AccountService } from 'src/app/account/account.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-    constructor(private router: Router , private toastr: ToastrService) {}
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(req).pipe(
-            catchError(error => {
-                if (error) {
-                    if (error.status === 400) {
-                        if (error.error.errors) {
-                            throw error.error;
-                        }  else if (typeof(error.error) === 'object') {
-                            this.toastr.error(error.statusText, error.status);
-                          } else {
-                            this.toastr.error(error.error);
-                          }
-                    }
-                    if (error.status === 401) {
-                        this.toastr.error(error.error.message, error.error.statusCode);
-                    }
-                    if (error.status === 404) {
-                        this.router.navigateByUrl('/not-found');
-                    }
-                    if (error.status === 500) {
-                        this.toastr.error(error.error.message, error.error.statusCode);
+  constructor(
+    private toastr: ToastrService,
+    private router: Router,
+    private accountService: AccountService
+  ) {}
 
-                    }
-                }
-                return throwError(error);
-            })
-        );
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (error) {
+          switch (error.status) {
+          case 400:
+              this.handle400Error(error);
+            break;
+            case 401:
+              this.handle401Error(error);
+            break;
+            case 500:
+              this.handle500Error(error);
+            break;
+            default:
+              this.handleUnexpectedError(error);
+              break;
+          }
+        }
+
+        return throwError(error);
+      })
+    );
+  }
+
+  handle400Error(error: any) {
+    if (!!error.error && Array.isArray(error.error)) {
+      let errorMessage = '';
+      for (const key in error.error) {
+        if (!!error.error[key]) {
+          const errorElement = error.error[key];
+          errorMessage = (`${errorMessage}${errorElement.code} - ${errorElement.description}\n`);
+        }
+      }
+      this.toastr.error(errorMessage, error.statusText);
+      console.log(error.error);
+    } else if (!!error?.error?.errors?.Content && (typeof error.error.errors.Content) === 'object') {
+      const errorObject = error.error.errors.Content;
+      let errorMessage = '';
+      for (const key in errorObject) {
+        const errorElement = errorObject[key];
+        errorMessage = (`${errorMessage}${errorElement}\n`);
+      }
+      this.toastr.error(errorMessage, error.statusCode);
+      console.log(error.error);
+    } else if (!!error.error) {
+      const errorMessage = ((typeof error.error) === 'string')
+        ? error.error
+        : 'There was a validation error.';
+      this.toastr.error(errorMessage, error.statusCode);
+      console.log(error.error);
+    } else {
+      this.toastr.error(error.statusText, error.status);
+      console.log(error);
     }
+  }
 
+  handle401Error(error: any) {
+    const errorMessage = 'Please login to your account.';
+    this.accountService.logout();
+    this.toastr.error(errorMessage, error.statusText);
+    this.router.navigate(['/login']);
+  }
+
+  handle500Error(error: any) {
+    this.toastr.error('Please contact the administrator. An error happened in the server.');
+    console.log(error);
+  }
+
+  handleUnexpectedError(error: any) {
+    this.toastr.error('Something unexpected happened.');
+    console.log(error);
+  }
 }
